@@ -1,0 +1,11 @@
+build/
+~*
+*~
+.flatpak-builder/
+app-dir/
+debian/com.github.naz013.tasks.debhelper.log
+debian/com.github.naz013.tasks.substvars
+debian/com.github.naz013.tasks/
+debian/debhelper-build-stamp
+debian/files
+obj-x86_64-linux-gnu/
