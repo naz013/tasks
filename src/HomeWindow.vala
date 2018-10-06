@@ -147,10 +147,8 @@ namespace Tasks {
         }
 
         public void add_action() {
-            if (!create_open) {
-                create_open = true;
-                draw_views();
-            }
+            create_open = !create_open;
+            draw_views();
         }
 
         private void update_theme() {
