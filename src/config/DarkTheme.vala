@@ -15,5 +15,9 @@ namespace Tasks {
         public string get_accent_color() {
             return "#00B0FF";
         }
+        
+        public string get_alpha_accent_color() {
+            return "rgba(0, 176, 255, 0.12)";
+        }
     }
 }

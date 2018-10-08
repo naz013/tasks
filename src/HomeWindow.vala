@@ -2,7 +2,7 @@
 namespace Tasks {
     public class HomeWindow : Gtk.Window {
 
-        private Gee.ArrayList<ListEvent> events = new Gee.ArrayList<ListEvent>();
+        private Gee.ArrayList<ListEvent> tasks = new Gee.ArrayList<ListEvent>();
 
         private Gtk.Grid grid = new Gtk.Grid ();
         private Gtk.HeaderBar header;
@@ -12,8 +12,9 @@ namespace Tasks {
         private Gtk.Entry description_field;
         private Gtk.Label summary_label;
         private Gtk.Label description_label;
+        private Gtk.Calendar calendar;
 
-        private bool create_open = false;
+        private bool create_open = true;
         private bool change_theme = true;
         private bool settings_visible = false;
         private int width = 500;
@@ -66,7 +67,7 @@ namespace Tasks {
             draw_views();
 
             focus_out_event.connect (() => {
-                print("\nFocus out");
+                print("Focus out\n");
                 return false;
             });
         }
@@ -101,7 +102,8 @@ namespace Tasks {
             int new_width, new_height;
             get_size (out new_width, out new_height);
 
-            print("\nCalculated dimentions: x -> ".concat(new_width.to_string()).concat(", y -> ").concat(new_height.to_string()));
+            print("Calculated dimentions: x -> ".concat(new_width.to_string()).concat(", y -> ").concat(new_height.to_string()));
+            print("\n");
 
             this.get_style_context().add_class("rounded");
             
@@ -111,7 +113,7 @@ namespace Tasks {
             main_grid.get_style_context().add_class("main_grid");
             grid.add(main_grid);
 
-            if (events.size == 0) {
+            if (tasks.size == 0) {
                 var empty_label = new Gtk.Label ("No events, use Plus button to add one");
 		        empty_label.set_use_markup (false);
                 empty_label.set_line_wrap (true);
@@ -161,7 +163,7 @@ namespace Tasks {
             scrollable_grid.show_all ();
             vert_grid.add(scrollable_grid);
             
-            summary_label = create_hint_label(summary_hint);
+            summary_label = create_hint_label(summary_hint, true);
 		    scrollable_grid.add(summary_label);
             
             summary_field = new Gtk.Entry ();
@@ -188,7 +190,7 @@ namespace Tasks {
 		    scrollable_grid.add(summary_field);
 		    
 		    scrollable_grid.add(create_empty_space(16));
-		    description_label = create_hint_label(description_hint);
+		    description_label = create_hint_label(description_hint, false);
 		    scrollable_grid.add(description_label);
 		    
 		    description_field = new Gtk.Entry ();
@@ -214,6 +216,35 @@ namespace Tasks {
 		    description_field.get_style_context().add_class("input_field");
 		    scrollable_grid.add(description_field);
 		    
+		    scrollable_grid.add(create_empty_space(16));
+		    scrollable_grid.add(create_hint_label("Date", true));
+		    
+		    calendar = new Gtk.Calendar();
+		    scrollable_grid.add(calendar);
+		    
+		    scrollable_grid.add(create_empty_space(16));
+		    scrollable_grid.add(create_hint_label("Time", true));
+		    
+		    Gtk.Grid time_grid = new Gtk.Grid();
+		    time_grid.orientation = Gtk.Orientation.HORIZONTAL;
+		    
+		    Gtk.SpinButton hours_view = new Gtk.SpinButton.with_range(0, 23, 1);
+		    hours_view.orientation = Gtk.Orientation.VERTICAL;
+		    hours_view.width_request = 101;
+		    
+		    Gtk.SpinButton minutes_view = new Gtk.SpinButton.with_range(0, 59, 1);
+		    minutes_view.orientation = Gtk.Orientation.VERTICAL;
+		    minutes_view.width_request = 101;
+		    
+		    Gtk.Widget h_empty = new Gtk.Label("");
+            h_empty.width_request = 16;
+		    
+		    time_grid.add(hours_view);
+		    time_grid.add(h_empty);
+		    time_grid.add(minutes_view);
+		    
+		    scrollable_grid.add(time_grid);
+		    
 		    //Buttons holder
 		    Gtk.Grid button_grid = new Gtk.Grid();
             button_grid.height_request = 32;
@@ -227,7 +258,7 @@ namespace Tasks {
             button_save.height_request = 32;
             button_save.width_request = 109;
 		    button_save.clicked.connect (() => {
-			    print("\nSave clicked");
+			    print("Save clicked\n");
 		    });
 		    button_save.get_style_context().add_class("material_button");
 		    button_grid.add (button_save);
@@ -245,12 +276,16 @@ namespace Tasks {
             grid.add(vert_grid);
         }
         
-        private Gtk.Label create_hint_label(string label) {
+        private Gtk.Label create_hint_label(string label, bool visible) {
             Gtk.Label hint_label = new Gtk.Label(label);
             hint_label.set_use_markup (true);
 		    hint_label.set_line_wrap (true);
 		    hint_label.set_selectable (false);
-		    hint_label.set_opacity(0);
+		    if (visible) {
+		        hint_label.set_opacity(1);
+		    } else {
+		        hint_label.set_opacity(0);
+		    }
 		    hint_label.set_xalign(0.0f);
 		    hint_label.get_style_context().add_class("hint_label");
 		    return hint_label;
@@ -258,7 +293,7 @@ namespace Tasks {
         
         private Gtk.Widget create_empty_space(int height) {
             Gtk.Widget empty_space = new Gtk.Label("");
-            description_field.height_request = height;
+            empty_space.height_request = height;
             return empty_space;
         }
 
@@ -279,6 +314,7 @@ namespace Tasks {
                 @define-color textColorSecondary %s;
                 @define-color bgColor %s;
                 @define-color accentColor %s;
+                @define-color accentAlphaColor %s;
                 
                 .input_field {
                     font-size: 13px;
@@ -292,8 +328,13 @@ namespace Tasks {
                 .input_field:focus {
                     font-size: 13px;
                     color: @textColorPrimary;
-                    background: @bgColor;
-                    border: 1px solid @accentColor;
+                    // background: @bgColor;
+                    // border: 1px solid @accentColor;
+                    background: @accentAlphaColor;
+                    border-left: 1px solid @accentAlphaColor;
+                    border-top: 1px solid @accentAlphaColor;
+                    border-right: 1px solid @accentAlphaColor;
+                    border-bottom: 1px solid @accentColor;
                     border-radius: 5px 5px 0px 0px;
                     padding: 5px;
                 }
@@ -347,14 +388,16 @@ namespace Tasks {
                     app_theme.get_text_primary_color(),
                     app_theme.get_text_secondary_color(),
                     app_theme.get_bg_color(),
-                    app_theme.get_accent_color()
+                    app_theme.get_accent_color(),
+                    app_theme.get_alpha_accent_color()
                 );
             } else {
-                style = (N_("""
-                @define-color textColorPrimary %s;
-                @define-color textColorSecondary %s;
-                @define-color bgColor %s;
-                @define-color accentColor %s;
+                style = "".concat(add_color("textColorPrimary", app_theme.get_text_primary_color()));
+                style = style.concat(add_color("textColorSecondary", app_theme.get_text_secondary_color()));
+                style = style.concat(add_color("bgColor", app_theme.get_bg_color()));
+                style = style.concat(add_color("accentColor", app_theme.get_accent_color()));
+                style = style.concat(add_color("accentAlphaColor", app_theme.get_alpha_accent_color()));
+                style = style.concat("""
                 
                 .input_field {
                     font-size: 13px;
@@ -368,8 +411,11 @@ namespace Tasks {
                 .input_field:focus {
                     font-size: 13px;
                     color: @textColorPrimary;
-                    background: @bgColor;
-                    border: 1px solid @accentColor;
+                    background: @accentAlphaColor;
+                    border-left: 1px solid @accentAlphaColor;
+                    border-top: 1px solid @accentAlphaColor;
+                    border-right: 1px solid @accentAlphaColor;
+                    border-bottom: 1px solid @accentColor;
                     border-radius: 5px 5px 0px 0px;
                     padding: 5px;
                 }
@@ -377,6 +423,7 @@ namespace Tasks {
                 .hint_label {
                     font-size: 10px;
                     color: @accentColor;
+                    padding-left: 5px;
                 }
 
                 .mainwindow {
@@ -421,12 +468,7 @@ namespace Tasks {
                     border-bottom-color: @bgColor;
                     box-shadow: none;
                 }
-                """)).printf(
-                    app_theme.get_text_primary_color(),
-                    app_theme.get_text_secondary_color(),
-                    app_theme.get_bg_color(),
-                    app_theme.get_accent_color()
-                );
+                """);
             }
 
             try {
@@ -440,6 +482,10 @@ namespace Tasks {
                 css_provider,
                 Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
             );
+        }
+        
+        private string add_color(string name, string color) {
+            return "@define-color ".concat(name).concat(" ").concat(color).concat(";\n");
         }
 
         public void toggle_mode() {
