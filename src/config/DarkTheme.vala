@@ -13,7 +13,7 @@ namespace Tasks {
         }
 
         public string get_accent_color() {
-            return "#673AB7";
+            return "#00B0FF";
         }
     }
 }
