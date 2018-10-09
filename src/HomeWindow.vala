@@ -117,7 +117,7 @@ namespace Tasks {
                 Gtk.Label empty_label = new Gtk.Label ("");
                 empty_label.set_use_markup (true);
                 empty_label.set_line_wrap (true);
-                empty_label.set_markup ("No events, use \"Plus\" button to add one\n\n<b>Control+N</b> - Create task\n<b>Control+M</b> - Toggle \"Dark mode\"\n<b>Control+Q</b> - Exit");
+                empty_label.set_markup ("No tasks, use \"Plus\" button to add one\n\n<b>Control+N</b> - Create task\n<b>Control+M</b> - Toggle \"Dark mode\"\n<b>Control+Q</b> - Exit");
                 empty_label.set_justify(Gtk.Justification.CENTER);
                 empty_label.get_style_context().add_class("empty_label");
                 empty_label.height_request = 500;
@@ -217,12 +217,8 @@ namespace Tasks {
 		    time_grid.column_spacing = 4;
 		    time_grid.orientation = Gtk.Orientation.HORIZONTAL;
 		    
-		    hours_view = new Gtk.SpinButton.with_range(0, 23, 1);
-		    hours_view.orientation = Gtk.Orientation.VERTICAL;
-		    hours_view.width_request = 44;
-		    hours_view.get_style_context().add_class("time_button");
-		    hours_view.value_changed.connect (() => {
-			    int val = hours_view.get_value_as_int ();
+		    hours_view = create_spin_button(0, 23, 1, 44, () => {
+		        int val = hours_view.get_value_as_int ();
 			    print ("hours: %d\n", val);
 			    if (val > 23) {
 			        hours_view.set_value(23.0);
@@ -231,12 +227,8 @@ namespace Tasks {
 			    }
 		    });
 		    
-		    minutes_view = new Gtk.SpinButton.with_range(0, 59, 1);
-		    minutes_view.orientation = Gtk.Orientation.VERTICAL;
-		    minutes_view.width_request = 44;
-		    minutes_view.get_style_context().add_class("time_button");
-		    minutes_view.value_changed.connect (() => {
-			    int val = minutes_view.get_value_as_int ();
+		    minutes_view = create_spin_button(0, 59, 1, 44, () => {
+		        int val = minutes_view.get_value_as_int ();
 			    print ("minutes: %d\n", val);
 			    if (val > 59) {
 			        minutes_view.set_value(59.0);
@@ -275,21 +267,15 @@ namespace Tasks {
             button_grid.get_style_context().add_class("buttons_block");
             vert_grid.add(button_grid);
             
-            Gtk.Button button_save = new Gtk.Button.with_label ("Save");
-            button_save.height_request = 32;
-            button_save.width_request = 109;
-		    button_save.clicked.connect (() => {
-			    print("Save clicked\n");
+            var button_save = create_material_button ("Save", 109, 32, () => {
+                print("Save clicked\n");
 			    save_task();
-		    });
+            });
 		    button_save.get_style_context().add_class("material_button");
 		    button_grid.add (button_save);
 		    
-		    Gtk.Button button_cancel = new Gtk.Button.with_label ("Cancel");
-		    button_cancel.height_request = 32;
-            button_cancel.width_request = 109;
-		    button_cancel.clicked.connect (() => {
-			    add_action();
+		    var button_cancel = create_material_button ("Cancel", 109, 32, () => {
+		        add_action();
 		    });
 		    button_cancel.get_style_context().add_class("material_button");
 		    button_grid.add (button_cancel);
@@ -321,6 +307,27 @@ namespace Tasks {
             tasks.add(event);
             create_open = false;
             draw_views();
+        }
+        
+        private Gtk.SpinButton create_spin_button(int from, int to, int step, int width, owned DelegateType action) {
+            var spin = new Gtk.SpinButton.with_range(from, to, step);
+		    spin.orientation = Gtk.Orientation.VERTICAL;
+		    spin.width_request = width;
+		    spin.get_style_context().add_class("time_button");
+		    spin.value_changed.connect (() => {
+			    action();
+		    });
+		    return spin;
+        }
+        
+        private Gtk.Button create_material_button(string label, int width, int height, owned DelegateType action) {
+            var button = new Gtk.Button.with_label (label);
+		    button.height_request = height;
+            button.width_request = width;
+		    button.clicked.connect (() => {
+			    action();
+		    });
+		    return button;
         }
         
         private Gtk.Entry create_entry(string hint, int max_length, int width, owned DelegateType on, owned DelegateType off) {
@@ -677,7 +684,7 @@ namespace Tasks {
                     padding: 16px;
                 }
                 
-                .right_block, .empty_label {
+                .empty_label {
                     border: 1px solid @accentColor;
                 }
 
