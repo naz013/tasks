@@ -217,6 +217,8 @@ namespace Tasks {
 		    time_grid.column_spacing = 4;
 		    time_grid.orientation = Gtk.Orientation.HORIZONTAL;
 		    
+		    DateTime current_dt = new DateTime.now_local ();
+		    
 		    hours_view = create_spin_button(0, 23, 1, 44, () => {
 		        int val = hours_view.get_value_as_int ();
 			    print ("hours: %d\n", val);
@@ -226,6 +228,7 @@ namespace Tasks {
 			        hours_view.set_value(0.0);
 			    }
 		    });
+		    hours_view.set_value(current_dt.get_hour());
 		    
 		    minutes_view = create_spin_button(0, 59, 1, 44, () => {
 		        int val = minutes_view.get_value_as_int ();
@@ -236,6 +239,7 @@ namespace Tasks {
 			        minutes_view.set_value(0.0);
 			    }
 		    });
+		    minutes_view.set_value(current_dt.get_minute());
 		    
 		    Gtk.Widget h_empty = new Gtk.Label("");
             h_empty.width_request = 66;
@@ -304,9 +308,15 @@ namespace Tasks {
             
             print("Event added\n");
             
-            tasks.add(event);
+            // tasks.add(event);
             create_open = false;
             draw_views();
+            Timeout.add_seconds(10, delayed_task, 1);
+        }
+        
+        private bool delayed_task() {
+            print("Delay action...\n");
+            return true;
         }
         
         private Gtk.SpinButton create_spin_button(int from, int to, int step, int width, owned DelegateType action) {
