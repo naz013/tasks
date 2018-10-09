@@ -13,8 +13,10 @@ namespace Tasks {
         private Gtk.Label summary_label;
         private Gtk.Label description_label;
         private Gtk.Calendar calendar;
+        private Gtk.SpinButton hours_view;
+        private Gtk.SpinButton minutes_view;
 
-        private bool create_open = true;
+        private bool create_open = false;
         private bool change_theme = true;
         private bool settings_visible = false;
         private int width = 500;
@@ -24,8 +26,8 @@ namespace Tasks {
 
         public SimpleActionGroup actions { get; construct; }
         
-        private string summary_hint = "Summary";
-        private string description_hint = "Description";
+        private string summary_hint = "Remind me...";
+        private string description_hint = "Note";
 
         public const string ACTION_PREFIX = "win.";
         public const string ACTION_MODE = "action_mode";
@@ -71,10 +73,6 @@ namespace Tasks {
                 return false;
             });
         }
-        
-        private int get_header_height() {
-            return header.get_allocated_height();
-        }
 
         private void init_theme() {
             if (AppSettings.get_default().is_dark_mode) {
@@ -114,9 +112,11 @@ namespace Tasks {
             grid.add(main_grid);
 
             if (tasks.size == 0) {
-                var empty_label = new Gtk.Label ("No events, use Plus button to add one");
-		        empty_label.set_use_markup (false);
+                Gtk.Label empty_label = new Gtk.Label ("");
+                empty_label.set_use_markup (true);
                 empty_label.set_line_wrap (true);
+                empty_label.set_markup ("No events, use \"Plus\" button to add one\n\n<b>Control+N</b> - Create task\n<b>Control+M</b> - Toggle \"Dark mode\"\n<b>Control+Q</b> - Exit");
+                empty_label.set_justify(Gtk.Justification.CENTER);
                 empty_label.get_style_context().add_class("empty_label");
                 empty_label.height_request = 500;
                 empty_label.width_request = 500;
@@ -157,11 +157,15 @@ namespace Tasks {
             
             //Scrollable holder
             
+            Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
+            
             Gtk.Grid scrollable_grid = new Gtk.Grid();
             scrollable_grid.expand = true;
             scrollable_grid.orientation = Gtk.Orientation.VERTICAL;
             scrollable_grid.show_all ();
-            vert_grid.add(scrollable_grid);
+            
+            scrolled.add(scrollable_grid);
+            vert_grid.add(scrolled);
             
             summary_label = create_hint_label(summary_hint, true);
 		    scrollable_grid.add(summary_label);
@@ -182,8 +186,8 @@ namespace Tasks {
 		        string text = summary_field.get_text();
                 if (text == "") {
                     summary_field.set_text(summary_hint);
+                    summary_label.set_opacity(0);
                 }
-                summary_label.set_opacity(0);
 		        return true;
 		    });
 		    summary_field.get_style_context().add_class("input_field");
@@ -209,8 +213,8 @@ namespace Tasks {
 		        string text = description_field.get_text();
                 if (text == "") {
                     description_field.set_text(description_hint);
+                    description_label.set_opacity(0);
                 }
-                description_label.set_opacity(0);
 		        return true;
 		    });
 		    description_field.get_style_context().add_class("input_field");
@@ -226,21 +230,54 @@ namespace Tasks {
 		    scrollable_grid.add(create_hint_label("Time", true));
 		    
 		    Gtk.Grid time_grid = new Gtk.Grid();
+		    time_grid.column_spacing = 4;
 		    time_grid.orientation = Gtk.Orientation.HORIZONTAL;
 		    
-		    Gtk.SpinButton hours_view = new Gtk.SpinButton.with_range(0, 23, 1);
+		    hours_view = new Gtk.SpinButton.with_range(0, 23, 1);
 		    hours_view.orientation = Gtk.Orientation.VERTICAL;
-		    hours_view.width_request = 101;
+		    hours_view.width_request = 44;
+		    hours_view.get_style_context().add_class("time_button");
+		    hours_view.value_changed.connect (() => {
+			    int val = hours_view.get_value_as_int ();
+			    print ("hours: %d\n", val);
+			    if (val > 23) {
+			        hours_view.set_value(23.0);
+			    } else if (val < 0) {
+			        hours_view.set_value(0.0);
+			    }
+		    });
 		    
-		    Gtk.SpinButton minutes_view = new Gtk.SpinButton.with_range(0, 59, 1);
+		    minutes_view = new Gtk.SpinButton.with_range(0, 59, 1);
 		    minutes_view.orientation = Gtk.Orientation.VERTICAL;
-		    minutes_view.width_request = 101;
+		    minutes_view.width_request = 44;
+		    minutes_view.get_style_context().add_class("time_button");
+		    minutes_view.value_changed.connect (() => {
+			    int val = minutes_view.get_value_as_int ();
+			    print ("minutes: %d\n", val);
+			    if (val > 59) {
+			        minutes_view.set_value(59.0);
+			    } else if (val < 0) {
+			        minutes_view.set_value(0.0);
+			    }
+		    });
 		    
 		    Gtk.Widget h_empty = new Gtk.Label("");
-            h_empty.width_request = 16;
+            h_empty.width_request = 66;
+            
+            Gtk.Label m_label = new Gtk.Label("mm");
+            m_label.width_request = 24;
+            m_label.set_xalign(1.0f);
+            m_label.get_style_context().add_class("time_label");
+            
+            Gtk.Label h_label = new Gtk.Label("HH");
+            h_label.width_request = 24;
+            h_label.set_xalign(0.0f);
+            h_label.get_style_context().add_class("time_label");
 		    
 		    time_grid.add(hours_view);
+		    time_grid.add(h_label);
 		    time_grid.add(h_empty);
+		    time_grid.add(m_label);
 		    time_grid.add(minutes_view);
 		    
 		    scrollable_grid.add(time_grid);
@@ -259,6 +296,7 @@ namespace Tasks {
             button_save.width_request = 109;
 		    button_save.clicked.connect (() => {
 			    print("Save clicked\n");
+			    save_task();
 		    });
 		    button_save.get_style_context().add_class("material_button");
 		    button_grid.add (button_save);
@@ -274,6 +312,31 @@ namespace Tasks {
 		    
 		    vert_grid.get_style_context().add_class("right_block");
             grid.add(vert_grid);
+        }
+        
+        private void save_task() {
+            var hour = hours_view.get_value_as_int ();
+            var minute = minutes_view.get_value_as_int ();
+            
+            var year = calendar.year;
+            var month = calendar.month;
+            var day = calendar.day;
+            
+            var summary = summary_field.get_text();
+            var note = description_field.get_text();
+            
+            ListEvent event = new ListEvent.with_id(0, summary, note);
+            event.year = year;
+            event.month = month;
+            event.day = day;
+            event.hour = hour;
+            event.minute = minute;
+            
+            print("Event added\n");
+            
+            tasks.add(event);
+            create_open = false;
+            draw_views();
         }
         
         private Gtk.Label create_hint_label(string label, bool visible) {
@@ -328,8 +391,6 @@ namespace Tasks {
                 .input_field:focus {
                     font-size: 13px;
                     color: @textColorPrimary;
-                    // background: @bgColor;
-                    // border: 1px solid @accentColor;
                     background: @accentAlphaColor;
                     border-left: 1px solid @accentAlphaColor;
                     border-top: 1px solid @accentAlphaColor;
@@ -337,6 +398,11 @@ namespace Tasks {
                     border-bottom: 1px solid @accentColor;
                     border-radius: 5px 5px 0px 0px;
                     padding: 5px;
+                }
+                
+                .time_label {
+                    font-size: 10px;
+                    color: @textColorPrimary;
                 }
                 
                 .hint_label {
@@ -397,13 +463,14 @@ namespace Tasks {
                 style = style.concat(add_color("bgColor", app_theme.get_bg_color()));
                 style = style.concat(add_color("accentColor", app_theme.get_accent_color()));
                 style = style.concat(add_color("accentAlphaColor", app_theme.get_alpha_accent_color()));
+                style = style.concat(add_color("textColorDisabled", app_theme.get_text_disabled_color()));
                 style = style.concat("""
                 
                 .input_field {
                     font-size: 13px;
                     color: @textColorPrimary;
-                    background: @bgColor;
-                    border: 1px solid @textColorSecondary;
+                    background: @accentAlphaColor;
+                    border: 1px solid @accentAlphaColor;
                     border-radius: 5px 5px 0px 0px;
                     padding: 5px;
                 }
@@ -418,6 +485,127 @@ namespace Tasks {
                     border-bottom: 1px solid @accentColor;
                     border-radius: 5px 5px 0px 0px;
                     padding: 5px;
+                }
+                
+                calendar:selected {
+                    color: #fff;
+                    background: @accentColor;
+                }
+
+                calendar {
+                    color: @textColorPrimary;
+                    background: transparent;
+                }
+                
+                calendar.button {
+                    color: @textColorPrimary;
+                    border: 1px solid transparent;
+                    box-shadow: none;
+                    padding: 4px;
+                    background: transparent;
+                    border-radius: 5px;
+                }
+
+                calendar.button:disabled {
+                    color: @textColorDisabled;
+                    border: 1px solid transparent;
+                    box-shadow: none;
+                    padding: 4px;
+                    background: transparent;
+                    border-radius: 5px;
+                }
+
+                calendar.button:hover {
+                    color: @textColorPrimary;
+                    background: @accentAlphaColor;
+                    border: 1px solid @accentAlphaColor;
+                    border-radius: 5px;
+                    padding: 4px;
+                    box-shadow: none;
+                }
+                
+                calendar.button:hover:active {
+                    color: @textColorPrimary;
+                    background: @accentAlphaColor;
+                    border: 1px solid @accentAlphaColor;
+                    border-radius: 5px;
+                    padding: 4px;
+                    box-shadow: none;
+                }
+                
+                calendar.button:active {
+                    color: @textColorPrimary;
+                    border: 1px solid transparent;
+                    box-shadow: none;
+                    padding: 4px;
+                    background: transparent;
+                    border-radius: 5px;
+                }
+                
+                spinbutton.vertical {
+                    border: 0px;
+                    background: transparent;
+                    box-shadow: none;
+                }
+                
+                spinbutton entry {
+                    font-size: 13px;
+                    color: @textColorPrimary;
+                    background: transparent;
+                    border: 0px;
+                    box-shadow: none;
+                    border-radius: 0px;
+                    padding: 5px;
+                }
+
+                spinbutton button {
+                    color: @textColorPrimary;
+                    border: 1px solid transparent;
+                    box-shadow: none;
+                    padding: 4px;
+                    background: transparent;
+                    border-radius: 5px;
+                }
+
+                spinbutton button:disabled {
+                    color: @textColorDisabled;
+                    border: 1px solid transparent;
+                    box-shadow: none;
+                    padding: 4px;
+                    background: transparent;
+                    border-radius: 5px;
+                }
+
+                spinbutton button:hover {
+                    color: @textColorPrimary;
+                    background: @accentAlphaColor;
+                    border: 1px solid @accentAlphaColor;
+                    border-radius: 5px;
+                    padding: 4px;
+                    box-shadow: none;
+                }
+                
+                spinbutton button:hover:active {
+                    color: @textColorPrimary;
+                    background: @accentAlphaColor;
+                    border: 1px solid @accentAlphaColor;
+                    border-radius: 5px;
+                    padding: 4px;
+                    box-shadow: none;
+                }
+                
+                spinbutton button:active {
+                    color: @textColorPrimary;
+                    border: 1px solid transparent;
+                    box-shadow: none;
+                    padding: 4px;
+                    background: transparent;
+                    border-radius: 5px;
+                }
+                
+                .time_label {
+                    font-size: 10px;
+                    color: @textColorPrimary;
                 }
                 
                 .hint_label {
@@ -441,12 +629,34 @@ namespace Tasks {
                 }
 
                 .material_button {
+                    border: 1px solid transparent;
                     color: @textColorPrimary;
-                    border: 1px solid @textColorPrimary;
+                    box-shadow: none;
+                    background: transparent;
+                    border-radius: 5px;
                 }
                 
-                .material_button:active, .material_button:focus  {
-                    border: 1px solid @accentColor;
+                .material_button:hover, .material_button:hover:active  {
+                    background: @accentAlphaColor;
+                    border: 1px solid @accentAlphaColor;
+                    border-radius: 5px;
+                    color: @textColorPrimary;
+                    box-shadow: none;
+                }
+                
+                .material_button:disabled {
+                    border: 1px solid transparent;
+                    color: @textColorDisabled;
+                    box-shadow: none;
+                    background: transparent;
+                    border-radius: 5px;
+                }
+                
+                .moon_icon {
+                    border: 0px;
+                    color: @textColorPrimary;
+                    box-shadow: none;
+                    background: transparent;
                 }
                 
                 .empty_label {
@@ -523,11 +733,16 @@ namespace Tasks {
                 return false;
             });
             mode_label.get_style_context().add_class("mode_label");
+            
+            var moon_icon = new Gtk.MenuButton();
+            moon_icon.image = new Gtk.Image.from_icon_name ("weather-clear-night-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+            moon_icon.get_style_context().add_class("moon_icon");
 
             var dark_mode_grid = new Gtk.Grid ();
-            dark_mode_grid.column_spacing = 16;
-            dark_mode_grid.attach(mode_label, 0, 0, 1, 1);
-            dark_mode_grid.attach(mode_switch, 1, 0, 1, 1);
+            dark_mode_grid.column_spacing = 4;
+            dark_mode_grid.attach(moon_icon, 0, 0, 1, 1);
+            dark_mode_grid.attach(mode_label, 1, 0, 1, 1);
+            dark_mode_grid.attach(mode_switch, 2, 0, 1, 1);
 
             var setting_grid = new Gtk.Grid ();
             setting_grid.margin = 12;

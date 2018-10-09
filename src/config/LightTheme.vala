@@ -11,6 +11,10 @@ namespace Tasks {
         public string get_text_secondary_color() {
             return "#9E9E9E";
         }
+        
+        public string get_text_disabled_color() {
+            return "rgba(33, 33, 33, 0.5)";
+        }
 
         public string get_accent_color() {
             return "#2979FF";
