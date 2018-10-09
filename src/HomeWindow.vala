@@ -1,6 +1,8 @@
 
 namespace Tasks {
     public class HomeWindow : Gtk.Window {
+    
+        delegate void DelegateType ();
 
         private Gee.ArrayList<ListEvent> tasks = new Gee.ArrayList<ListEvent>();
 
@@ -167,28 +169,19 @@ namespace Tasks {
             scrolled.add(scrollable_grid);
             vert_grid.add(scrolled);
             
-            summary_label = create_hint_label(summary_hint, true);
+            summary_label = create_hint_label(summary_hint, false);
 		    scrollable_grid.add(summary_label);
             
-            summary_field = new Gtk.Entry ();
-		    summary_field.set_text(summary_hint);
-		    summary_field.set_max_length(72);
-		    summary_field.width_request = 218;
-		    summary_field.focus_in_event.connect(() => {
-		        string text = summary_field.get_text();
-                if (text == summary_hint) {
+            summary_field = create_entry(summary_hint, 72, 218, () => {
+                if (summary_field.get_text() == summary_hint) {
                     summary_field.set_text("");
                 }
                 summary_label.set_opacity(1);
-		        return true;
-		    });
-		    summary_field.focus_out_event.connect(() => {
-		        string text = summary_field.get_text();
-                if (text == "") {
+		    }, () => {
+                if (summary_field.get_text() == "") {
                     summary_field.set_text(summary_hint);
                     summary_label.set_opacity(0);
                 }
-		        return true;
 		    });
 		    summary_field.get_style_context().add_class("input_field");
 		    scrollable_grid.add(summary_field);
@@ -197,25 +190,16 @@ namespace Tasks {
 		    description_label = create_hint_label(description_hint, false);
 		    scrollable_grid.add(description_label);
 		    
-		    description_field = new Gtk.Entry ();
-		    description_field.set_text(description_hint);
-		    description_field.set_max_length(500);
-		    description_field.width_request = 218;
-		    description_field.focus_in_event.connect(() => {
-		        string text = description_field.get_text();
-                if (text == description_hint) {
+		    description_field = create_entry(description_hint, 500, 218, () => {
+                if (description_field.get_text() == description_hint) {
                     description_field.set_text("");
                 }
                 description_label.set_opacity(1);
-		        return true;
-		    });
-		    description_field.focus_out_event.connect(() => {
-		        string text = description_field.get_text();
-                if (text == "") {
+		    }, () => {
+                if (description_field.get_text() == "") {
                     description_field.set_text(description_hint);
                     description_label.set_opacity(0);
                 }
-		        return true;
 		    });
 		    description_field.get_style_context().add_class("input_field");
 		    scrollable_grid.add(description_field);
@@ -337,6 +321,22 @@ namespace Tasks {
             tasks.add(event);
             create_open = false;
             draw_views();
+        }
+        
+        private Gtk.Entry create_entry(string hint, int max_length, int width, owned DelegateType on, owned DelegateType off) {
+            Gtk.Entry entry = new Gtk.Entry ();
+		    entry.set_text(hint);
+		    entry.set_max_length(max_length);
+		    entry.width_request = width;
+		    entry.focus_in_event.connect(() => {
+		        on();
+		        return true;
+		    });
+		    entry.focus_out_event.connect(() => {
+		        off();
+		        return true;
+		    });
+		    return entry;
         }
         
         private Gtk.Label create_hint_label(string label, bool visible) {
@@ -606,6 +606,15 @@ namespace Tasks {
                 .time_label {
                     font-size: 10px;
                     color: @textColorPrimary;
+                }
+                
+                .time_button {
+                    font-size: 13px;
+                    color: @textColorPrimary;
+                    background: transparent;
+                    border: 0px;
+                    border-radius: 0px;
+                    box-shadow: none;
                 }
                 
                 .hint_label {
