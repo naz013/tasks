@@ -128,7 +128,8 @@ namespace Tasks {
                 }
             } else {
                 //Show events
-                Gtk.ListBox list_box = new Gtk.ListBox();
+                var list_box = new Gtk.ListBox();
+                list_box.set_selection_mode(Gtk.SelectionMode.SINGLE);
                 list_box.height_request = 500;
                 list_box.width_request = 500;
                 if (create_open) {
@@ -141,9 +142,50 @@ namespace Tasks {
                 }
 
                 list_box.get_style_context().add_class("list_container");
+                list_box.row_selected.connect((row) => {
+                    Logger.log(@"Selected row $(row.get_index())");
+                });
+                
+                Logger.log(@"Show list $(tasks.size)");
+                
+                for (int i = 0; i < tasks.size; i++) {
+                    ListEvent task = tasks.get(i);
+                    list_box.add(get_row(task));
+                }
+                list_box.show_all();
             }
             update_theme();
             this.show_all();
+        }
+        
+        private Gtk.ListBoxRow get_row(ListEvent task) {
+            var row = new Gtk.ListBoxRow();
+            row.width_request = 500;
+            row.set_selectable(true);
+            
+            var vert_grid = new Gtk.Grid();
+            vert_grid.width_request = 500;
+            vert_grid.orientation = Gtk.Orientation.VERTICAL;
+            vert_grid.show_all ();
+            vert_grid.get_style_context().add_class("row_item");
+            
+            var summary_label = new Gtk.Label(task.summary);
+            var desc_label = new Gtk.Label(task.description);
+            
+            string date = @"$(task.year)/$(task.month)/$(task.day)";
+            string time = @"$(task.hour):$(task.minute)";
+            string date_time = @"$date $time";
+            var date_label = new Gtk.Label(date_time);
+            
+            vert_grid.add(summary_label);
+            vert_grid.add(desc_label);
+            vert_grid.add(date_label);
+            
+            row.add(vert_grid);
+            
+            Logger.log(@"Create row $(task.summary)");
+            
+            return row;
         }
         
         private void add_create_task_panel(Gtk.Grid grid) {
@@ -299,16 +341,16 @@ namespace Tasks {
             event.hour = hour;
             event.minute = minute;
             
-            Logger.log("Event added\n");
+            Logger.log("Event added");
             
-            // tasks.add(event);
+            tasks.add(event);
             create_open = false;
             draw_views();
-            Timeout.add_seconds(10, delayed_task, 1);
+            // Timeout.add_seconds(10, delayed_task, 1);
         }
         
         private bool delayed_task() {
-            Logger.log("Delay action...\n");
+            Logger.log("Delay action...");
             return true;
         }
         
@@ -683,11 +725,16 @@ namespace Tasks {
                     font-size: 15px;
                 }
                 
+                .list_container {
+                    background: transparent;
+                    padding: 16px;
+                }
+                
                 .right_block {
                     padding: 16px;
                 }
                 
-                .empty_label {
+                .empty_label .row_item .list_container {
                     border: 1px solid @accentColor;
                 }
 
