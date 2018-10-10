@@ -71,7 +71,6 @@ namespace Tasks {
             draw_views();
 
             focus_out_event.connect (() => {
-                print("Focus out\n");
                 return false;
             });
         }
@@ -101,9 +100,6 @@ namespace Tasks {
 
             int new_width, new_height;
             get_size (out new_width, out new_height);
-
-            print("Calculated dimentions: x -> ".concat(new_width.to_string()).concat(", y -> ").concat(new_height.to_string()));
-            print("\n");
 
             this.get_style_context().add_class("rounded");
             
@@ -221,7 +217,6 @@ namespace Tasks {
 		    
 		    hours_view = create_spin_button(0, 23, 1, 44, () => {
 		        int val = hours_view.get_value_as_int ();
-			    print ("hours: %d\n", val);
 			    if (val > 23) {
 			        hours_view.set_value(23.0);
 			    } else if (val < 0) {
@@ -232,7 +227,6 @@ namespace Tasks {
 		    
 		    minutes_view = create_spin_button(0, 59, 1, 44, () => {
 		        int val = minutes_view.get_value_as_int ();
-			    print ("minutes: %d\n", val);
 			    if (val > 59) {
 			        minutes_view.set_value(59.0);
 			    } else if (val < 0) {
@@ -272,7 +266,6 @@ namespace Tasks {
             vert_grid.add(button_grid);
             
             var button_save = create_material_button ("Save", 109, 32, () => {
-                print("Save clicked\n");
 			    save_task();
             });
 		    button_save.get_style_context().add_class("material_button");
@@ -306,7 +299,7 @@ namespace Tasks {
             event.hour = hour;
             event.minute = minute;
             
-            print("Event added\n");
+            Logger.log("Event added\n");
             
             // tasks.add(event);
             create_open = false;
@@ -315,7 +308,7 @@ namespace Tasks {
         }
         
         private bool delayed_task() {
-            print("Delay action...\n");
+            Logger.log("Delay action...\n");
             return true;
         }
         

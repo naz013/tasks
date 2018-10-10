@@ -47,6 +47,7 @@ executable(
     'src/config/AppTheme.vala',
     'src/config/LightTheme.vala',
     'src/config/DarkTheme.vala',
+    'src/config/Logger.vala',
     c_args: c_args,
     dependencies: [
         dependency('granite'),
