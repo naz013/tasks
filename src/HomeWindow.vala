@@ -129,7 +129,7 @@ namespace Tasks {
             } else {
                 //Show events
                 var list_box = new Gtk.ListBox();
-                list_box.set_selection_mode(Gtk.SelectionMode.SINGLE);
+                list_box.set_selection_mode(Gtk.SelectionMode.NONE);
                 list_box.height_request = 500;
                 list_box.width_request = 500;
                 if (create_open) {
@@ -141,7 +141,6 @@ namespace Tasks {
                     main_grid.add(list_box);
                 }
 
-                list_box.get_style_context().add_class("list_container");
                 list_box.row_selected.connect((row) => {
                     Logger.log(@"Selected row $(row.get_index())");
                 });
@@ -161,31 +160,92 @@ namespace Tasks {
         private Gtk.ListBoxRow get_row(ListEvent task) {
             var row = new Gtk.ListBoxRow();
             row.width_request = 500;
-            row.set_selectable(true);
+            row.set_selectable(false);
+            
+            var hor_grid = new Gtk.Grid();
+            hor_grid.orientation = Gtk.Orientation.HORIZONTAL;
+            hor_grid.expand = true;
+            
+            var button_grid = new Gtk.Grid();
+            button_grid.orientation = Gtk.Orientation.VERTICAL;
+            button_grid.width_request = 32;
+            
+            var edit_button = new Gtk.Button.from_icon_name ("document-edit-symbolic", Gtk.IconSize.BUTTON);
+            edit_button.has_tooltip = true;
+            edit_button.tooltip_text = ("Edit task");
+            edit_button.get_style_context().add_class("icon_button");
+            edit_button.clicked.connect (() => {
+			    action_edit(task);
+		    });
+            
+            var delete_button = new Gtk.Button.from_icon_name ("edit-delete-symbolic", Gtk.IconSize.BUTTON);
+            delete_button.has_tooltip = true;
+            delete_button.tooltip_text = ("Delete task");
+            delete_button.get_style_context().add_class("icon_button");
+            delete_button.clicked.connect (() => {
+			    action_delete(task);
+		    });
+		    
+		    var copy_button = new Gtk.Button.from_icon_name ("edit-copy-symbolic", Gtk.IconSize.BUTTON);
+            copy_button.has_tooltip = true;
+            copy_button.tooltip_text = ("Copy task");
+            copy_button.get_style_context().add_class("icon_button");
+            copy_button.clicked.connect (() => {
+			    action_copy(task);
+		    });
+            
+            button_grid.add(edit_button);
+            button_grid.add(delete_button);
+            button_grid.add(copy_button);
+            button_grid.show_all();
             
             var vert_grid = new Gtk.Grid();
-            vert_grid.width_request = 500;
             vert_grid.orientation = Gtk.Orientation.VERTICAL;
+            vert_grid.expand = true;
             vert_grid.show_all ();
             vert_grid.get_style_context().add_class("row_item");
             
             var summary_label = new Gtk.Label(task.summary);
+            summary_label.set_xalign(0.0f);
+            summary_label.get_style_context().add_class("body1");
+            
             var desc_label = new Gtk.Label(task.description);
+            desc_label.set_xalign(0.0f);
+            desc_label.get_style_context().add_class("body1");
             
             string date = @"$(task.year)/$(task.month)/$(task.day)";
             string time = @"$(task.hour):$(task.minute)";
             string date_time = @"$date $time";
+            
             var date_label = new Gtk.Label(date_time);
+            date_label.set_xalign(0.0f);
+            date_label.get_style_context().add_class("body2");
             
             vert_grid.add(summary_label);
             vert_grid.add(desc_label);
             vert_grid.add(date_label);
             
-            row.add(vert_grid);
+            hor_grid.add(vert_grid);
+            hor_grid.add(button_grid);
+            hor_grid.show_all();
+            
+            row.add(hor_grid);
             
             Logger.log(@"Create row $(task.summary)");
             
             return row;
+        }
+        
+        private void action_copy(ListEvent task) {
+            Logger.log(@"Copy row $(task.summary)");
+        }
+        
+        private void action_edit(ListEvent task) {
+            Logger.log(@"Edit row $(task.summary)");
+        }
+        
+        private void action_delete(ListEvent task) {
+            Logger.log(@"Delete row $(task.summary)");
         }
         
         private void add_create_task_panel(Gtk.Grid grid) {
@@ -720,6 +780,42 @@ namespace Tasks {
                     background: transparent;
                 }
                 
+                .icon_button {
+                    border: 1px solid transparent;
+                    color: @textColorPrimary;
+                    box-shadow: none;
+                    background: transparent;
+                    border-radius: 5px;
+                }
+                
+                .icon_button:hover, .icon_button:hover:active  {
+                    background: @accentAlphaColor;
+                    border: 1px solid @accentAlphaColor;
+                    border-radius: 5px;
+                    color: @textColorPrimary;
+                    box-shadow: none;
+                }
+                
+                .body1 {
+                    font-size: 13px;
+                    color: @textColorPrimary;
+                    background: transparent;
+                    border: 0px;
+                    box-shadow: none;
+                    border-radius: 0px;
+                    font-weight: normal;
+                }
+                
+                .body2 {
+                    font-size: 15px;
+                    color: @textColorPrimary;
+                    background: transparent;
+                    border: 0px;
+                    box-shadow: none;
+                    border-radius: 0px;
+                    font-weight: bold;
+                }
+                
                 .empty_label {
                     color: @textColorPrimary;
                     font-size: 15px;
@@ -730,11 +826,14 @@ namespace Tasks {
                     padding: 16px;
                 }
                 
-                .right_block {
+                .right_block,
+                .row_item {
                     padding: 16px;
                 }
                 
-                .empty_label .row_item .list_container {
+                .empty_label,
+                .show_border,
+                .list_container {
                     border: 1px solid @accentColor;
                 }
 
@@ -800,8 +899,7 @@ namespace Tasks {
             });
             mode_label.get_style_context().add_class("mode_label");
             
-            var moon_icon = new Gtk.MenuButton();
-            moon_icon.image = new Gtk.Image.from_icon_name ("weather-clear-night-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+            var moon_icon = new Gtk.Button.from_icon_name ("weather-clear-night-symbolic", Gtk.IconSize.BUTTON);
             moon_icon.get_style_context().add_class("moon_icon");
 
             var dark_mode_grid = new Gtk.Grid ();
