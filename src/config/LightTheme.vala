@@ -1,7 +1,11 @@
 namespace Tasks {
     public class LightTheme : AppTheme, GLib.Object {
         public string get_bg_color() {
-            return "#EEEEEE";
+            return "#eeeeee";
+        }
+        
+        public string get_card_bg_color() {
+            return "#ffffff";
         }
 
         public string get_text_primary_color() {

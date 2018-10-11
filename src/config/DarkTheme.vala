@@ -3,6 +3,10 @@ namespace Tasks {
         public string get_bg_color() {
             return "#212121";
         }
+        
+        public string get_card_bg_color() {
+            return "#484848";
+        }
 
         public string get_text_primary_color() {
             return "#FFFFFF";

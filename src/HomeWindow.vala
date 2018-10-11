@@ -144,6 +144,7 @@ namespace Tasks {
                 list_box.row_selected.connect((row) => {
                     Logger.log(@"Selected row $(row.get_index())");
                 });
+                list_box.get_style_context().add_class("list_container");
                 
                 Logger.log(@"Show list $(tasks.size)");
                 
@@ -165,6 +166,8 @@ namespace Tasks {
             var hor_grid = new Gtk.Grid();
             hor_grid.orientation = Gtk.Orientation.HORIZONTAL;
             hor_grid.expand = true;
+            hor_grid.get_style_context().add_class("row_item");
+            hor_grid.get_style_context().add_class("card");
             
             var button_grid = new Gtk.Grid();
             button_grid.orientation = Gtk.Orientation.VERTICAL;
@@ -203,7 +206,6 @@ namespace Tasks {
             vert_grid.orientation = Gtk.Orientation.VERTICAL;
             vert_grid.expand = true;
             vert_grid.show_all ();
-            vert_grid.get_style_context().add_class("row_item");
             
             var summary_label = new Gtk.Label(task.summary);
             summary_label.set_xalign(0.0f);
@@ -576,6 +578,7 @@ namespace Tasks {
                 style = style.concat(add_color("accentColor", app_theme.get_accent_color()));
                 style = style.concat(add_color("accentAlphaColor", app_theme.get_alpha_accent_color()));
                 style = style.concat(add_color("textColorDisabled", app_theme.get_text_disabled_color()));
+                style = style.concat(add_color("cardBgColor", app_theme.get_card_bg_color()));
                 style = style.concat("""
                 
                 .input_field {
@@ -823,7 +826,6 @@ namespace Tasks {
                 
                 .list_container {
                     background: transparent;
-                    padding: 16px;
                 }
                 
                 .right_block,
@@ -831,9 +833,22 @@ namespace Tasks {
                     padding: 16px;
                 }
                 
-                .empty_label,
-                .show_border,
-                .list_container {
+                .card {
+                    background: @cardBgColor;
+                    border-radius: 2px;
+                    margin: 4px;
+                }
+                
+                .row_item {
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+                    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+                }
+                
+                .row_item:selected {
+                    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+                }
+                
+                .show_border {
                     border: 1px solid @accentColor;
                 }
 
