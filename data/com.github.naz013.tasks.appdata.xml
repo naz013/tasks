@@ -6,26 +6,28 @@
     <name>Tasks</name>
     <summary>Simple tasks manager</summary>
     <description>
-        <p>A stupidly-simple sticky notes application for any type of short term notes or ideas.</p>
+        <p>Create reminders or tasks.</p>
         <ul>
+            <li>Create task with the shortcut Ctrl + N</li>
+            <li>Switch Dark mode with the shortcut Ctrl + M</li>
             <li>Quit anytime with the shortcut Ctrl + Q</li>
         </ul>
     </description>
     <provides>
         <binary>com.github.naz013.tasks.desktop</binary>
     </provides>
-    <developer_name>Lains</developer_name>
-    <url type="homepage">https://github.com/lainsce/notejot/</url>
-    <url type="bugtracker">https://github.com/lainsce/notejot/issues</url>
+    <developer_name>Nazar Suhovich</developer_name>
+    <url type="homepage">https://github.com/naz013/reminder-vala</url>
+    <url type="bugtracker">https://github.com/naz013/reminder-vala/issues</url>
     <screenshots>
         <screenshot type="default">
-            <image>https://raw.githubusercontent.com/lainsce/notejot/master/data/shot.png</image>
+            <image>https://raw.githubusercontent.com/naz013/reminder-vala/master/data/shot.png</image>
         </screenshot>
     </screenshots>
     <releases>
       <release version="1.0.0" date="2018-03-19">
           <description>
-              <p>Release: Open Notes From Anywhere</p>
+              <p>Simple task manager</p>
               <ul>
                   <li>New option to open notes from the icon in the Dock or App Menu.</li>
               </ul>
