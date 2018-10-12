@@ -10,10 +10,10 @@
 			<summary>Window position</summary>
 			<description>The y axis of window position</description>
 		</key>
-		<key name="is-dark-mode" type="b">
-			<default>false</default>
+		<key name="theme" type="i">
+			<default>0</default>
 			<summary>Window theme</summary>
-			<description>Window dark mode status</description>
+			<description>Window theme parameter</description>
 		</key>
 	</schema>
 </schemalist>

@@ -27,5 +27,17 @@ namespace Tasks {
         public string get_alpha_accent_color() {
             return "rgba(0, 176, 255, 0.12)";
         }
+        
+        public string get_shadow_color() {
+            return "rgba(255,255,255,0.12)";
+        }
+        
+        public string get_shadow_out_color() {
+            return "rgba(255,255,255,0.24)";
+        }
+        
+        public string get_button_disabled_color() {
+            return "#484848";
+        }
     }
 }

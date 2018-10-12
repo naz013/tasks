@@ -4,7 +4,7 @@ namespace Tasks {
         private static AppSettings? instance;
         public int window_x { get; set; }
         public int window_y { get; set; }
-        public bool is_dark_mode { get; set; }
+        public int theme { get; set; }
 
         public static unowned AppSettings get_default () {
             if (instance == null) {
