@@ -36,8 +36,7 @@ cc = meson.get_compiler('c')
 executable(
     meson.project_name(),
     'src/Application.vala',
-    # 'src/MainWindow.vala',
-    'src/HomeWindow.vala',\
+    'src/HomeWindow.vala',
     'src/models/Event.vala',
     'src/models/ListEvent.vala',
     'src/Services/NoteManager.vala',

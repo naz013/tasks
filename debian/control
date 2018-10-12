@@ -15,4 +15,4 @@ Standards-Version: 1.0.0
 Package: com.github.naz013.tasks
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
-Description: A stupidly-simple sticky notes app.
+Description: Simple task manager.

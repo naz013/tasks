@@ -10,6 +10,9 @@ namespace Tasks {
     public int second { get; set; default = 0; }
     public string summary { get; set; default = ""; }
     public string description { get; set; default = ""; }
+    public bool is_active { get; set; default = true; }
+    public bool has_reminder { get; set; default = false; }
+    
     public bool isSelected { get; set; default = false; }
 
     public ListEvent() {
@@ -32,6 +35,8 @@ namespace Tasks {
       this.hour = event.hour;
       this.minute = event.minute;
       this.second = event.second;
+      this.is_active = event.is_active;
+      this.has_reminder = event.has_reminder;
     }
   }
 }
