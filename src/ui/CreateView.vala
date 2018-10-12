@@ -50,6 +50,7 @@ namespace Tasks {
                     summary_field.set_text("");
                 }
                 summary_label.set_opacity(1);
+                summary_field.set_state_flags(Gtk.StateFlags.FOCUSED, true);
 		    }, () => {
                 if (summary_field.get_text() == "") {
                     summary_field.set_text(summary_hint);
@@ -68,6 +69,7 @@ namespace Tasks {
                     description_field.set_text("");
                 }
                 description_label.set_opacity(1);
+                description_field.set_state_flags(Gtk.StateFlags.FOCUSED, true);
 		    }, () => {
                 if (description_field.get_text() == "") {
                     description_field.set_text(description_hint);
@@ -168,6 +170,20 @@ namespace Tasks {
             var summary = summary_field.get_text();
             var note = description_field.get_text();
             
+            var has_error = false;
+            if (summary == summary_hint) {
+                has_error = true;
+                summary_field.set_state_flags(Gtk.StateFlags.INCONSISTENT, true);
+            }
+            if (note == description_hint) {
+                has_error = true;
+                description_field.set_state_flags(Gtk.StateFlags.INCONSISTENT, true);
+            }
+            
+            if (has_error) {
+                return;
+            }
+            
             Event event = new Event.with_id(0, summary, note);
             event.year = year;
             event.month = month;
@@ -231,6 +247,20 @@ namespace Tasks {
 		    }
 		    hint_label.set_xalign(0.0f);
 		    hint_label.get_style_context().add_class(CssData.MATERIAL_HINT_LABEL);
+		    return hint_label;
+        }
+        
+        private Gtk.Label create_error_label(string label, bool visible) {
+            Gtk.Label hint_label = new Gtk.Label(label);
+		    hint_label.set_line_wrap (true);
+		    hint_label.set_selectable (false);
+		    if (visible) {
+		        hint_label.set_opacity(1);
+		    } else {
+		        hint_label.set_opacity(0);
+		    }
+		    hint_label.set_xalign(0.0f);
+		    hint_label.get_style_context().add_class(CssData.MATERIAL_HINT_ERROR);
 		    return hint_label;
         }
         

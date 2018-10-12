@@ -12,10 +12,11 @@ namespace Tasks {
         private Gtk.Switch mode_switch;
 
         private bool create_open = false;
+        private bool was_create_open = false;
         private bool change_theme = true;
         private bool settings_visible = false;
-        private int width = 500;
-        private int height = 500;
+        private int old_width = 500;
+        private int old_height = 500;
 
         public AppTheme app_theme = new LightTheme();
 
@@ -62,7 +63,11 @@ namespace Tasks {
             focus_out_event.connect (() => {
                 return false;
             });
-            
+            grid.size_allocate.connect(() => {
+                was_create_open = create_open;
+                // get_size (out old_width, out old_height);
+                // Logger.log(@"Resize: width -> $old_width, height -> $old_height");
+            });
             AppSettings.get_default().changed.connect(() => {
                 Logger.log("Settings changed");
             });
@@ -88,13 +93,13 @@ namespace Tasks {
             grid.remove_column(0);
 
             if (create_open) {
-                width = new_width + 250;
-                height = new_height;
-            } else {
-                width = new_height;
-                height = new_height;
+                if (!was_create_open) {
+                    new_width = new_width + 250;
+                }
+            } else if (was_create_open) {
+                new_width = new_width - 250;
             }
-            resize(width, height);
+            resize(new_width, new_height);
 
             this.get_style_context().add_class("rounded");
             

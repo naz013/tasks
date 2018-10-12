@@ -9,6 +9,7 @@ namespace Tasks {
         public const string MATERIAL_BUTTON_CANCEL = "material_button_cancel";
         public const string MATERIAL_TEXT_FIELD = "material_text_field";
         public const string MATERIAL_HINT_LABEL = "material_hint_label";
+        public const string MATERIAL_HINT_ERROR = "material_hint_error";
         
         public const string LABEL_PRIMARY = "body2";
         public const string LABEL_SECONDARY = "body1";
@@ -402,9 +403,27 @@ namespace Tasks {
                     padding: 5px;
                 }
                 
+                .material_text_field:indeterminate {
+                    font-size: 13px;
+                    color: @textColorPrimary;
+                    background: @accentAlphaColor;
+                    border-left: 1px solid @accentAlphaColor;
+                    border-top: 1px solid @accentAlphaColor;
+                    border-right: 1px solid @accentAlphaColor;
+                    border-bottom: 1px solid red;
+                    border-radius: 5px 5px 0px 0px;
+                    padding: 5px;
+                }
+                
                 .material_hint_label {
                     font-size: 10px;
                     color: @accentColor;
+                    padding-left: 5px;
+                }
+                
+                .material_hint_error {
+                    font-size: 10px;
+                    color: red;
                     padding-left: 5px;
                 }
                 
