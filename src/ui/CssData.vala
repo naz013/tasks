@@ -321,14 +321,16 @@ namespace Tasks {
                     background: transparent;
                 }
                 
-                .right_block {
+                .scrollable {
                     padding: 16px;
                 }
                 
                 .material_card {
                     background: @cardBgColor;
                     border-radius: 2px;
-                    margin: 4px;
+                    margin-top: 8px;
+                    margin-left: 8px;
+                    margin-right: 8px;
                     padding: 16px;
                 }
                 

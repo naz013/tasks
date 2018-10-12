@@ -34,6 +34,7 @@ namespace Tasks {
             Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
             
             Gtk.Grid scrollable_grid = new Gtk.Grid();
+            scrollable_grid.get_style_context().add_class("scrollable");
             scrollable_grid.vexpand = true;
             vert_grid.width_request = 250;
             scrollable_grid.orientation = Gtk.Orientation.VERTICAL;
@@ -141,6 +142,8 @@ namespace Tasks {
             button_grid.set_column_homogeneous(true);
             button_grid.orientation = Gtk.Orientation.HORIZONTAL;
             button_grid.show_all ();
+            button_grid.get_style_context().add_class("scrollable");
+            
             vert_grid.add(button_grid);
             
             var button_save = create_material_button ("SAVE", () => {
