@@ -4,6 +4,7 @@ namespace Tasks {
         public const string SHOW_BORDER = "show_border";
         
         public const string MATERIAL_CARD = "material_card";
+        public const string MATERIAL_SWITCH = "material_switch";
         public const string MATERIAL_BUTTON = "material_button";
         public const string MATERIAL_BUTTON_OK = "material_button_ok";
         public const string MATERIAL_BUTTON_CANCEL = "material_button_cancel";
@@ -117,6 +118,8 @@ namespace Tasks {
                 style = style.concat(add_color("textColorSecondary", theme.get_text_secondary_color()));
                 style = style.concat(add_color("bgColor", theme.get_bg_color()));
                 style = style.concat(add_color("accentColor", theme.get_accent_color()));
+                style = style.concat(add_color("accentLightColor", theme.get_accent_light_color()));
+                style = style.concat(add_color("accentDarkColor", theme.get_accent_dark_color()));
                 style = style.concat(add_color("accentAlphaColor", theme.get_alpha_accent_color()));
                 style = style.concat(add_color("textColorDisabled", theme.get_text_disabled_color()));
                 style = style.concat(add_color("cardBgColor", theme.get_card_bg_color()));
@@ -332,6 +335,20 @@ namespace Tasks {
                     margin-left: 8px;
                     box-shadow: 0 1px 2px @shadowColor, 0 1px 2px @shadowOutColor;
                     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+                }
+                
+                .material_switch {
+                    border: 1px solid @buttonDisabledColor;
+                    background: @buttonDisabledColor;
+                }
+                
+                .material_switch:checked {
+                    border: 1px solid @accentLightColor;
+                    background: @accentLightColor;
+                }
+                
+                .material_switch slider {
+                    background: @accentColor;
                 }
                 
                 .material_card {

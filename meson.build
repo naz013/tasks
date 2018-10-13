@@ -38,7 +38,6 @@ executable(
     'src/Application.vala',
     'src/HomeWindow.vala',
     'src/models/Event.vala',
-    'src/models/ListEvent.vala',
     'src/Services/NoteManager.vala',
     'src/Services/Storage.vala',
     'src/config/AppSettings.vala',

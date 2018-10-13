@@ -9,23 +9,31 @@ namespace Tasks {
         }
 
         public string get_text_primary_color() {
-            return "#212121";
+            return "#000000";
         }
 
         public string get_text_secondary_color() {
-            return "#9E9E9E";
+            return "#000000";
         }
         
         public string get_text_disabled_color() {
-            return "rgba(33, 33, 33, 0.5)";
+            return "rgba(0, 0, 33, 0.5)";
         }
 
         public string get_accent_color() {
-            return "#2979FF";
+            return "#0091ea";
+        }
+        
+        public string get_accent_light_color() {
+            return "#64c1ff";
+        }
+        
+        public string get_accent_dark_color() {
+            return "#0064b7";
         }
         
         public string get_alpha_accent_color() {
-            return "rgba(41, 121, 255, 0.12)";
+            return "rgba(0, 145, 234, 0.12)";
         }
         
         public string get_shadow_color() {
@@ -37,7 +45,7 @@ namespace Tasks {
         }
         
         public string get_button_disabled_color() {
-            return "#ffffff";
+            return "rgba(0, 0, 0, 0.25)";
         }
     }
 }

@@ -14,6 +14,8 @@ namespace Tasks {
         private Gtk.Calendar calendar;
         private Gtk.SpinButton hours_view;
         private Gtk.SpinButton minutes_view;
+        private Gtk.Switch due_switch;
+        private Gtk.Switch notification_switch;
         
         private string summary_hint = "Remind me...";
         private string description_hint = "Note";
@@ -79,6 +81,29 @@ namespace Tasks {
 		    });
 		    description_field.get_style_context().add_class(CssData.MATERIAL_TEXT_FIELD);
 		    scrollable_grid.add(description_field);
+		    
+		    due_switch = new Gtk.Switch();
+		    due_switch.activate.connect (() => {
+                toggle_reminder();
+    		});
+            due_switch.set_property("height-request", 15);
+            due_switch.get_style_context().add_class(CssData.MATERIAL_SWITCH);
+		    
+		    var due_label = new Gtk.Label ("Due date");
+            due_label.set_line_wrap (true);
+            due_label.touch_event.connect (() => {
+                due_switch.active = !due_switch.active;
+                return false;
+            });
+            due_label.get_style_context().add_class(CssData.LABEL_SECONDARY);
+            
+            var due_grid = new Gtk.Grid ();
+            due_grid.column_spacing = 8;
+            due_grid.attach(due_label, 0, 0, 1, 1);
+            due_grid.attach(due_switch, 1, 0, 1, 1);
+            
+            scrollable_grid.add(create_empty_space(16));
+            scrollable_grid.add(due_grid);
 		    
 		    scrollable_grid.add(create_empty_space(16));
 		    scrollable_grid.add(create_hint_label("Date", true));
@@ -160,6 +185,14 @@ namespace Tasks {
 		    clear_view();
         }
         
+        private void toggle_reminder() {
+            
+        }
+        
+        private void toggle_notification() {
+            
+        }
+        
         public void save_task() {
             var hour = hours_view.get_value_as_int ();
             var minute = minutes_view.get_value_as_int ();
@@ -212,20 +245,24 @@ namespace Tasks {
         }
         
         public void clear_view() {
-            DateTime current_dt = new DateTime.now_local ();
-            
-            hours_view.set_value(current_dt.get_hour());
-            minutes_view.set_value(current_dt.get_minute());
-            
             description_field.set_text(description_hint);
             summary_field.set_text(summary_hint);
             
             description_label.set_opacity(0);
             summary_label.set_opacity(0);
             
-            calendar.year = current_dt.get_year();
-		    calendar.month = current_dt.get_month();
-		    calendar.day = current_dt.get_day_of_month();
+            due_switch.set_active (false);
+            
+            if (due_switch.active) {
+                DateTime current_dt = new DateTime.now_local ();
+            
+                hours_view.set_value(current_dt.get_hour());
+                minutes_view.set_value(current_dt.get_minute());
+                
+                calendar.year = current_dt.get_year();
+		        calendar.month = current_dt.get_month();
+		        calendar.day = current_dt.get_day_of_month();
+            }
         }
         
         private Gtk.SpinButton create_spin_button(int from, int to, int step, int width, owned DelegateType action) {

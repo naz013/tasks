@@ -21,11 +21,19 @@ namespace Tasks {
         }
 
         public string get_accent_color() {
-            return "#00B0FF";
+            return "#0091ea";
+        }
+        
+        public string get_accent_light_color() {
+            return "#64c1ff";
+        }
+        
+        public string get_accent_dark_color() {
+            return "#0064b7";
         }
         
         public string get_alpha_accent_color() {
-            return "rgba(0, 176, 255, 0.12)";
+            return "rgba(0, 145, 234, 0.12)";
         }
         
         public string get_shadow_color() {
@@ -37,7 +45,7 @@ namespace Tasks {
         }
         
         public string get_button_disabled_color() {
-            return "#484848";
+            return "rgba(255, 255, 255, 0.5)";
         }
     }
 }

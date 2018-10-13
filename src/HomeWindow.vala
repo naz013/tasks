@@ -228,7 +228,7 @@ namespace Tasks {
             }
             
             init_theme();
-            draw_views();
+            update_theme();
             if (settings_visible && mode_switch != null) {
                 toggle_mode_switch();
             }
