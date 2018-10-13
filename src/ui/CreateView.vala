@@ -22,7 +22,7 @@ namespace Tasks {
             Gtk.Grid vert_grid = new Gtk.Grid();
             vert_grid.vexpand = true;
             vert_grid.hexpand = false;
-            vert_grid.width_request = 250;
+            vert_grid.width_request = 258;
             vert_grid.orientation = Gtk.Orientation.VERTICAL;
             vert_grid.show_all ();
             vert_grid.size_allocate.connect(() => {
@@ -36,7 +36,7 @@ namespace Tasks {
             Gtk.Grid scrollable_grid = new Gtk.Grid();
             scrollable_grid.get_style_context().add_class("scrollable");
             scrollable_grid.vexpand = true;
-            vert_grid.width_request = 250;
+            vert_grid.width_request = 258;
             scrollable_grid.orientation = Gtk.Orientation.VERTICAL;
             scrollable_grid.show_all ();
             

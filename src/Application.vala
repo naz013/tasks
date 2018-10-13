@@ -18,7 +18,7 @@ namespace Tasks {
             set_accels_for_action ("app.quit", {"<Control>q"});
             add_action (quit_action);
             quit_action.activate.connect (() => {
-    	        print ("Quitting...\n");
+    	        Logger.log("Quitting...");
                 if (main_window != null) {
                     main_window.destroy();
                 }
@@ -27,7 +27,7 @@ namespace Tasks {
             set_accels_for_action ("app.new", {"<Control>n"});
             add_action (new_action);
             new_action.activate.connect (() => {
-                print ("Add task...\n");
+                Logger.log("Add task...");
                 if (main_window != null) {
                     main_window.add_action();
                 }
@@ -37,9 +37,39 @@ namespace Tasks {
             set_accels_for_action ("app.mode", {"<Control>m"});
             add_action (mode_action);
             mode_action.activate.connect (() => {
-                print ("Change mode...\n");
+                Logger.log("Change mode...");
                 if (main_window != null) {
                     main_window.toggle_mode();
+                }
+            });
+            
+            var maximaze_action = new SimpleAction ("mode", null);
+            set_accels_for_action ("app.mode", {"<Control>f"});
+            add_action (maximaze_action);
+            maximaze_action.activate.connect (() => {
+                Logger.log("Change screen size...");
+                if (main_window != null) {
+                    main_window.max_action();
+                }
+            });
+            
+            var save_action = new SimpleAction ("mode", null);
+            set_accels_for_action ("app.mode", {"<Control>s"});
+            add_action (save_action);
+            save_action.activate.connect (() => {
+                Logger.log("Saving task...");
+                if (main_window != null) {
+                    main_window.save_action();
+                }
+            });
+            
+            var cancel_action = new SimpleAction ("mode", null);
+            set_accels_for_action ("app.mode", {"<Control>c"});
+            add_action (cancel_action);
+            cancel_action.activate.connect (() => {
+                Logger.log("Cancel task...");
+                if (main_window != null) {
+                    main_window.cancel_action();
                 }
             });
         }

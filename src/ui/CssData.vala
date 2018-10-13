@@ -325,6 +325,15 @@ namespace Tasks {
                     padding: 16px;
                 }
                 
+                .right_block {
+                    background: @cardBgColor;
+                    border-radius: 2px;
+                    margin-top: 8px;
+                    margin-left: 8px;
+                    box-shadow: 0 1px 2px @shadowColor, 0 1px 2px @shadowOutColor;
+                    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+                }
+                
                 .material_card {
                     background: @cardBgColor;
                     border-radius: 2px;

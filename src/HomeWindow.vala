@@ -13,6 +13,8 @@ namespace Tasks {
 
         private bool create_open = false;
         private bool was_create_open = false;
+        private bool was_maximized = false;
+        private bool was_minimized = false;
         private bool change_theme = true;
         private bool settings_visible = false;
         private int old_width = 500;
@@ -65,14 +67,49 @@ namespace Tasks {
             });
             grid.size_allocate.connect(() => {
                 was_create_open = create_open;
-                // get_size (out old_width, out old_height);
-                // Logger.log(@"Resize: width -> $old_width, height -> $old_height");
+                if (is_maximized) {
+                    if (!was_maximized && !create_open) {
+                        draw_views();
+                    }
+                    was_maximized = true;
+                    was_minimized = false;
+                } else if (!is_maximized) {
+                    if (!was_minimized && !create_open) {
+                        draw_views();
+                    }
+                    was_maximized = false;
+                    was_minimized = true;
+                }
             });
             AppSettings.get_default().changed.connect(() => {
                 Logger.log("Settings changed");
             });
             
             draw_views();
+        }
+        
+        public void add_action() {
+            if (is_maximized) {
+                return;
+            }
+            create_open = !create_open;
+            draw_views();
+        }
+        
+        public void max_action() {
+            if (is_maximized) {
+                unmaximize();
+            } else {
+                maximize();
+            }
+        }
+        
+        public void save_action() {
+            
+        }
+        
+        public void cancel_action() {
+            
         }
 
         private void init_theme() {
@@ -83,21 +120,23 @@ namespace Tasks {
             }
         }
 
-        public void draw_views() {
+        private void draw_views() {
             int new_width, new_height;
             get_size (out new_width, out new_height);
             
-            Logger.log(@"width -> $new_width, height -> $new_height");
+            Logger.log(@"Draw screen: width -> $new_width, height -> $new_height, max -> $is_maximized");
             
             grid.remove_row(0);
             grid.remove_column(0);
 
             if (create_open) {
-                if (!was_create_open) {
+                if (!was_create_open && !is_maximized) {
                     new_width = new_width + 250;
                 }
             } else if (was_create_open) {
                 new_width = new_width - 250;
+            } else if (is_maximized) {
+                
             }
             resize(new_width, new_height);
 
@@ -111,7 +150,7 @@ namespace Tasks {
 
             if (tasks.size == 0) {
                 main_grid.add(new EmptyView());
-                if (create_open) {
+                if (create_open || is_maximized) {
 
                     //Add rigth panel
                     add_create_task_panel(main_grid);
@@ -130,7 +169,7 @@ namespace Tasks {
                 });
                 
                 main_grid.add(list_box);
-                if (create_open) {
+                if (create_open || is_maximized) {
 
                     //Add rigth panel
                     add_create_task_panel(main_grid);
@@ -151,11 +190,6 @@ namespace Tasks {
                 add_action();
             });
             grid.add(create_view);
-        }
-
-        public void add_action() {
-            create_open = !create_open;
-            draw_views();
         }
 
         private void update_theme() {
