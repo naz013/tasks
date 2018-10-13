@@ -1,15 +1,15 @@
-
 namespace Tasks {
     public class HomeWindow : Gtk.Window {
-    
+        
         delegate void DelegateType ();
 
-        private Gee.ArrayList<ListEvent> tasks = new Gee.ArrayList<ListEvent>();
+        private Gee.ArrayList<Event> tasks = new Gee.ArrayList<Event>();
 
         private Gtk.Grid grid = new Gtk.Grid ();
         private Gtk.HeaderBar header;
         private Gtk.Popover popover;
         private Gtk.Switch mode_switch;
+        private CreateView create_view;
 
         private bool create_open = false;
         private bool was_create_open = false;
@@ -36,10 +36,11 @@ namespace Tasks {
         };
 
         public HomeWindow (Gtk.Application app) {
-            Object (application: app,
-                    resizable: true,
-                    height_request: 500,
-                    width_request: 500
+            Object (
+                application: app,
+                resizable: true,
+                height_request: 500,
+                width_request: 500
             );
 
             init_theme();
@@ -105,11 +106,19 @@ namespace Tasks {
         }
         
         public void save_action() {
-            
+            if (create_view != null) {
+                create_view.save_task();
+            }
         }
         
         public void cancel_action() {
-            
+            if (create_view != null) {
+                if (is_maximized) {
+                    create_view.clear_view();
+                } else {
+                    add_action();
+                }
+            }
         }
 
         private void init_theme() {
@@ -121,6 +130,7 @@ namespace Tasks {
         }
 
         private void draw_views() {
+            create_view = null;
             int new_width, new_height;
             get_size (out new_width, out new_height);
             
@@ -180,9 +190,9 @@ namespace Tasks {
         }
         
         private void add_create_task_panel(Gtk.Grid grid) {
-            CreateView create_view = new CreateView();
+            create_view = new CreateView();
             create_view.on_save.connect((event) => {
-                tasks.add(new ListEvent.with_event(event));
+                tasks.add(event);
                 create_open = false;
                 draw_views();
             });

@@ -93,8 +93,6 @@ namespace Tasks {
 		    time_grid.column_spacing = 4;
 		    time_grid.orientation = Gtk.Orientation.HORIZONTAL;
 		    
-		    DateTime current_dt = new DateTime.now_local ();
-		    
 		    hours_view = create_spin_button(0, 23, 1, 44, () => {
 		        int val = hours_view.get_value_as_int ();
 			    if (val > 23) {
@@ -103,7 +101,6 @@ namespace Tasks {
 			        hours_view.set_value(0.0);
 			    }
 		    });
-		    hours_view.set_value(current_dt.get_hour());
 		    
 		    minutes_view = create_spin_button(0, 59, 1, 44, () => {
 		        int val = minutes_view.get_value_as_int ();
@@ -113,7 +110,6 @@ namespace Tasks {
 			        minutes_view.set_value(0.0);
 			    }
 		    });
-		    minutes_view.set_value(current_dt.get_minute());
 		    
 		    Gtk.Widget h_empty = new Gtk.Label("");
             h_empty.width_request = 66;
@@ -146,13 +142,13 @@ namespace Tasks {
             
             vert_grid.add(button_grid);
             
-            var button_save = create_material_button ("SAVE", () => {
+            var button_save = create_material_button ("SAVE (Ctrl+S)", () => {
 			    save_task();
             });
 		    button_save.get_style_context().add_class(CssData.MATERIAL_BUTTON);
 		    button_grid.add (button_save);
 		    
-		    var button_cancel = create_material_button ("CANCEL", () => {
+		    var button_cancel = create_material_button ("CANCEL (Ctrl+C)", () => {
 		        on_cancel();
 		    });
 		    button_cancel.get_style_context().add_class(CssData.MATERIAL_BUTTON);
@@ -160,9 +156,11 @@ namespace Tasks {
 		    
 		    vert_grid.get_style_context().add_class("right_block");
 		    add(vert_grid);
+		    
+		    clear_view();
         }
         
-        private void save_task() {
+        public void save_task() {
             var hour = hours_view.get_value_as_int ();
             var minute = minutes_view.get_value_as_int ();
             
@@ -199,7 +197,35 @@ namespace Tasks {
         }
         
         public void edit_event(Event event) {
+            hours_view.set_value(event.hour);
+            minutes_view.set_value(event.minute);
             
+            description_field.set_text(event.description);
+            summary_field.set_text(event.summary);
+            
+            description_label.set_opacity(0);
+            summary_label.set_opacity(0);
+            
+            calendar.year = event.year;
+		    calendar.month = event.month;
+		    calendar.day = event.day;
+        }
+        
+        public void clear_view() {
+            DateTime current_dt = new DateTime.now_local ();
+            
+            hours_view.set_value(current_dt.get_hour());
+            minutes_view.set_value(current_dt.get_minute());
+            
+            description_field.set_text(description_hint);
+            summary_field.set_text(summary_hint);
+            
+            description_label.set_opacity(0);
+            summary_label.set_opacity(0);
+            
+            calendar.year = current_dt.get_year();
+		    calendar.month = current_dt.get_month();
+		    calendar.day = current_dt.get_day_of_month();
         }
         
         private Gtk.SpinButton create_spin_button(int from, int to, int step, int width, owned DelegateType action) {

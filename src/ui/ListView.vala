@@ -2,11 +2,11 @@ namespace Tasks {
 
     public class ListView : Gtk.EventBox {
         
-        public signal void on_edit(ListEvent task);
-        public signal void on_delete(ListEvent task);
-        public signal void on_copy(ListEvent task);
+        public signal void on_edit(Event task);
+        public signal void on_delete(Event task);
+        public signal void on_copy(Event task);
         
-        public ListView(Gee.ArrayList<ListEvent> tasks) {
+        public ListView(Gee.ArrayList<Event> tasks) {
             var list_box = new Gtk.ListBox();
             list_box.set_selection_mode(Gtk.SelectionMode.NONE);
             list_box.expand = true;
@@ -18,7 +18,7 @@ namespace Tasks {
             Logger.log(@"Show list $(tasks.size)");
             
             for (int i = 0; i < tasks.size; i++) {
-                ListEvent task = tasks.get(i);
+                Event task = tasks.get(i);
                 list_box.add(get_row(task));
             }
             list_box.show_all();
@@ -26,7 +26,7 @@ namespace Tasks {
             add(list_box);
         }
         
-        private Gtk.ListBoxRow get_row(ListEvent task) {
+        private Gtk.ListBoxRow get_row(Event task) {
             var row = new Gtk.ListBoxRow();
             row.hexpand = true;
             row.set_selectable(false);

@@ -43,8 +43,8 @@ namespace Tasks {
                 }
             });
             
-            var maximaze_action = new SimpleAction ("mode", null);
-            set_accels_for_action ("app.mode", {"<Control>f"});
+            var maximaze_action = new SimpleAction ("fullscreen", null);
+            set_accels_for_action ("app.fullscreen", {"<Control>f"});
             add_action (maximaze_action);
             maximaze_action.activate.connect (() => {
                 Logger.log("Change screen size...");
@@ -53,8 +53,8 @@ namespace Tasks {
                 }
             });
             
-            var save_action = new SimpleAction ("mode", null);
-            set_accels_for_action ("app.mode", {"<Control>s"});
+            var save_action = new SimpleAction ("save", null);
+            set_accels_for_action ("app.save", {"<Control>s"});
             add_action (save_action);
             save_action.activate.connect (() => {
                 Logger.log("Saving task...");
@@ -63,8 +63,8 @@ namespace Tasks {
                 }
             });
             
-            var cancel_action = new SimpleAction ("mode", null);
-            set_accels_for_action ("app.mode", {"<Control>c"});
+            var cancel_action = new SimpleAction ("cancel", null);
+            set_accels_for_action ("app.cancel", {"<Control>c"});
             add_action (cancel_action);
             cancel_action.activate.connect (() => {
                 Logger.log("Cancel task...");
