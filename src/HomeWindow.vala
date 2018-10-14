@@ -15,6 +15,7 @@ namespace Tasks {
         private bool was_create_open = false;
         private bool was_maximized = false;
         private bool was_minimized = false;
+        private bool was_resized = false;
         private bool change_theme = true;
         private bool settings_visible = false;
         private int old_width = 500;
@@ -131,6 +132,7 @@ namespace Tasks {
 
         private void draw_views() {
             create_view = null;
+            
             int new_width, new_height;
             get_size (out new_width, out new_height);
             
@@ -140,13 +142,15 @@ namespace Tasks {
             grid.remove_column(0);
 
             if (create_open) {
-                if (!was_create_open && !is_maximized) {
+                if (!was_create_open && !is_maximized && new_width < 500) {
                     new_width = new_width + 250;
+                    was_resized = true;
                 }
-            } else if (was_create_open) {
+            } else if (was_create_open && was_resized) {
                 new_width = new_width - 250;
+                was_resized = false;
             } else if (is_maximized) {
-                
+                was_resized = false;
             }
             resize(new_width, new_height);
 
@@ -193,11 +197,10 @@ namespace Tasks {
             create_view = new CreateView();
             create_view.on_save.connect((event) => {
                 tasks.add(event);
-                create_open = false;
-                draw_views();
+                add_action();
             });
             create_view.on_cancel.connect(() => {
-                add_action();
+                cancel_action();
             });
             grid.add(create_view);
         }

@@ -8,6 +8,7 @@ namespace Tasks {
     public int hour { get; set; default = 0; }
     public int minute { get; set; default = 0; }
     public int second { get; set; default = 0; }
+    public int64 timer_time { get; set; default = 0; }
     public string summary { get; set; default = ""; }
     public string description { get; set; default = ""; }
     public bool is_active { get; set; default = true; }

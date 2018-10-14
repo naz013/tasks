@@ -16,9 +16,13 @@ namespace Tasks {
         private Gtk.SpinButton minutes_view;
         private Gtk.Switch due_switch;
         private Gtk.Switch notification_switch;
+        private Gtk.Grid mutable_grid;
+        private Gtk.Grid type_grid;
         
         private string summary_hint = "Remind me...";
         private string description_hint = "Note";
+        private string type_date_time_label = "Date/Time";
+        private string type_timer_label = "Timer";
         
         public CreateView() {
             Gtk.Grid vert_grid = new Gtk.Grid();
@@ -83,10 +87,9 @@ namespace Tasks {
 		    scrollable_grid.add(description_field);
 		    
 		    due_switch = new Gtk.Switch();
-		    due_switch.activate.connect (() => {
+		    due_switch.notify["active"].connect (() => {
                 toggle_reminder();
     		});
-            due_switch.set_property("height-request", 15);
             due_switch.get_style_context().add_class(CssData.MATERIAL_SWITCH);
 		    
 		    var due_label = new Gtk.Label ("Due date");
@@ -104,58 +107,13 @@ namespace Tasks {
             
             scrollable_grid.add(create_empty_space(16));
             scrollable_grid.add(due_grid);
-		    
-		    scrollable_grid.add(create_empty_space(16));
-		    scrollable_grid.add(create_hint_label("Date", true));
-		    
-		    calendar = new Gtk.Calendar();
-		    scrollable_grid.add(calendar);
-		    
-		    scrollable_grid.add(create_empty_space(16));
-		    scrollable_grid.add(create_hint_label("Time", true));
-		    
-		    Gtk.Grid time_grid = new Gtk.Grid();
-		    time_grid.column_spacing = 4;
-		    time_grid.orientation = Gtk.Orientation.HORIZONTAL;
-		    
-		    hours_view = create_spin_button(0, 23, 1, 44, () => {
-		        int val = hours_view.get_value_as_int ();
-			    if (val > 23) {
-			        hours_view.set_value(23.0);
-			    } else if (val < 0) {
-			        hours_view.set_value(0.0);
-			    }
-		    });
-		    
-		    minutes_view = create_spin_button(0, 59, 1, 44, () => {
-		        int val = minutes_view.get_value_as_int ();
-			    if (val > 59) {
-			        minutes_view.set_value(59.0);
-			    } else if (val < 0) {
-			        minutes_view.set_value(0.0);
-			    }
-		    });
-		    
-		    Gtk.Widget h_empty = new Gtk.Label("");
-            h_empty.width_request = 66;
             
-            Gtk.Label m_label = new Gtk.Label("mm");
-            m_label.width_request = 24;
-            m_label.set_xalign(1.0f);
-            m_label.get_style_context().add_class("time_label");
-            
-            Gtk.Label h_label = new Gtk.Label("HH");
-            h_label.width_request = 24;
-            h_label.set_xalign(0.0f);
-            h_label.get_style_context().add_class("time_label");
+            mutable_grid = new Gtk.Grid();
+            mutable_grid.hexpand = true;
+		    mutable_grid.orientation = Gtk.Orientation.VERTICAL;
+		    scrollable_grid.add(mutable_grid);
 		    
-		    time_grid.add(hours_view);
-		    time_grid.add(h_label);
-		    time_grid.add(h_empty);
-		    time_grid.add(m_label);
-		    time_grid.add(minutes_view);
-		    
-		    scrollable_grid.add(time_grid);
+		    add_due_view();
 		    
 		    //Buttons holder
 		    Gtk.Grid button_grid = new Gtk.Grid();
@@ -185,17 +143,178 @@ namespace Tasks {
 		    clear_view();
         }
         
-        private void toggle_reminder() {
+        private void add_due_view() {
+            mutable_grid.remove_row(0);
+            mutable_grid.remove_column(0);
+        
+            var grid = new Gtk.Grid();
+            grid.hexpand = true;
+		    grid.orientation = Gtk.Orientation.VERTICAL;
+		    mutable_grid.add(grid);
+		    
+		    if (due_switch.active) {
+		        add_notification_switch(grid);
+		        add_type_radios(grid);
+		    }
+		    mutable_grid.show_all();
+        }
+        
+        private void add_type_radios(Gtk.Grid container) {
+            Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
+            scrolled.hexpand = true;
             
+            Gtk.Grid button_grid = new Gtk.Grid();
+            button_grid.column_spacing = 8;
+            button_grid.orientation = Gtk.Orientation.HORIZONTAL;
+            button_grid.show_all ();
+            
+            var date_radio = new Gtk.RadioButton.with_label(null, type_date_time_label);
+            date_radio.toggled.connect(toggled);
+            var timer_radio = new Gtk.RadioButton.with_label(date_radio.get_group(), type_timer_label);
+            timer_radio.toggled.connect(toggled);
+            
+            button_grid.add(date_radio);
+            button_grid.add(timer_radio);
+            
+            button_grid.show_all();
+            scrolled.add(button_grid);
+            
+            type_grid = new Gtk.Grid();
+            type_grid.hexpand = true;
+		    type_grid.orientation = Gtk.Orientation.VERTICAL;
+		    toggled(date_radio);
+            
+            container.add(create_empty_space(16));
+            container.add(scrolled);
+            container.add(type_grid);
+        }
+        
+        private void toggled (Gtk.ToggleButton button) {
+            type_grid.remove_row(0);
+            type_grid.remove_column(0);
+            
+            var grid = new Gtk.Grid();
+            grid.hexpand = true;
+		    grid.orientation = Gtk.Orientation.VERTICAL;
+		    type_grid.add(grid);
+		    
+            if (button.active) {
+                Logger.log(@"Toggled radio -> $(button.label)");
+                if (button.label == type_date_time_label) {
+                    add_date_type(grid);
+                } else if (button.label == type_timer_label) {
+                    add_timer_type(grid);
+                }
+            }
+            type_grid.show_all();
+	    }
+	    
+	    private void add_timer_type(Gtk.Grid container) {
+		    container.add(create_hint_label("Timer", true));
+		    
+		    
+        }
+        
+        private void add_date_type(Gtk.Grid container) {
+		    container.add(create_hint_label("Date", true));
+		    
+		    calendar = new Gtk.Calendar();
+		    calendar.hexpand = true;
+		    container.add(calendar);
+		    
+		    container.add(create_empty_space(16));
+		    container.add(create_hint_label("Time", true));
+		    
+		    Gtk.Grid time_grid = new Gtk.Grid();
+		    time_grid.column_spacing = 4;
+		    time_grid.hexpand = true;
+		    time_grid.orientation = Gtk.Orientation.HORIZONTAL;
+		    
+		    hours_view = create_spin_button(0, 23, 1, 44, () => {
+		        int val = hours_view.get_value_as_int ();
+			    if (val > 23) {
+			        hours_view.set_value(23.0);
+			    } else if (val < 0) {
+			        hours_view.set_value(0.0);
+			    }
+		    });
+		    
+		    minutes_view = create_spin_button(0, 59, 1, 44, () => {
+		        int val = minutes_view.get_value_as_int ();
+			    if (val > 59) {
+			        minutes_view.set_value(59.0);
+			    } else if (val < 0) {
+			        minutes_view.set_value(0.0);
+			    }
+		    });
+		    
+		    Gtk.Widget h_empty = new Gtk.Label("");
+            h_empty.width_request = 66;
+            h_empty.hexpand = true;
+            
+            Gtk.Label m_label = new Gtk.Label("m");
+            m_label.set_xalign(1.0f);
+            m_label.get_style_context().add_class("time_label");
+            
+            Gtk.Label h_label = new Gtk.Label("H");
+            h_label.set_xalign(0.0f);
+            h_label.get_style_context().add_class("time_label");
+		    
+		    time_grid.add(hours_view);
+		    time_grid.add(h_label);
+		    time_grid.add(h_empty);
+		    time_grid.add(m_label);
+		    time_grid.add(minutes_view);
+		    
+		    container.add(time_grid);
+		    
+		    DateTime current_dt = new DateTime.now_local ();
+            
+            hours_view.set_value(current_dt.get_hour());
+            minutes_view.set_value(current_dt.get_minute());
+            
+            calendar.year = current_dt.get_year();
+	        calendar.month = current_dt.get_month();
+	        calendar.day = current_dt.get_day_of_month();
+        }
+        
+        private void add_notification_switch(Gtk.Grid container) {
+            notification_switch = new Gtk.Switch();
+		    notification_switch.notify["active"].connect (() => {
+                toggle_notification();
+    		});
+            notification_switch.get_style_context().add_class(CssData.MATERIAL_SWITCH);
+		    
+		    var label = new Gtk.Label ("Show notification");
+            label.set_line_wrap (true);
+            label.touch_event.connect (() => {
+                notification_switch.active = !notification_switch.active;
+                return false;
+            });
+            label.get_style_context().add_class(CssData.LABEL_SECONDARY);
+            
+            var grid = new Gtk.Grid ();
+            grid.column_spacing = 8;
+            grid.attach(label, 0, 0, 1, 1);
+            grid.attach(notification_switch, 1, 0, 1, 1);
+            
+            container.add(create_empty_space(16));
+            container.add(grid);
+        }
+        
+        private void toggle_reminder() {
+            Logger.log(@"Due is enabled -> $(due_switch.active)");
+            add_due_view();
         }
         
         private void toggle_notification() {
-            
+            Logger.log(@"Notification is enabled -> $(notification_switch.active)");
         }
         
         public void save_task() {
             var hour = hours_view.get_value_as_int ();
             var minute = minutes_view.get_value_as_int ();
+            var timer_value = 0;
             
             var year = calendar.year;
             var month = calendar.month;
@@ -204,14 +323,33 @@ namespace Tasks {
             var summary = summary_field.get_text();
             var note = description_field.get_text();
             
+            var type = 0;
+            
             var has_error = false;
+            var has_reminder = false;
+            
             if (summary == summary_hint) {
                 has_error = true;
                 summary_field.set_state_flags(Gtk.StateFlags.INCONSISTENT, true);
             }
             if (note == description_hint) {
-                has_error = true;
-                description_field.set_state_flags(Gtk.StateFlags.INCONSISTENT, true);
+                note = "";
+            }
+            if (due_switch.active) {
+                if (type == 0) {
+                    has_error = validate_dt(year, month, day, hour, minute);
+                } else if (type == 1) {
+                    has_error = validate_time(timer_value);
+                }
+                has_reminder = true;
+            } else {
+                has_reminder = false;
+                hour = 0;
+                minute = 0;
+                year = 0;
+                month = 0;
+                day = 0;
+                timer_value = 0;
             }
             
             if (has_error) {
@@ -224,9 +362,20 @@ namespace Tasks {
             event.day = day;
             event.hour = hour;
             event.minute = minute;
+            event.is_active = true;
+            event.has_reminder = has_reminder;
+            event.timer_time = timer_value;
             
             Logger.log("Event added");
             on_save(event);
+        }
+        
+        private bool validate_time(int timer_value) {
+            return true;
+        }
+        
+        private bool validate_dt(int year, int month, int day, int hour, int minute) {
+            return true;
         }
         
         public void edit_event(Event event) {
@@ -252,23 +401,11 @@ namespace Tasks {
             summary_label.set_opacity(0);
             
             due_switch.set_active (false);
-            
-            if (due_switch.active) {
-                DateTime current_dt = new DateTime.now_local ();
-            
-                hours_view.set_value(current_dt.get_hour());
-                minutes_view.set_value(current_dt.get_minute());
-                
-                calendar.year = current_dt.get_year();
-		        calendar.month = current_dt.get_month();
-		        calendar.day = current_dt.get_day_of_month();
-            }
         }
         
         private Gtk.SpinButton create_spin_button(int from, int to, int step, int width, owned DelegateType action) {
             var spin = new Gtk.SpinButton.with_range(from, to, step);
 		    spin.orientation = Gtk.Orientation.VERTICAL;
-		    spin.width_request = width;
 		    spin.get_style_context().add_class("time_button");
 		    spin.value_changed.connect (() => {
 			    action();
