@@ -18,11 +18,13 @@ namespace Tasks {
         private Gtk.Switch notification_switch;
         private Gtk.Grid mutable_grid;
         private Gtk.Grid type_grid;
+        private TimerView timer_view;
         
         private string summary_hint = "Remind me...";
         private string description_hint = "Note";
         private string type_date_time_label = "Date/Time";
         private string type_timer_label = "Timer";
+        private int type = 0;
         
         public CreateView() {
             Gtk.Grid vert_grid = new Gtk.Grid();
@@ -87,18 +89,18 @@ namespace Tasks {
 		    scrollable_grid.add(description_field);
 		    
 		    due_switch = new Gtk.Switch();
+		    due_switch.vexpand = false;
 		    due_switch.notify["active"].connect (() => {
                 toggle_reminder();
     		});
             due_switch.get_style_context().add_class(CssData.MATERIAL_SWITCH);
 		    
-		    var due_label = new Gtk.Label ("Due date");
-            due_label.set_line_wrap (true);
-            due_label.touch_event.connect (() => {
+		    var due_label = new Gtk.Button.with_label ("Due date");
+            due_label.clicked.connect (() => {
                 due_switch.active = !due_switch.active;
-                return false;
+                Logger.log("Due label click");
             });
-            due_label.get_style_context().add_class(CssData.LABEL_SECONDARY);
+            due_label.get_style_context().add_class(CssData.MATERIAL_BUTTON_FLAT);
             
             var due_grid = new Gtk.Grid ();
             due_grid.column_spacing = 8;
@@ -201,8 +203,10 @@ namespace Tasks {
             if (button.active) {
                 Logger.log(@"Toggled radio -> $(button.label)");
                 if (button.label == type_date_time_label) {
+                    type = 0;
                     add_date_type(grid);
                 } else if (button.label == type_timer_label) {
+                    type = 1;
                     add_timer_type(grid);
                 }
             }
@@ -211,8 +215,11 @@ namespace Tasks {
 	    
 	    private void add_timer_type(Gtk.Grid container) {
 		    container.add(create_hint_label("Timer", true));
+		    container.add(create_empty_space(16));
 		    
-		    
+		    timer_view = new TimerView();
+		    timer_view.get_style_context().add_class("timer_view");
+		    container.add(timer_view);
         }
         
         private void add_date_type(Gtk.Grid container) {
@@ -280,18 +287,17 @@ namespace Tasks {
         
         private void add_notification_switch(Gtk.Grid container) {
             notification_switch = new Gtk.Switch();
+            notification_switch.vexpand = false;
 		    notification_switch.notify["active"].connect (() => {
                 toggle_notification();
     		});
             notification_switch.get_style_context().add_class(CssData.MATERIAL_SWITCH);
 		    
-		    var label = new Gtk.Label ("Show notification");
-            label.set_line_wrap (true);
-            label.touch_event.connect (() => {
+		    var label = new Gtk.Button.with_label ("Show notification");
+            label.clicked.connect (() => {
                 notification_switch.active = !notification_switch.active;
-                return false;
             });
-            label.get_style_context().add_class(CssData.LABEL_SECONDARY);
+            label.get_style_context().add_class(CssData.MATERIAL_BUTTON_FLAT);
             
             var grid = new Gtk.Grid ();
             grid.column_spacing = 8;
@@ -314,7 +320,7 @@ namespace Tasks {
         public void save_task() {
             var hour = hours_view.get_value_as_int ();
             var minute = minutes_view.get_value_as_int ();
-            var timer_value = 0;
+            long timer_value = 0;
             
             var year = calendar.year;
             var month = calendar.month;
@@ -322,8 +328,6 @@ namespace Tasks {
             
             var summary = summary_field.get_text();
             var note = description_field.get_text();
-            
-            var type = 0;
             
             var has_error = false;
             var has_reminder = false;
@@ -337,9 +341,16 @@ namespace Tasks {
             }
             if (due_switch.active) {
                 if (type == 0) {
-                    has_error = validate_dt(year, month, day, hour, minute);
+                    if (validate_dt(year, month, day, hour, minute)) {
+                    	has_error = true;
+                    }
                 } else if (type == 1) {
-                    has_error = validate_time(timer_value);
+                    if (timer_view != null) {
+                        timer_value = timer_view.get_seconds();
+                    }
+                    if (validate_time(timer_value)) {
+                    	has_error = true;
+                    }
                 }
                 has_reminder = true;
             } else {
@@ -362,6 +373,7 @@ namespace Tasks {
             event.day = day;
             event.hour = hour;
             event.minute = minute;
+            event.event_type = type;
             event.is_active = true;
             event.has_reminder = has_reminder;
             event.timer_time = timer_value;
@@ -370,12 +382,15 @@ namespace Tasks {
             on_save(event);
         }
         
-        private bool validate_time(int timer_value) {
-            return true;
+        private bool validate_time(long timer_value) {
+            if (timer_value <= 0) {
+                return true;
+            }
+            return false;
         }
         
         private bool validate_dt(int year, int month, int day, int hour, int minute) {
-            return true;
+            return false;
         }
         
         public void edit_event(Event event) {

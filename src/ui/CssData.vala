@@ -6,6 +6,7 @@ namespace Tasks {
         public const string MATERIAL_CARD = "material_card";
         public const string MATERIAL_SWITCH = "material_switch";
         public const string MATERIAL_BUTTON = "material_button";
+        public const string MATERIAL_BUTTON_FLAT = "material_button_flat";
         public const string MATERIAL_BUTTON_OK = "material_button_ok";
         public const string MATERIAL_BUTTON_CANCEL = "material_button_cancel";
         public const string MATERIAL_TEXT_FIELD = "material_text_field";
@@ -127,6 +128,47 @@ namespace Tasks {
                 style = style.concat(add_color("shadowOutColor", theme.get_shadow_out_color()));
                 style = style.concat(add_color("buttonDisabledColor", theme.get_button_disabled_color()));
                 style = style.concat("""
+                
+                .timer_label {
+                    color: @textColorPrimary;
+                    font-size: 20px;
+                }
+                
+                .timer_view {
+                    background: @accentAlphaColor;
+                }
+                
+                .invisible_view {
+                    border: 0px;
+                    background: transparent;
+                    color: transparent;
+                    margin: 15px;
+                }
+                
+                .invisible_view progress {
+                    border: 0px;
+                    background: transparent;
+                    color: transparent;
+                }
+                
+                .invisible_view pulse {
+                    border: 0px;
+                    background: transparent;
+                    color: transparent;
+                }
+                
+                .invisible_view selection {
+                    border: 0px;
+                    background: transparent;
+                    color: transparent;
+                }
+                
+                .invisible_view:focus {
+                    border: 0px;
+                    background: transparent;
+                    color: transparent;
+                    margin: 15px;
+                }
                 
                 calendar:selected {
                     color: #fff;
@@ -367,6 +409,20 @@ namespace Tasks {
                 
                 .material_card:selected {
                     box-shadow: 0 14px 28px @shadowColor, 0 10px 10px @shadowOutColor;
+                }
+                
+                .material_button_flat, 
+                .material_button_flat:hover, 
+                .material_button_flat:hover:active,
+                .material_button_flat:selected {
+                    border-radius: 0px;
+                    font-size: 13px;
+                    color: @textColorPrimary;
+                    background: transparent;
+                    border: 0px;
+                    padding: 0px;
+                    box-shadow: none;
+                    font-weight: normal;
                 }
                 
                 .material_button {

@@ -49,6 +49,7 @@ executable(
     'src/ui/CreateView.vala',
     'src/ui/ListView.vala',
     'src/ui/EmptyView.vala',
+    'src/ui/TimerView.vala',
     'src/ui/SettingsView.vala',
     c_args: c_args,
     dependencies: [
