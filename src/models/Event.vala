@@ -1,8 +1,8 @@
 namespace Tasks {
 	public class Event : Object {
 	
-		public static const int DATE = 0;
-		public static const int TIMER = 1;
+		public const int DATE = 0;
+		public const int TIMER = 1;
 		
 		public int id { get; set; default = 0; }
 		public int year { get; set; default = 0; }

@@ -7,6 +7,7 @@ namespace Tasks {
         public const string MATERIAL_SWITCH = "material_switch";
         public const string MATERIAL_RADIO_BUTTON = "material_radio_button";
         public const string MATERIAL_BUTTON = "material_button";
+        public const string MATERIAL_FAB = "material_fab";
         public const string MATERIAL_BUTTON_FLAT = "material_button_flat";
         public const string MATERIAL_BUTTON_OK = "material_button_ok";
         public const string MATERIAL_BUTTON_CANCEL = "material_button_cancel";
@@ -94,6 +95,7 @@ namespace Tasks {
                 .empty_label {
                     color: @textColorPrimary;
                     font-size: 15px;
+                    background: @bgColor;
                 }
 
                 GtkTextView.view:selected {
@@ -442,6 +444,42 @@ namespace Tasks {
                     color: @accentColor;
                     border: 1px solid @accentColor;
                     background: transparent;
+                }
+                
+                .material_fab {
+                    border-radius: 25px;
+                    color: #fff;
+                    border: 0px;
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                    background: @accentColor;
+                    box-shadow: 0 1px 2px @shadowColor, 0 1px 2px @shadowOutColor;
+                    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+                }
+                
+                .material_fab:hover  {
+                    border-radius: 25px;
+                    border: 0px;
+                    color: #fff;
+                    background: @accentColor;
+                    box-shadow: 0 1px 3px @shadowColor, 0 1px 3px @shadowOutColor;
+                }
+                
+                .material_fab:selected, .material_fab:hover:active {
+                    border-radius: 25px;
+                    color: #fff;
+                    outline: 0px;
+                    border: 0px;
+                    background: @accentColor;
+                    box-shadow: 0 1px 4px @shadowColor, 0 1px 4px @shadowOutColor;
+                }
+                
+                .material_fab:disabled {
+                    border-radius: 25px;
+                    color: @textColorDisabled;
+                    border: 0px;
+                    background: @buttonDisabledColor;
+                    box-shadow: none;
                 }
                 
                 .material_button {

@@ -5,25 +5,71 @@ namespace Tasks {
         public signal void on_edit(Event task);
         public signal void on_delete(Event task);
         public signal void on_copy(Event task);
+        public signal void on_add_clicked();
+        
+        private Gtk.Grid list_box;
         
         public ListView(Gee.ArrayList<Event> tasks) {
-            var list_box = new Gtk.ListBox();
-            list_box.set_selection_mode(Gtk.SelectionMode.NONE);
-            list_box.expand = true;
-            list_box.row_selected.connect((row) => {
-                Logger.log(@"Selected row $(row.get_index())");
-            });
+            var overlay = new Gtk.Overlay();
+            overlay.expand = true;
+            
+            Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
+            
+            list_box = new Gtk.Grid();
+            list_box.orientation = Gtk.Orientation.VERTICAL;
+            list_box.hexpand = true;
             list_box.get_style_context().add_class("list_container");
+            scrolled.add(list_box);
             
             Logger.log(@"Show list $(tasks.size)");
             
+            refresh_list(tasks);
+            scrolled.show_all();
+            overlay.add(scrolled);
+            
+            var vert_grid = new Gtk.Grid();
+            vert_grid.expand = true;
+            vert_grid.orientation = Gtk.Orientation.VERTICAL;
+            
+            var box = new Gtk.Fixed();
+            box.expand = true;
+            vert_grid.add(box);
+            
+            var hor_grid = new Gtk.Grid();
+            hor_grid.hexpand = true;
+            hor_grid.vexpand = false;
+            hor_grid.margin = 18;
+            hor_grid.orientation = Gtk.Orientation.HORIZONTAL;
+            vert_grid.add(hor_grid);
+            
+            var box2 = new Gtk.Fixed();
+            box2.hexpand = true;
+            box2.vexpand = false;
+            
+            var button = new Gtk.Button.from_icon_name ("list-add-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+		    button.hexpand = false;
+		    button.set_always_show_image(true);
+		    button.set_label("Add task");
+		    button.clicked.connect (() => {
+			    on_add_clicked();
+		    });
+		    button.get_style_context().add_class(CssData.MATERIAL_FAB);
+            
+            hor_grid.add(box2);
+            hor_grid.add(button);
+            overlay.add_overlay(vert_grid);
+            
+            overlay.show_all();
+            add(overlay);
+        }
+        
+        public void refresh_list(Gee.ArrayList<Event> tasks) {
+            list_box.forall ((element) => list_box.remove (element));
             for (int i = 0; i < tasks.size; i++) {
                 Event task = tasks.get(i);
                 list_box.add(get_row(task));
             }
             list_box.show_all();
-            
-            add(list_box);
         }
         
         private Gtk.ListBoxRow get_row(Event task) {

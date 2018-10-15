@@ -10,6 +10,7 @@ namespace Tasks {
         private Gtk.Popover popover;
         private Gtk.Switch mode_switch;
         private CreateView create_view;
+        private ListView list_box;
 
         private bool create_open = false;
         private bool was_create_open = false;
@@ -33,7 +34,7 @@ namespace Tasks {
 
         private const GLib.ActionEntry[] action_entries = {
             { ACTION_MODE, toggle_mode },
-            { ACTION_NEW, add_action }
+            { ACTION_NEW, add_key_action }
         };
 
         public HomeWindow (Gtk.Application app) {
@@ -90,12 +91,17 @@ namespace Tasks {
             draw_views();
         }
         
-        public void add_action() {
+        public void add_key_action() {
+            add_action();
+        }
+        
+        public bool add_action() {
             if (is_maximized) {
-                return;
+                return false;
             }
             create_open = !create_open;
             draw_views();
+            return true;
         }
         
         public void max_action() {
@@ -163,7 +169,11 @@ namespace Tasks {
             grid.add(main_grid);
 
             if (tasks.size == 0) {
-                main_grid.add(new EmptyView());
+                var empty_view = new EmptyView();
+                empty_view.on_add_clicked.connect(() => {
+                    add_action();
+                });
+                main_grid.add(empty_view);
                 if (create_open || is_maximized) {
 
                     //Add rigth panel
@@ -171,7 +181,7 @@ namespace Tasks {
                 }
             } else {
                 //Show events
-                var list_box = new ListView(tasks);
+                list_box = new ListView(tasks);
                 list_box.on_edit.connect((event) => {
                     Logger.log(@"Edit row $(event.to_string())");
                 });
@@ -182,6 +192,9 @@ namespace Tasks {
                 });
                 list_box.on_copy.connect((event) => {
                     Logger.log(@"Copy row $(event.to_string())");
+                });
+                list_box.on_add_clicked.connect(() => {
+                    add_action();
                 });
                 
                 main_grid.add(list_box);
@@ -199,7 +212,9 @@ namespace Tasks {
             create_view = new CreateView();
             create_view.on_save.connect((event) => {
                 tasks.add(event);
-                add_action();
+                if (!add_action() && list_box != null) {
+                    list_box.refresh_list(tasks);
+                }
             });
             create_view.on_cancel.connect(() => {
                 cancel_action();
@@ -300,15 +315,7 @@ namespace Tasks {
             app_button.image = new Gtk.Image.from_icon_name ("open-menu-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
             app_button.popover = popover;
             
-            var add_button = new Gtk.MenuButton();
-            add_button.has_tooltip = true;
-            add_button.tooltip_text = ("Create task");
-            add_button.image = new Gtk.Image.from_icon_name ("list-add-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
-            add_button.action_name = HomeWindow.ACTION_PREFIX + HomeWindow.ACTION_NEW;
-            add_button.get_style_context().add_class("new_button");
-
             header.pack_end(app_button);
-            header.pack_end(add_button);
         }
     }
 }
