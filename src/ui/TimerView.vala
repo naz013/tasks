@@ -1,11 +1,6 @@
 namespace Tasks {
 
     public class TimerView : Gtk.EventBox {
-    	
-    	private const string ZERO = "0";
-    	private const int LENGTH = 6;
-    	private const long MINUTE = 60;
-    	private const long HOUR = MINUTE * 60;
         
         private Gtk.Entry entry;
         private Gtk.Button label;
@@ -51,6 +46,7 @@ namespace Tasks {
                 entry.grab_focus_without_selecting();
                 Logger.log("Timer touched");
             });
+            create_label();
 		    
 		    overlay.add_overlay(label);
 		    
@@ -61,61 +57,16 @@ namespace Tasks {
     	}
     	
     	public long get_seconds() {
-    	    var tmp = "";
-    		if (input.length < LENGTH) {
-    			for (int i = 0; i < LENGTH - input.length; i++) {
-    				tmp = tmp + ZERO;
-    			}
-    		}
-    		tmp = tmp + input;
-    		
-    		var d01 = tmp.substring(0, 2);
-    		var d23 = tmp.substring(2, 2);
-    		var d45 = tmp.substring(4, 2);
-    		
-    		long secs = 0;
-    		secs += int.parse(d01) * HOUR;
-    		secs += int.parse(d23) * MINUTE;
-    		secs += int.parse(d45);
-    		
-    		Logger.log(@"get_seconds: tmp -> $tmp, secs -> $secs");
-    		
-    		return secs;
+    		return Utils.to_seconds(input);
     	}
     	
     	public void set_seconds(long seconds) {
-    	    var hours = seconds / HOUR;
-    	    var minutes = (seconds - (hours * HOUR)) / MINUTE;
-    	    var secs = (seconds - (hours * HOUR) - (minutes * MINUTE));
-    	    var tmp = "";
-    	    if (hours > 0){
-    	        tmp = tmp + @"$(hours)";
-    	    }
-    	    if (tmp.length > 0) {
-    	        if (minutes < 10) {
-        	        tmp = tmp + @"0$(minutes)";
-        	    } else {
-        	        tmp = tmp + @"$(minutes)";
-        	    }
-    	    } else {
-    	        tmp = tmp + @"$(minutes)";
-    	    }
-    	    if (tmp.length > 0) {
-    	        if (secs < 10) {
-        	        tmp = tmp + @"0$(secs)";
-        	    } else {
-        	        tmp = tmp + @"$(secs)";
-        	    }
-    	    } else {
-    	        tmp = tmp + @"$(secs)";
-    	    }
-    	    
-    	    input = tmp;
+    	    input = Utils.from_seconds(seconds);
     		create_label();
     	}
     	
     	private void add_digit(string digit) {
-    		if (input.length >= LENGTH) {
+    		if (input.length >= Utils.LENGTH) {
     			return;
     		}
     		input = input + digit;
@@ -123,20 +74,7 @@ namespace Tasks {
     	}
     	
     	private void create_label() {
-    		var tmp = "";
-    		if (input.length < LENGTH) {
-    			for (int i = 0; i < LENGTH - input.length; i++) {
-    				tmp = tmp + ZERO;
-    			}
-    		}
-    		tmp = tmp + input;
-    		Logger.log(@"create_label: tmp -> $tmp");
-    		
-    		var d01 = tmp.substring(0, 2);
-    		var d23 = tmp.substring(2, 2);
-    		var d45 = tmp.substring(4, 2);
-    		
-    		re_presentation = @"$(d01)H $(d23)m $(d45)s";
+    		re_presentation = Utils.to_label(input);
     		Logger.log(@"create_label: re_p -> $re_presentation");
     		label.set_label(re_presentation);
     	}

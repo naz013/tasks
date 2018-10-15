@@ -172,14 +172,16 @@ namespace Tasks {
             } else {
                 //Show events
                 var list_box = new ListView(tasks);
-                list_box.on_edit.connect((list_event) => {
-                    Logger.log(@"Edit row $(list_event.summary)");
+                list_box.on_edit.connect((event) => {
+                    Logger.log(@"Edit row $(event.to_string())");
                 });
-                list_box.on_delete.connect((list_event) => {
-                    Logger.log(@"Delete row $(list_event.summary)");
+                list_box.on_delete.connect((event) => {
+                    Logger.log(@"Delete row $(event.to_string())");
+                    tasks.remove(event);
+                    draw_views();
                 });
-                list_box.on_copy.connect((list_event) => {
-                    Logger.log(@"Copy row $(list_event.summary)");
+                list_box.on_copy.connect((event) => {
+                    Logger.log(@"Copy row $(event.to_string())");
                 });
                 
                 main_grid.add(list_box);

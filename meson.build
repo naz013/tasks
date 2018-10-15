@@ -45,6 +45,7 @@ executable(
     'src/config/LightTheme.vala',
     'src/config/DarkTheme.vala',
     'src/config/Logger.vala',
+    'src/config/Utils.vala',
     'src/ui/CssData.vala',
     'src/ui/CreateView.vala',
     'src/ui/ListView.vala',

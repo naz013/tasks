@@ -198,10 +198,10 @@ namespace Tasks {
             if (button.active) {
                 Logger.log(@"Toggled radio -> $(button.label)");
                 if (button.label == type_date_time_label) {
-                    type = 0;
+                    type = Event.DATE;
                     add_date_type(grid);
                 } else if (button.label == type_timer_label) {
-                    type = 1;
+                    type = Event.TIMER;
                     add_timer_type(grid);
                 }
             }
@@ -313,14 +313,13 @@ namespace Tasks {
         }
         
         public void save_task() {
-            var hour = hours_view.get_value_as_int ();
-            var minute = minutes_view.get_value_as_int ();
-            long timer_value = 0;
-            
-            var year = calendar.year;
-            var month = calendar.month;
-            var day = calendar.day;
-            
+        	int hour = 0;
+	        int minute = 0;
+	        long timer_value = 0;
+	        
+	        int year = 0;
+	        int month = 0;
+	        int day = 0;
             var summary = summary_field.get_text();
             var note = description_field.get_text();
             
@@ -333,11 +332,19 @@ namespace Tasks {
             }
             
             if (due_switch.active) {
-                if (type == 0) {
+            	hour = hours_view.get_value_as_int ();
+		        minute = minutes_view.get_value_as_int ();
+		        timer_value = 0;
+		        
+		    	year = calendar.year;
+		        month = calendar.month;
+		        day = calendar.day;
+		        
+                if (type == Event.DATE) {
                     if (validate_dt(year, month, day, hour, minute)) {
                     	has_error = true;
                     }
-                } else if (type == 1) {
+                } else if (type == Event.TIMER) {
                     if (timer_view != null) {
                         timer_value = timer_view.get_seconds();
                     }
@@ -348,12 +355,6 @@ namespace Tasks {
                 has_reminder = true;
             } else {
                 has_reminder = false;
-                hour = 0;
-                minute = 0;
-                year = 0;
-                month = 0;
-                day = 0;
-                timer_value = 0;
             }
             
             if (has_error) {

@@ -38,7 +38,7 @@ namespace Tasks {
             hor_grid.get_style_context().add_class(CssData.MATERIAL_CARD);
             
             var button_grid = new Gtk.Grid();
-            button_grid.orientation = Gtk.Orientation.VERTICAL;
+            button_grid.orientation = Gtk.Orientation.HORIZONTAL;
             button_grid.width_request = 32;
             
             var edit_button = new Gtk.Button.from_icon_name ("document-edit-symbolic", Gtk.IconSize.BUTTON);
@@ -78,22 +78,36 @@ namespace Tasks {
             var summary_label = new Gtk.Label(task.summary);
             summary_label.set_xalign(0.0f);
             summary_label.get_style_context().add_class(CssData.LABEL_SECONDARY);
-            
-            var desc_label = new Gtk.Label(task.description);
-            desc_label.set_xalign(0.0f);
-            desc_label.get_style_context().add_class(CssData.LABEL_SECONDARY);
-            
-            string date = @"$(task.year)/$(task.month)/$(task.day)";
-            string time = @"$(task.hour):$(task.minute)";
-            string date_time = @"$date $time";
-            
-            var date_label = new Gtk.Label(date_time);
-            date_label.set_xalign(0.0f);
-            date_label.get_style_context().add_class(CssData.LABEL_PRIMARY);
-            
             vert_grid.add(summary_label);
-            vert_grid.add(desc_label);
-            vert_grid.add(date_label);
+            
+            if (task.description != "") {
+                var desc_label = new Gtk.Label(task.description);
+                desc_label.set_xalign(0.0f);
+                desc_label.get_style_context().add_class(CssData.LABEL_SECONDARY);
+                vert_grid.add(desc_label);
+            }
+            
+            if (task.has_reminder) {
+                if (task.event_type == Event.TIMER) {
+                	string timer_text = @"Timer for: $(Utils.to_label_from_seconds(task.timer_time))";
+                	
+                	var timer_label = new Gtk.Label(timer_text);
+				    timer_label.set_xalign(0.0f);
+				    timer_label.get_style_context().add_class(CssData.LABEL_PRIMARY);
+				    
+				    vert_grid.add(timer_label);
+                } else if (task.event_type == Event.DATE) {
+                	string date = @"$(task.year)/$(task.month)/$(task.day)";
+				    string time = @"$(task.hour):$(task.minute)";
+				    string date_time = @"$date $time";
+				    
+				    var date_label = new Gtk.Label(date_time);
+				    date_label.set_xalign(0.0f);
+				    date_label.get_style_context().add_class(CssData.LABEL_PRIMARY);
+				    
+				    vert_grid.add(date_label);
+                }
+            }
             
             hor_grid.add(vert_grid);
             hor_grid.add(button_grid);
@@ -101,7 +115,7 @@ namespace Tasks {
             
             row.add(hor_grid);
             
-            Logger.log(@"Create row $(task.summary)");
+            Logger.log(@"Create row $(task.to_string())");
             
             return row;
         }
