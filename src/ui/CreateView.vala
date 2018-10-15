@@ -55,14 +55,10 @@ namespace Tasks {
 		    scrollable_grid.add(summary_label);
             
             summary_field = create_entry(summary_hint, 72,  () => {
-                if (summary_field.get_text() == summary_hint) {
-                    summary_field.set_text("");
-                }
                 summary_label.set_opacity(1);
                 summary_field.set_state_flags(Gtk.StateFlags.FOCUSED, true);
 		    }, () => {
                 if (summary_field.get_text() == "") {
-                    summary_field.set_text(summary_hint);
                     summary_label.set_opacity(0);
                 }
 		    });
@@ -74,14 +70,10 @@ namespace Tasks {
 		    scrollable_grid.add(description_label);
 		    
 		    description_field = create_entry(description_hint, 500, () => {
-                if (description_field.get_text() == description_hint) {
-                    description_field.set_text("");
-                }
                 description_label.set_opacity(1);
                 description_field.set_state_flags(Gtk.StateFlags.FOCUSED, true);
 		    }, () => {
                 if (description_field.get_text() == "") {
-                    description_field.set_text(description_hint);
                     description_label.set_opacity(0);
                 }
 		    });
@@ -172,8 +164,11 @@ namespace Tasks {
             
             var date_radio = new Gtk.RadioButton.with_label(null, type_date_time_label);
             date_radio.toggled.connect(toggled);
+            date_radio.get_style_context().add_class(CssData.MATERIAL_RADIO_BUTTON);
+            
             var timer_radio = new Gtk.RadioButton.with_label(date_radio.get_group(), type_timer_label);
             timer_radio.toggled.connect(toggled);
+            timer_radio.get_style_context().add_class(CssData.MATERIAL_RADIO_BUTTON);
             
             button_grid.add(date_radio);
             button_grid.add(timer_radio);
@@ -332,13 +327,11 @@ namespace Tasks {
             var has_error = false;
             var has_reminder = false;
             
-            if (summary == summary_hint) {
+            if (summary == "") {
                 has_error = true;
                 summary_field.set_state_flags(Gtk.StateFlags.INCONSISTENT, true);
             }
-            if (note == description_hint) {
-                note = "";
-            }
+            
             if (due_switch.active) {
                 if (type == 0) {
                     if (validate_dt(year, month, day, hour, minute)) {
@@ -409,8 +402,8 @@ namespace Tasks {
         }
         
         public void clear_view() {
-            description_field.set_text(description_hint);
-            summary_field.set_text(summary_hint);
+            description_field.set_text("");
+            summary_field.set_text("");
             
             description_label.set_opacity(0);
             summary_label.set_opacity(0);
@@ -439,7 +432,6 @@ namespace Tasks {
         
         private Gtk.Entry create_entry(string hint, int max_length, owned DelegateType on, owned DelegateType off) {
             Gtk.Entry entry = new Gtk.Entry ();
-		    entry.set_text(hint);
 		    entry.set_max_length(max_length);
 		    entry.hexpand = true;
 		    entry.focus_in_event.connect(() => {
@@ -450,6 +442,7 @@ namespace Tasks {
 		        off();
 		        return true;
 		    });
+		    entry.placeholder_text = hint;
 		    return entry;
         }
         

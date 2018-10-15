@@ -5,6 +5,7 @@ namespace Tasks {
         
         public const string MATERIAL_CARD = "material_card";
         public const string MATERIAL_SWITCH = "material_switch";
+        public const string MATERIAL_RADIO_BUTTON = "material_radio_button";
         public const string MATERIAL_BUTTON = "material_button";
         public const string MATERIAL_BUTTON_FLAT = "material_button_flat";
         public const string MATERIAL_BUTTON_OK = "material_button_ok";
@@ -423,6 +424,24 @@ namespace Tasks {
                     padding: 0px;
                     box-shadow: none;
                     font-weight: normal;
+                }
+                
+                .material_radio_button {
+                    border-radius: 0px;
+                    font-size: 13px;
+                    color: @textColorPrimary;
+                    background: transparent;
+                    border: 0px;
+                    padding: 0px;
+                    margin: 5px;
+                    box-shadow: none;
+                    font-weight: normal;
+                }
+                
+                .material_radio_button radio {
+                    color: @accentColor;
+                    border: 1px solid @accentColor;
+                    background: transparent;
                 }
                 
                 .material_button {
