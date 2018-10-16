@@ -19,7 +19,9 @@ namespace Tasks {
         private Gtk.Grid mutable_grid;
         private Gtk.Grid type_grid;
         private TimerView timer_view;
+        private Gtk.Button cancel_button;
         
+        private bool is_max = false;
         private string summary_hint = "Remind me...";
         private string description_hint = "Note";
         private string type_date_time_label = "Date/Time";
@@ -125,16 +127,34 @@ namespace Tasks {
 		    button_save.get_style_context().add_class(CssData.MATERIAL_BUTTON);
 		    button_grid.add (button_save);
 		    
-		    var button_cancel = create_material_button ("CANCEL (Ctrl+C)", () => {
+		    cancel_button = create_material_button ("CANCEL (Ctrl+C)", () => {
 		        on_cancel();
 		    });
-		    button_cancel.get_style_context().add_class(CssData.MATERIAL_BUTTON);
-		    button_grid.add (button_cancel);
+		    cancel_button.get_style_context().add_class(CssData.MATERIAL_BUTTON);
+		    button_grid.add (cancel_button);
+		    
+		    // update_buttons();
 		    
 		    vert_grid.get_style_context().add_class("right_block");
 		    add(vert_grid);
 		    
 		    clear_view();
+        }
+        
+        public void set_maximazed(bool max) {
+        	this.is_max = max;
+        	// update_buttons();
+        }
+        
+        private void update_buttons() {
+            Logger.log(@"update_buttons: isMax -> $is_max");
+        	if (is_max) {
+        		cancel_button.set_label("CLEAR (Ctrl+C)");
+        	} else {
+        		cancel_button.set_label("CANCEL (Ctrl+C)");
+        	}
+        	cancel_button.set_always_show_image(false);
+        	cancel_button.show_all();
         }
         
         private void add_due_view() {

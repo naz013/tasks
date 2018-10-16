@@ -11,6 +11,7 @@ namespace Tasks {
         private Gtk.Switch mode_switch;
         private CreateView create_view;
         private ListView list_box;
+        private EmptyView empty_view;
 
         private bool create_open = false;
         private bool was_create_open = false;
@@ -82,6 +83,15 @@ namespace Tasks {
                     }
                     was_maximized = false;
                     was_minimized = true;
+                }
+                if (list_box != null) {
+                    list_box.set_maximazed(is_maximized);
+                }
+                if (empty_view != null) {
+                    empty_view.set_maximazed(is_maximized);
+                }
+                if (create_view != null) {
+                    create_view.set_maximazed(is_maximized);
                 }
             });
             AppSettings.get_default().changed.connect(() => {
@@ -169,10 +179,11 @@ namespace Tasks {
             grid.add(main_grid);
 
             if (tasks.size == 0) {
-                var empty_view = new EmptyView();
+                empty_view = new EmptyView();
                 empty_view.on_add_clicked.connect(() => {
                     add_action();
                 });
+                empty_view.set_maximazed(is_maximized);
                 main_grid.add(empty_view);
                 if (create_open || is_maximized) {
 
@@ -196,6 +207,7 @@ namespace Tasks {
                 list_box.on_add_clicked.connect(() => {
                     add_action();
                 });
+                list_box.set_maximazed(is_maximized);
                 
                 main_grid.add(list_box);
                 if (create_open || is_maximized) {
@@ -219,6 +231,7 @@ namespace Tasks {
             create_view.on_cancel.connect(() => {
                 cancel_action();
             });
+            create_view.set_maximazed(is_maximized);
             grid.add(create_view);
         }
 

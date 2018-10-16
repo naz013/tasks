@@ -4,6 +4,9 @@ namespace Tasks {
         
         public signal void on_add_clicked();
         
+        private Gtk.Button fab;
+        private bool is_max = false;
+        
         public EmptyView() {
             var overlay = new Gtk.Overlay();
             overlay.expand = true;
@@ -36,21 +39,44 @@ namespace Tasks {
             box2.hexpand = true;
             box2.vexpand = false;
             
-            var button = new Gtk.Button.from_icon_name ("list-add-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
-		    button.hexpand = false;
-		    button.set_always_show_image(true);
-		    button.set_label("Add task");
-		    button.clicked.connect (() => {
+            fab = new Gtk.Button.from_icon_name ("list-add-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+		    fab.hexpand = false;
+		    fab.set_always_show_image(true);
+		    fab.set_label("Add task");
+		    fab.clicked.connect (() => {
 			    on_add_clicked();
 		    });
-		    button.get_style_context().add_class(CssData.MATERIAL_FAB);
+		    fab.get_style_context().add_class(CssData.MATERIAL_FAB);
             
             hor_grid.add(box2);
-            hor_grid.add(button);
+            hor_grid.add(fab);
             overlay.add_overlay(vert_grid);
             
             overlay.show_all();
             add(overlay);
+            
+            update_fab();
+        }
+        
+        public void set_maximazed(bool max) {
+        	this.is_max = max;
+        	update_fab();
+        }
+        
+        private void update_fab() {
+        	if (is_max) {
+        		hide_fab();
+        	} else {
+        		show_fab();
+        	}
+        }
+        
+        private void show_fab() {
+        	fab.set_opacity(1);
+        }
+        
+        private void hide_fab() {
+        	fab.set_opacity(0);
         }
     }
 }
