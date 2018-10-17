@@ -4,7 +4,8 @@ namespace Tasks {
     
         delegate void DelegateType ();
         
-        public signal void on_save(Event event);
+        public signal void on_add_new(Event event);
+        public signal void on_update(Event event);
         public signal void on_cancel();
         
         private Gtk.Entry summary_field;
@@ -20,6 +21,8 @@ namespace Tasks {
         private Gtk.Grid type_grid;
         private TimerView timer_view;
         private Gtk.Button cancel_button;
+        private Gtk.RadioButton timer_radio;
+        private Gtk.RadioButton date_radio;
         
         private bool is_max = false;
         private string summary_hint = "Remind me...";
@@ -27,6 +30,7 @@ namespace Tasks {
         private string type_date_time_label = "Date/Time";
         private string type_timer_label = "Timer";
         private int type = 0;
+        private Event editable_event = null;
         
         public CreateView() {
             Gtk.Grid vert_grid = new Gtk.Grid();
@@ -182,11 +186,11 @@ namespace Tasks {
             button_grid.orientation = Gtk.Orientation.HORIZONTAL;
             button_grid.show_all ();
             
-            var date_radio = new Gtk.RadioButton.with_label(null, type_date_time_label);
+            date_radio = new Gtk.RadioButton.with_label(null, type_date_time_label);
             date_radio.toggled.connect(toggled);
             date_radio.get_style_context().add_class(CssData.MATERIAL_RADIO_BUTTON);
             
-            var timer_radio = new Gtk.RadioButton.with_label(date_radio.get_group(), type_timer_label);
+            timer_radio = new Gtk.RadioButton.with_label(date_radio.get_group(), type_timer_label);
             timer_radio.toggled.connect(toggled);
             timer_radio.get_style_context().add_class(CssData.MATERIAL_RADIO_BUTTON);
             
@@ -345,6 +349,7 @@ namespace Tasks {
             
             var has_error = false;
             var has_reminder = false;
+            var show_notification = false;
             
             if (summary == "") {
                 has_error = true;
@@ -352,6 +357,8 @@ namespace Tasks {
             }
             
             if (due_switch.active) {
+                show_notification = true;
+            
             	hour = hours_view.get_value_as_int ();
 		        minute = minutes_view.get_value_as_int ();
 		        timer_value = 0;
@@ -375,13 +382,29 @@ namespace Tasks {
                 has_reminder = true;
             } else {
                 has_reminder = false;
+                show_notification = false;
             }
             
             if (has_error) {
                 return;
             }
             
-            Event event = new Event.with_id(0, summary, note);
+            Event event;
+            if (editable_event != null) {
+            	event = editable_event;
+            	if (editable_event.id == 0) {
+            	    int id = AppSettings.get_default().last_id;
+                    AppSettings.get_default().last_id = id + 1;
+                    event.id = id;
+                    editable_event = null;
+            	}
+            	event.summary = summary;
+                event.description = note;
+            } else {
+                int id = AppSettings.get_default().last_id;
+                AppSettings.get_default().last_id = id + 1;
+            	event = new Event.with_id(id, summary, note);
+            }
             event.year = year;
             event.month = month;
             event.day = day;
@@ -390,10 +413,18 @@ namespace Tasks {
             event.event_type = type;
             event.is_active = true;
             event.has_reminder = has_reminder;
+            event.show_notification = show_notification;
             event.timer_time = timer_value;
             
-            Logger.log("Event added");
-            on_save(event);
+            Logger.log(@"Event saved: $(event.to_string())");
+            
+            if (editable_event != null) {
+            	on_update(event);
+            } else {
+            	on_add_new(event);
+            }
+            
+            editable_event = null;
         }
         
         private bool validate_time(long timer_value) {
@@ -408,8 +439,9 @@ namespace Tasks {
         }
         
         public void edit_event(Event event) {
-            hours_view.set_value(event.hour);
-            minutes_view.set_value(event.minute);
+            clear_view();
+            
+            editable_event = event;
             
             description_field.set_text(event.description);
             summary_field.set_text(event.summary);
@@ -417,9 +449,22 @@ namespace Tasks {
             description_label.set_opacity(0);
             summary_label.set_opacity(0);
             
-            calendar.year = event.year;
-		    calendar.month = event.month;
-		    calendar.day = event.day;
+            if (event.has_reminder) {
+                due_switch.active = true;
+                notification_switch.active = event.show_notification;
+                
+                if (event.event_type == Event.DATE) {
+                    hours_view.set_value(event.hour);
+                    minutes_view.set_value(event.minute);
+                    
+                    calendar.year = event.year;
+		            calendar.month = event.month;
+		            calendar.day = event.day;
+                } else {
+                    timer_radio.set_active(true);
+                    timer_view.set_seconds(event.timer_time);
+                }
+            }
         }
         
         public void clear_view() {

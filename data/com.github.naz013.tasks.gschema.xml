@@ -11,10 +11,15 @@
 			<summary>Window position</summary>
 			<description>The y axis of window position</description>
 		</key>
-		<key name="theme" type="i">
+		<key name="app-theme" type="i">
 			<default>0</default>
 			<summary>Window theme</summary>
 			<description>Window theme parameter</description>
+		</key>
+		<key name="last-id" type="i">
+			<default>0</default>
+			<summary>Last used id for task</summary>
+			<description>Last used id for task</description>
 		</key>
 	</schema>
 </schemalist>

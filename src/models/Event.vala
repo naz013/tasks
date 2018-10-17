@@ -17,6 +17,7 @@ namespace Tasks {
 		public string description { get; set; default = ""; }
 		public bool is_active { get; set; default = true; }
 		public bool has_reminder { get; set; default = false; }
+		public bool show_notification { get; set; default = false; }
 		
 		public bool isSelected { get; set; default = false; }
 
@@ -29,9 +30,24 @@ namespace Tasks {
 		  	this.summary = summary;
 		  	this.description = description;
 		}
+		
+		public Event.with_event(Event event) {
+		  	this.year = event.year;
+            this.month = event.month;
+            this.day = event.day;
+            this.hour = event.hour;
+            this.minute = event.minute;
+            this.event_type = event.event_type;
+            this.is_active = event.is_active;
+            this.has_reminder = event.has_reminder;
+            this.show_notification = event.show_notification;
+            this.timer_time = event.timer_time;
+            this.summary = event.summary;
+            this.description = event.description;
+		}
 
 		public string to_string() {
-		  	return @"Event => id: $id, summary: $summary, type: $event_type, has_reminder: $has_reminder";
+		  	return @"Event => id: $id, summary: $summary, desc: $description, type: $event_type, has_reminder: $has_reminder";
 		}
   	}
 }

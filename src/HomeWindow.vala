@@ -18,7 +18,7 @@ namespace Tasks {
         private bool was_maximized = false;
         private bool was_minimized = false;
         private bool was_resized = false;
-        private bool change_theme = true;
+        private bool change_theme = false;
         private bool settings_visible = false;
         private int old_width = 500;
         private int old_height = 500;
@@ -45,8 +45,11 @@ namespace Tasks {
                 height_request: 500,
                 width_request: 500
             );
+            
+            int theme = AppSettings.get_default().app_theme;
+            Logger.log(@"Theme value: $theme");
 
-            init_theme();
+            init_theme(theme);
 
             var actions = new SimpleActionGroup ();
             actions.add_action_entries (action_entries, this);
@@ -94,9 +97,6 @@ namespace Tasks {
                     create_view.set_maximazed(is_maximized);
                 }
             });
-            AppSettings.get_default().changed.connect(() => {
-                Logger.log("Settings changed");
-            });
             
             draw_views();
         }
@@ -138,8 +138,9 @@ namespace Tasks {
             }
         }
 
-        private void init_theme() {
-            if (AppSettings.get_default().theme == 0) {
+        private void init_theme(int theme) {
+            Logger.log(@"Is dark -> $(theme == 0), value -> $theme");
+            if (theme == 0) {
                 app_theme = new DarkTheme();
             } else {
                 app_theme = new LightTheme();
@@ -189,12 +190,18 @@ namespace Tasks {
 
                     //Add rigth panel
                     add_create_task_panel(main_grid);
+                } else {
+                    create_view = null;
                 }
             } else {
                 //Show events
                 list_box = new ListView(tasks);
                 list_box.on_edit.connect((event) => {
                     Logger.log(@"Edit row $(event.to_string())");
+                    add_action();
+                    if (create_view != null) {
+                        create_view.edit_event(event);
+                    }
                 });
                 list_box.on_delete.connect((event) => {
                     Logger.log(@"Delete row $(event.to_string())");
@@ -203,6 +210,12 @@ namespace Tasks {
                 });
                 list_box.on_copy.connect((event) => {
                     Logger.log(@"Copy row $(event.to_string())");
+                    add_action();
+                    if (create_view != null) {
+                        var editable = new Event.with_event(event);
+                        editable.summary = event.summary + " - copy";
+                        create_view.edit_event(editable);
+                    }
                 });
                 list_box.on_add_clicked.connect(() => {
                     add_action();
@@ -214,6 +227,8 @@ namespace Tasks {
 
                     //Add rigth panel
                     add_create_task_panel(main_grid);
+                } else {
+                    create_view = null;
                 }
             }
             update_theme();
@@ -222,8 +237,18 @@ namespace Tasks {
         
         private void add_create_task_panel(Gtk.Grid grid) {
             create_view = new CreateView();
-            create_view.on_save.connect((event) => {
+            create_view.on_add_new.connect((event) => {
+                Logger.log(@"Event added: $(event.to_string())");
                 tasks.add(event);
+                if (!add_action() && list_box != null) {
+                    list_box.refresh_list(tasks);
+                } else {
+                    draw_views();
+                }
+            });
+            create_view.on_update.connect((event) => {
+                Logger.log(@"Event updated: $(event.to_string())");
+                update_event(event);
                 if (!add_action() && list_box != null) {
                     list_box.refresh_list(tasks);
                 } else {
@@ -235,6 +260,15 @@ namespace Tasks {
             });
             create_view.set_maximazed(is_maximized);
             grid.add(create_view);
+        }
+        
+        private void update_event(Event event) {
+            for (int i = 0; i < tasks.size; i++) {
+                if (tasks.get(i).id == event.id) {
+                    tasks.set(i, event);
+                    break;
+                }
+            }
         }
 
         private void update_theme() {
@@ -256,13 +290,14 @@ namespace Tasks {
         }
 
         public void toggle_mode() {
-            if (AppSettings.get_default().theme == 0) {
-                AppSettings.get_default().theme = 1;
+            if (AppSettings.get_default().app_theme == 0) {
+                AppSettings.get_default().app_theme = 1;
+                init_theme(1);
             } else {
-                AppSettings.get_default().theme = 0;
+                AppSettings.get_default().app_theme = 0;
+                init_theme(0);
             }
             
-            init_theme();
             update_theme();
             if (settings_visible && mode_switch != null) {
                 toggle_mode_switch();
@@ -271,7 +306,7 @@ namespace Tasks {
 
         private void toggle_mode_switch() {
             change_theme = false;
-            mode_switch.set_active (AppSettings.get_default().theme == 0);
+            mode_switch.set_active (AppSettings.get_default().app_theme == 0);
             change_theme = true;
         }
 
@@ -282,7 +317,7 @@ namespace Tasks {
                     toggle_mode();
                 }
     		});
-    		mode_switch.set_active (AppSettings.get_default().theme == 0);
+    		mode_switch.set_active (AppSettings.get_default().app_theme == 0);
             mode_switch.set_property("height-request", 20);
             mode_switch.get_style_context().add_class("mode_switch");
 
