@@ -226,6 +226,8 @@ namespace Tasks {
                 tasks.add(event);
                 if (!add_action() && list_box != null) {
                     list_box.refresh_list(tasks);
+                } else {
+                    draw_views();
                 }
             });
             create_view.on_cancel.connect(() => {

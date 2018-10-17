@@ -7,7 +7,7 @@ namespace Tasks {
         public signal void on_copy(Event task);
         public signal void on_add_clicked();
         
-        private Gtk.Grid list_box;
+        private Gtk.ListBox list_box;
         private Gtk.Button fab;
         private bool is_max = false;
         
@@ -16,9 +16,9 @@ namespace Tasks {
             overlay.expand = true;
             
             Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
+            scrolled.expand = true;
             
-            list_box = new Gtk.Grid();
-            list_box.orientation = Gtk.Orientation.VERTICAL;
+            list_box = new Gtk.ListBox();
             list_box.hexpand = true;
             list_box.get_style_context().add_class("list_container");
             scrolled.add(list_box);
@@ -62,6 +62,8 @@ namespace Tasks {
             hor_grid.add(fab);
             overlay.add_overlay(vert_grid);
             
+            overlay.set_overlay_pass_through(vert_grid, true);
+            
             overlay.show_all();
             add(overlay);
             
@@ -79,7 +81,6 @@ namespace Tasks {
                 Event task = tasks.get(i);
                 list_box.add(get_row(task));
             }
-            list_box.show_all();
         }
         
         private void update_fab() {
@@ -101,6 +102,7 @@ namespace Tasks {
         private Gtk.ListBoxRow get_row(Event task) {
             var row = new Gtk.ListBoxRow();
             row.hexpand = true;
+            row.vexpand = false;
             row.set_selectable(false);
             
             var hor_grid = new Gtk.Grid();
@@ -115,9 +117,12 @@ namespace Tasks {
             
             var edit_button = new Gtk.Button.from_icon_name ("document-edit-symbolic", Gtk.IconSize.BUTTON);
             edit_button.has_tooltip = true;
+            edit_button.hexpand = false;
+		    edit_button.set_always_show_image(true);
             edit_button.tooltip_text = ("Edit task");
             edit_button.get_style_context().add_class("icon_button");
             edit_button.clicked.connect (() => {
+                Logger.log(@"Edit row $(task.to_string())");
 			    on_edit(task);
 		    });
             
@@ -126,6 +131,7 @@ namespace Tasks {
             delete_button.tooltip_text = ("Delete task");
             delete_button.get_style_context().add_class("icon_button");
             delete_button.clicked.connect (() => {
+                Logger.log(@"Delete row $(task.to_string())");
 			    on_delete(task);
 		    });
 		    
@@ -134,18 +140,17 @@ namespace Tasks {
             copy_button.tooltip_text = ("Copy task");
             copy_button.get_style_context().add_class("icon_button");
             copy_button.clicked.connect (() => {
+                Logger.log(@"Copy row $(task.to_string())");
 			    on_copy(task);
 		    });
             
             button_grid.add(edit_button);
             button_grid.add(delete_button);
             button_grid.add(copy_button);
-            button_grid.show_all();
             
             var vert_grid = new Gtk.Grid();
             vert_grid.orientation = Gtk.Orientation.VERTICAL;
             vert_grid.hexpand = true;
-            vert_grid.show_all ();
             
             var summary_label = new Gtk.Label(task.summary);
             summary_label.set_xalign(0.0f);
@@ -183,9 +188,9 @@ namespace Tasks {
             
             hor_grid.add(vert_grid);
             hor_grid.add(button_grid);
-            hor_grid.show_all();
             
             row.add(hor_grid);
+            row.show_all();
             
             Logger.log(@"Create row $(task.to_string())");
             
