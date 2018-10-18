@@ -14,6 +14,7 @@ namespace Tasks {
         public const string MATERIAL_TEXT_FIELD = "material_text_field";
         public const string MATERIAL_HINT_LABEL = "material_hint_label";
         public const string MATERIAL_HINT_ERROR = "material_hint_error";
+        public const string MATERIAL_SNACKBAR = "material_snackbar";
         
         public const string LABEL_PRIMARY = "body2";
         public const string LABEL_SECONDARY = "body1";
@@ -566,6 +567,21 @@ namespace Tasks {
                     font-size: 10px;
                     color: red;
                     padding-left: 5px;
+                }
+                
+                .material_snackbar {
+                    background: @cardBgColor;
+                    padding-left: 16px;
+                    padding-right: 16px;
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                    margin-bottom: 8px;
+                    margin-top: 16px;
+                    margin-left: 16px;
+                    margin-right: 16px;
+                    border-radius: 2px;
+                    box-shadow: 0 2px 2px @shadowColor, 0 2px 2px @shadowOutColor;
+                    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
                 }
                 
                 .show_border {

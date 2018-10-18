@@ -5,7 +5,7 @@ namespace Tasks {
         }
         
         public string get_card_bg_color() {
-            return "#484848";
+            return "#2b2b2b";
         }
 
         public string get_text_primary_color() {
@@ -37,11 +37,11 @@ namespace Tasks {
         }
         
         public string get_shadow_color() {
-            return "rgba(255,255,255,0.12)";
+            return "rgba(0,0,0,0.24)";
         }
         
         public string get_shadow_out_color() {
-            return "rgba(255,255,255,0.24)";
+            return "rgba(0,0,0,0.36)";
         }
         
         public string get_button_disabled_color() {

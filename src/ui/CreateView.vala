@@ -10,16 +10,24 @@ namespace Tasks {
         
         private Gtk.Entry summary_field;
         private Gtk.Entry description_field;
+        
         private Gtk.Label summary_label;
         private Gtk.Label description_label;
+        private Gtk.Label summary_error;
+        private SnackBar snackbar;
+        
         private Gtk.Calendar calendar;
         private Gtk.SpinButton hours_view;
         private Gtk.SpinButton minutes_view;
+        
         private Gtk.Switch due_switch;
         private Gtk.Switch notification_switch;
+        
         private Gtk.Grid mutable_grid;
         private Gtk.Grid type_grid;
+        
         private TimerView timer_view;
+        
         private Gtk.Button cancel_button;
         private Gtk.RadioButton timer_radio;
         private Gtk.RadioButton date_radio;
@@ -45,6 +53,9 @@ namespace Tasks {
             
             //Scrollable holder
             
+            Gtk.Overlay overlay = new Gtk.Overlay();
+            overlay.expand = true;
+            
             Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
             
             Gtk.Grid scrollable_grid = new Gtk.Grid();
@@ -55,7 +66,10 @@ namespace Tasks {
             scrollable_grid.show_all ();
             
             scrolled.add(scrollable_grid);
-            vert_grid.add(scrolled);
+            overlay.add(scrolled);
+            
+            add_error_popup(overlay);
+            vert_grid.add(overlay);
             
             summary_label = create_hint_label(summary_hint, false);
 		    scrollable_grid.add(summary_label);
@@ -63,6 +77,7 @@ namespace Tasks {
             summary_field = create_entry(summary_hint, 72,  () => {
                 summary_label.set_opacity(1);
                 summary_field.set_state_flags(Gtk.StateFlags.FOCUSED, true);
+                summary_error.set_opacity(0);
 		    }, () => {
                 if (summary_field.get_text() == "") {
                     summary_label.set_opacity(0);
@@ -71,7 +86,10 @@ namespace Tasks {
 		    summary_field.get_style_context().add_class(CssData.MATERIAL_TEXT_FIELD);
 		    scrollable_grid.add(summary_field);
 		    
-		    scrollable_grid.add(create_empty_space(16));
+		    summary_error = create_error_label("*Must be not empty", false);
+		    scrollable_grid.add(create_empty_space(4));
+		    scrollable_grid.add(summary_error);
+		    
 		    description_label = create_hint_label(description_hint, false);
 		    scrollable_grid.add(description_label);
 		    
@@ -148,6 +166,162 @@ namespace Tasks {
         public void set_maximazed(bool max) {
         	this.is_max = max;
         	// update_buttons();
+        }
+        
+        public void save_task() {
+        	int hour = 0;
+	        int minute = 0;
+	        long timer_value = 0;
+	        
+	        int year = 0;
+	        int month = 0;
+	        int day = 0;
+            var summary = summary_field.get_text();
+            var note = description_field.get_text();
+            
+            var has_error = false;
+            var has_reminder = false;
+            var show_notification = false;
+            
+            if (summary == "") {
+                has_error = true;
+                summary_field.set_state_flags(Gtk.StateFlags.INCONSISTENT, true);
+                summary_error.set_opacity(1);
+            }
+            
+            if (due_switch.active) {
+                show_notification = true;
+            
+            	hour = hours_view.get_value_as_int ();
+		        minute = minutes_view.get_value_as_int ();
+		        timer_value = 0;
+		        
+		    	year = calendar.year;
+		        month = calendar.month;
+		        day = calendar.day;
+		        
+                if (type == Event.DATE) {
+                    if (validate_dt(year, month, day, hour, minute)) {
+                    	has_error = true;
+                    	show_error("Select date in future");
+                    }
+                } else if (type == Event.TIMER) {
+                    if (timer_view != null) {
+                        timer_value = timer_view.get_seconds();
+                    }
+                    if (validate_time(timer_value)) {
+                    	has_error = true;
+                    	show_error("Timer time not selected");
+                    }
+                }
+                has_reminder = true;
+            } else {
+                has_reminder = false;
+                show_notification = false;
+            }
+            
+            if (has_error) {
+                return;
+            }
+            
+            Event event;
+            if (editable_event != null) {
+            	event = editable_event;
+            	if (editable_event.id == 0) {
+            	    int id = AppSettings.get_default().last_id;
+                    AppSettings.get_default().last_id = id + 1;
+                    event.id = id;
+                    editable_event = null;
+            	}
+            	event.summary = summary;
+                event.description = note;
+            } else {
+                int id = AppSettings.get_default().last_id;
+                AppSettings.get_default().last_id = id + 1;
+            	event = new Event.with_id(id, summary, note);
+            }
+            event.year = year;
+            event.month = month;
+            event.day = day;
+            event.hour = hour;
+            event.minute = minute;
+            event.event_type = type;
+            event.is_active = true;
+            event.has_reminder = has_reminder;
+            event.show_notification = show_notification;
+            event.timer_time = timer_value;
+            
+            Logger.log(@"Event saved: $(event.to_string())");
+            
+            if (editable_event != null) {
+            	on_update(event);
+            } else {
+            	on_add_new(event);
+            }
+            
+            editable_event = null;
+        }
+        
+        public void edit_event(Event event) {
+            clear_view();
+            
+            editable_event = event;
+            
+            description_field.set_text(event.description);
+            summary_field.set_text(event.summary);
+            
+            description_label.set_opacity(0);
+            summary_label.set_opacity(0);
+            
+            if (event.has_reminder) {
+                due_switch.active = true;
+                notification_switch.active = event.show_notification;
+                
+                if (event.event_type == Event.DATE) {
+                    hours_view.set_value(event.hour);
+                    minutes_view.set_value(event.minute);
+                    
+                    calendar.year = event.year;
+		            calendar.month = event.month;
+		            calendar.day = event.day;
+                } else {
+                    timer_radio.set_active(true);
+                    timer_view.set_seconds(event.timer_time);
+                }
+            }
+        }
+        
+        public void clear_view() {
+            description_field.set_text("");
+            summary_field.set_text("");
+            
+            description_label.set_opacity(0);
+            summary_label.set_opacity(0);
+            
+            due_switch.set_active (false);
+        }
+        
+        private bool validate_time(long timer_value) {
+            if (timer_value <= 0) {
+                return true;
+            }
+            return false;
+        }
+        
+        private void add_error_popup(Gtk.Overlay overlay) {
+            var v_grid = new Gtk.Grid();
+            v_grid.expand = true;
+            v_grid.orientation = Gtk.Orientation.VERTICAL;
+            
+            var box = new Gtk.Fixed();
+            box.expand = true;
+            v_grid.add(box);
+            
+            snackbar = new SnackBar();
+            v_grid.add(snackbar);
+            
+            overlay.add_overlay(v_grid);
+            overlay.set_overlay_pass_through(v_grid, true);
         }
         
         private void update_buttons() {
@@ -239,6 +413,8 @@ namespace Tasks {
 		    timer_view = new TimerView();
 		    timer_view.get_style_context().add_class("timer_view");
 		    container.add(timer_view);
+		    
+		    container.add(create_empty_space(16));
         }
         
         private void add_date_type(Gtk.Grid container) {
@@ -327,6 +503,13 @@ namespace Tasks {
             container.add(grid);
         }
         
+        private void show_error(string label) {
+            Logger.log(@"show_error: $label");
+            if (snackbar != null) {
+                snackbar.show_snackbar(label);
+            }
+        }
+        
         private void toggle_reminder() {
             Logger.log(@"Due is enabled -> $(due_switch.active)");
             add_due_view();
@@ -336,145 +519,8 @@ namespace Tasks {
             Logger.log(@"Notification is enabled -> $(notification_switch.active)");
         }
         
-        public void save_task() {
-        	int hour = 0;
-	        int minute = 0;
-	        long timer_value = 0;
-	        
-	        int year = 0;
-	        int month = 0;
-	        int day = 0;
-            var summary = summary_field.get_text();
-            var note = description_field.get_text();
-            
-            var has_error = false;
-            var has_reminder = false;
-            var show_notification = false;
-            
-            if (summary == "") {
-                has_error = true;
-                summary_field.set_state_flags(Gtk.StateFlags.INCONSISTENT, true);
-            }
-            
-            if (due_switch.active) {
-                show_notification = true;
-            
-            	hour = hours_view.get_value_as_int ();
-		        minute = minutes_view.get_value_as_int ();
-		        timer_value = 0;
-		        
-		    	year = calendar.year;
-		        month = calendar.month;
-		        day = calendar.day;
-		        
-                if (type == Event.DATE) {
-                    if (validate_dt(year, month, day, hour, minute)) {
-                    	has_error = true;
-                    }
-                } else if (type == Event.TIMER) {
-                    if (timer_view != null) {
-                        timer_value = timer_view.get_seconds();
-                    }
-                    if (validate_time(timer_value)) {
-                    	has_error = true;
-                    }
-                }
-                has_reminder = true;
-            } else {
-                has_reminder = false;
-                show_notification = false;
-            }
-            
-            if (has_error) {
-                return;
-            }
-            
-            Event event;
-            if (editable_event != null) {
-            	event = editable_event;
-            	if (editable_event.id == 0) {
-            	    int id = AppSettings.get_default().last_id;
-                    AppSettings.get_default().last_id = id + 1;
-                    event.id = id;
-                    editable_event = null;
-            	}
-            	event.summary = summary;
-                event.description = note;
-            } else {
-                int id = AppSettings.get_default().last_id;
-                AppSettings.get_default().last_id = id + 1;
-            	event = new Event.with_id(id, summary, note);
-            }
-            event.year = year;
-            event.month = month;
-            event.day = day;
-            event.hour = hour;
-            event.minute = minute;
-            event.event_type = type;
-            event.is_active = true;
-            event.has_reminder = has_reminder;
-            event.show_notification = show_notification;
-            event.timer_time = timer_value;
-            
-            Logger.log(@"Event saved: $(event.to_string())");
-            
-            if (editable_event != null) {
-            	on_update(event);
-            } else {
-            	on_add_new(event);
-            }
-            
-            editable_event = null;
-        }
-        
-        private bool validate_time(long timer_value) {
-            if (timer_value <= 0) {
-                return true;
-            }
-            return false;
-        }
-        
         private bool validate_dt(int year, int month, int day, int hour, int minute) {
             return false;
-        }
-        
-        public void edit_event(Event event) {
-            clear_view();
-            
-            editable_event = event;
-            
-            description_field.set_text(event.description);
-            summary_field.set_text(event.summary);
-            
-            description_label.set_opacity(0);
-            summary_label.set_opacity(0);
-            
-            if (event.has_reminder) {
-                due_switch.active = true;
-                notification_switch.active = event.show_notification;
-                
-                if (event.event_type == Event.DATE) {
-                    hours_view.set_value(event.hour);
-                    minutes_view.set_value(event.minute);
-                    
-                    calendar.year = event.year;
-		            calendar.month = event.month;
-		            calendar.day = event.day;
-                } else {
-                    timer_radio.set_active(true);
-                    timer_view.set_seconds(event.timer_time);
-                }
-            }
-        }
-        
-        public void clear_view() {
-            description_field.set_text("");
-            summary_field.set_text("");
-            
-            description_label.set_opacity(0);
-            summary_label.set_opacity(0);
-            
-            due_switch.set_active (false);
         }
         
         private Gtk.SpinButton create_spin_button(int from, int to, int step, int width, owned DelegateType action) {
@@ -542,7 +588,8 @@ namespace Tasks {
         }
         
         private Gtk.Widget create_empty_space(int height) {
-            Gtk.Widget empty_space = new Gtk.Label("");
+            Gtk.Widget empty_space = new Gtk.Grid();
+            empty_space.expand = false;
             empty_space.height_request = height;
             return empty_space;
         }
