@@ -318,6 +318,12 @@ namespace Tasks {
             v_grid.add(box);
             
             snackbar = new SnackBar();
+            snackbar.on_show.connect(() => {
+                overlay.set_overlay_pass_through(v_grid, false);
+            });
+            snackbar.on_hide.connect(() => {
+                overlay.set_overlay_pass_through(v_grid, true);
+            });
             v_grid.add(snackbar);
             
             overlay.add_overlay(v_grid);

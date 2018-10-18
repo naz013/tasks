@@ -9,6 +9,7 @@ namespace Tasks {
         public const string MATERIAL_BUTTON = "material_button";
         public const string MATERIAL_FAB = "material_fab";
         public const string MATERIAL_BUTTON_FLAT = "material_button_flat";
+        public const string MATERIAL_BUTTON_FLAT_COLORED = "material_button_flat_colored";
         public const string MATERIAL_BUTTON_OK = "material_button_ok";
         public const string MATERIAL_BUTTON_CANCEL = "material_button_cancel";
         public const string MATERIAL_TEXT_FIELD = "material_text_field";
@@ -425,6 +426,31 @@ namespace Tasks {
                     background: transparent;
                     border: 0px;
                     padding: 0px;
+                    box-shadow: none;
+                    font-weight: normal;
+                }
+                
+                .material_button_flat_colored {
+                    border-radius: 0px;
+                    font-size: 15px;
+                    color: @accentColor;
+                    background: transparent;
+                    border: 0px;
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                    box-shadow: none;
+                    font-weight: normal;
+                } 
+                .material_button_flat_colored:hover, 
+                .material_button_flat_colored:hover:active,
+                .material_button_flat_colored:selected {
+                    border-radius: 0px;
+                    font-size: 15px;
+                    color: @accentColor;
+                    background: @shadowColor;
+                    border: 0px;
+                    padding-top: 8px;
+                    padding-bottom: 8px;
                     box-shadow: none;
                     font-weight: normal;
                 }
