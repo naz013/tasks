@@ -22,6 +22,7 @@ namespace Tasks {
         private bool settings_visible = false;
         private int old_width = 500;
         private int old_height = 500;
+        private int last_delete_position = -1;
 
         public AppTheme app_theme = new LightTheme();
 
@@ -205,6 +206,7 @@ namespace Tasks {
                 });
                 list_box.on_delete.connect((event) => {
                     Logger.log(@"Delete row $(event.to_string())");
+                    last_delete_position = tasks.index_of(event);
                     tasks.remove(event);
                     draw_views();
                 });
@@ -215,6 +217,18 @@ namespace Tasks {
                         var editable = new Event.with_event(event);
                         editable.summary = event.summary + " - copy";
                         create_view.edit_event(editable);
+                    }
+                });
+                list_box.on_undo.connect((event) => {
+                    Logger.log(@"Undo row $(event.to_string())");
+                    if (last_delete_position >= 0) {
+                        tasks.insert(last_delete_position, event);
+                        if (!add_action() && list_box != null) {
+                            list_box.refresh_list(tasks);
+                        } else {
+                            draw_views();
+                        }
+                        last_delete_position = -1;
                     }
                 });
                 list_box.on_add_clicked.connect(() => {

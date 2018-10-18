@@ -24,6 +24,7 @@ namespace Tasks {
 		}
 		
 		public void show_snackbar(string message) {
+			Logger.log("show_snackbar: ");
 			on_show();
 			clear_container();
 			container.attach(get_label(message), 0, 0, 1, 1);
@@ -33,6 +34,7 @@ namespace Tasks {
 		}
 		
 		public void show_snackbar_with_action(string message, string action_label, owned DelegateType action) {
+			Logger.log("show_snackbar_with_action: ");
 			on_show();
 			clear_container();
 			container.attach(get_label(message), 0, 0, 1, 1);

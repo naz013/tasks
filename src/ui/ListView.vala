@@ -5,10 +5,13 @@ namespace Tasks {
         public signal void on_edit(Event task);
         public signal void on_delete(Event task);
         public signal void on_copy(Event task);
+        public signal void on_undo(Event task);
         public signal void on_add_clicked();
         
         private Gtk.ListBox list_box;
         private Gtk.Button fab;
+        private SnackBar snackbar;
+        
         private bool is_max = false;
         
         public ListView(Gee.ArrayList<Event> tasks) {
@@ -42,7 +45,17 @@ namespace Tasks {
             hor_grid.vexpand = false;
             hor_grid.margin = 18;
             hor_grid.orientation = Gtk.Orientation.HORIZONTAL;
+            
             vert_grid.add(hor_grid);
+            
+            snackbar = new SnackBar();
+            snackbar.on_show.connect(() => {
+                overlay.set_overlay_pass_through(vert_grid, false);
+            });
+            snackbar.on_hide.connect(() => {
+                overlay.set_overlay_pass_through(vert_grid, true);
+            });
+            // hor_grid.add(snackbar);
             
             var box2 = new Gtk.Fixed();
             box2.hexpand = true;
@@ -99,6 +112,13 @@ namespace Tasks {
         	fab.set_opacity(0);
         }
         
+        private void show_undo_snackbar(Event event) {
+            var message = @"Event $(event.summary) deleted.";
+            snackbar.show_snackbar_with_action(message, "UNDO", () => {
+                on_undo(event);
+            });
+        }
+        
         private Gtk.ListBoxRow get_row(Event task) {
             var row = new Gtk.ListBoxRow();
             row.hexpand = true;
@@ -133,6 +153,7 @@ namespace Tasks {
             delete_button.clicked.connect (() => {
                 Logger.log(@"Delete row $(task.to_string())");
 			    on_delete(task);
+			    show_undo_snackbar(task);
 		    });
 		    
 		    var copy_button = new Gtk.Button.from_icon_name ("edit-copy-symbolic", Gtk.IconSize.BUTTON);
@@ -191,8 +212,6 @@ namespace Tasks {
             
             row.add(hor_grid);
             row.show_all();
-            
-            Logger.log(@"Create row $(task.to_string())");
             
             return row;
         }
