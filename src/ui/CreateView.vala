@@ -37,7 +37,7 @@ namespace Tasks {
         private string description_hint = "Note";
         private string type_date_time_label = "Date/Time";
         private string type_timer_label = "Timer";
-        private int type = 0;
+        private int64 type = 0;
         private Event editable_event = null;
         
         public CreateView() {
@@ -169,13 +169,13 @@ namespace Tasks {
         }
         
         public void save_task() {
-        	int hour = 0;
-	        int minute = 0;
-	        long timer_value = 0;
+        	int64 hour = 0;
+	        int64 minute = 0;
+	        int64 timer_value = 0;
 	        
-	        int year = 0;
-	        int month = 0;
-	        int day = 0;
+	        int64 year = 0;
+	        int64 month = 0;
+	        int64 day = 0;
             var summary = summary_field.get_text();
             var note = description_field.get_text();
             
@@ -228,7 +228,7 @@ namespace Tasks {
             if (editable_event != null) {
             	event = editable_event;
             	if (editable_event.id == 0) {
-            	    int id = AppSettings.get_default().last_id;
+            	    int64 id = AppSettings.get_default().last_id;
                     AppSettings.get_default().last_id = id + 1;
                     event.id = id;
                     editable_event = null;
@@ -236,7 +236,7 @@ namespace Tasks {
             	event.summary = summary;
                 event.description = note;
             } else {
-                int id = AppSettings.get_default().last_id;
+                int64 id = AppSettings.get_default().last_id;
                 AppSettings.get_default().last_id = id + 1;
             	event = new Event.with_id(id, summary, note);
             }
@@ -281,9 +281,9 @@ namespace Tasks {
                     hours_view.set_value(event.hour);
                     minutes_view.set_value(event.minute);
                     
-                    calendar.year = event.year;
-		            calendar.month = event.month;
-		            calendar.day = event.day;
+                    calendar.year = (int) event.year;
+		            calendar.month = (int) event.month;
+		            calendar.day = (int) event.day;
                 } else {
                     timer_radio.set_active(true);
                     timer_view.set_seconds(event.timer_time);
@@ -301,7 +301,7 @@ namespace Tasks {
             due_switch.set_active (false);
         }
         
-        private bool validate_time(long timer_value) {
+        private bool validate_time(int64 timer_value) {
             if (timer_value <= 0) {
                 return true;
             }
@@ -525,7 +525,7 @@ namespace Tasks {
             Logger.log(@"Notification is enabled -> $(notification_switch.active)");
         }
         
-        private bool validate_dt(int year, int month, int day, int hour, int minute) {
+        private bool validate_dt(int64 year, int64 month, int64 day, int64 hour, int64 minute) {
             return false;
         }
         

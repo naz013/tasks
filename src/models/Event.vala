@@ -4,15 +4,15 @@ namespace Tasks {
 		public const int DATE = 0;
 		public const int TIMER = 1;
 		
-		public int id { get; set; default = 0; }
-		public int year { get; set; default = 0; }
-		public int month { get; set; default = 0; }
-		public int day { get; set; default = 0; }
-		public int hour { get; set; default = 0; }
-		public int minute { get; set; default = 0; }
-		public int second { get; set; default = 0; }
-		public int event_type { get; set; default = 0; }
-		public long timer_time { get; set; default = 0; }
+		public int64 id { get; set; default = 0; }
+		public int64 year { get; set; default = 0; }
+		public int64 month { get; set; default = 0; }
+		public int64 day { get; set; default = 0; }
+		public int64 hour { get; set; default = 0; }
+		public int64 minute { get; set; default = 0; }
+		public int64 second { get; set; default = 0; }
+		public int64 event_type { get; set; default = 0; }
+		public int64 timer_time { get; set; default = 0; }
 		public string summary { get; set; default = ""; }
 		public string description { get; set; default = ""; }
 		public bool is_active { get; set; default = true; }
@@ -25,7 +25,7 @@ namespace Tasks {
 			this.with_id(0, "", "");
 		}
 
-		public Event.with_id(int id, string summary, string description) {
+		public Event.with_id(int64 id, string summary, string description) {
 		  	this.id = id;
 		  	this.summary = summary;
 		  	this.description = description;

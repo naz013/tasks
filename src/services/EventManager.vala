@@ -1,6 +1,7 @@
 
 namespace Tasks {
     public class EventManager {
+        
         private string app_dir = Environment.get_user_cache_dir () + "/com.github.naz013.tasks";
         private string file_name;
 
@@ -29,7 +30,6 @@ namespace Tasks {
             } catch (Error e) {
                 warning ("Failed to save notes %s\n", e.message);
             }
-
         }
 
         private string prepare_json_from_events (Gee.ArrayList<Event> events) {
@@ -38,16 +38,41 @@ namespace Tasks {
             builder.begin_array ();
             foreach (Event event in events) {
                 builder.begin_object ();
-                // builder.set_member_name ("x");
-                // builder.add_int_value (note.x);
-                // builder.set_member_name ("y");
-                // builder.add_int_value (note.y);
-                // builder.set_member_name ("color");
-                // builder.add_string_value (note.color);
-                // builder.set_member_name ("content");
-                // builder.add_string_value (note.content);
-                // builder.set_member_name ("title");
-                // builder.add_string_value (note.title);
+                
+                builder.set_member_name ("id");
+                builder.add_int_value (event.id);
+                
+                builder.set_member_name ("year");
+                builder.add_int_value (event.year);
+                builder.set_member_name ("month");
+                builder.add_int_value (event.month);
+                builder.set_member_name ("day");
+                builder.add_int_value (event.day);
+                builder.set_member_name ("hour");
+                builder.add_int_value (event.year);
+                builder.set_member_name ("minute");
+                builder.add_int_value (event.minute);
+                builder.set_member_name ("second");
+                builder.add_int_value (event.second);
+                
+                builder.set_member_name ("event_type");
+                builder.add_int_value (event.event_type);
+                
+                builder.set_member_name ("timer_time");
+                builder.add_int_value (event.timer_time);
+                
+                builder.set_member_name ("summary");
+                builder.add_string_value (event.summary);
+                builder.set_member_name ("description");
+                builder.add_string_value (event.description);
+                
+                builder.set_member_name ("is_active");
+                builder.add_boolean_value (event.is_active);
+                builder.set_member_name ("has_reminder");
+                builder.add_boolean_value (event.has_reminder);
+                builder.set_member_name ("show_notification");
+                builder.add_boolean_value (event.show_notification);
+                
                 builder.end_object ();
             };
             builder.end_array ();
@@ -81,13 +106,42 @@ namespace Tasks {
                     var array = root.get_array();
                     foreach (var item in array.get_elements()) {
                         var node = item.get_object();
-                        // string color = node.get_string_member("color");
-                        // int64 x = node.get_int_member("x");
-                        // int64 y = node.get_int_member("y");
-                        // string content = node.get_string_member("content");
-                        // string title = node.get_string_member("title");
-                        // Storage stored_note = new Storage.from_storage(x, y, color, content, title);
-                        // stored_notes.add(stored_note);
+                        
+                        string summary = node.get_string_member("summary");
+                        string description = node.get_string_member("description");
+                        
+                        int64 timer_time = node.get_int_member("timer_time");
+                        int64 id = node.get_int_member("id");
+                        
+                        bool is_active = node.get_boolean_member("is_active");
+                        bool has_reminder = node.get_boolean_member("has_reminder");
+                        bool show_notification = node.get_boolean_member("show_notification");
+                        
+                        int64 event_type = node.get_int_member("event_type");
+                        int64 second = node.get_int_member("second");
+                        int64 minute = node.get_int_member("minute");
+                        int64 hour = node.get_int_member("hour");
+                        int64 day = node.get_int_member("day");
+                        int64 month = node.get_int_member("month");
+                        int64 year = node.get_int_member("year");
+                        
+                        Event event = new Event();
+                        event.year = year;
+                        event.month = month;
+                        event.day = day;
+                        event.hour = hour;
+                        event.minute = minute;
+                        
+                        event.event_type = event_type;
+                        event.is_active = is_active;
+                        event.has_reminder = has_reminder;
+                        event.show_notification = show_notification;
+                        event.timer_time = timer_time;
+                        
+                        event.summary = summary;
+                        event.description = description;
+                        
+                        stored_events.add(event);
                     }
 
                 }

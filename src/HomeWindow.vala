@@ -20,11 +20,12 @@ namespace Tasks {
         private bool was_resized = false;
         private bool change_theme = false;
         private bool settings_visible = false;
-        private int old_width = 500;
-        private int old_height = 500;
+        private int64 old_width = 500;
+        private int64 old_height = 500;
         private int last_delete_position = -1;
 
-        public AppTheme app_theme = new LightTheme();
+        private AppTheme app_theme = new LightTheme();
+        private EventManager event_manager = new EventManager();
 
         public SimpleActionGroup actions { get; construct; }
 
@@ -99,6 +100,7 @@ namespace Tasks {
                 }
             });
             
+            tasks = event_manager.load_from_file();
             draw_views();
         }
         
@@ -208,6 +210,7 @@ namespace Tasks {
                     Logger.log(@"Delete row $(event.to_string())");
                     last_delete_position = tasks.index_of(event);
                     tasks.remove(event);
+                    event_manager.save_events(tasks);
                     draw_views();
                 });
                 list_box.on_copy.connect((event) => {
@@ -223,6 +226,7 @@ namespace Tasks {
                     Logger.log(@"Undo row $(event.to_string())");
                     if (last_delete_position >= 0) {
                         tasks.insert(last_delete_position, event);
+                        event_manager.save_events(tasks);
                         if (!add_action() && list_box != null) {
                             list_box.refresh_list(tasks);
                         } else {
@@ -254,6 +258,7 @@ namespace Tasks {
             create_view.on_add_new.connect((event) => {
                 Logger.log(@"Event added: $(event.to_string())");
                 tasks.add(event);
+                event_manager.save_events(tasks);
                 if (!add_action() && list_box != null) {
                     list_box.refresh_list(tasks);
                 } else {
@@ -263,6 +268,7 @@ namespace Tasks {
             create_view.on_update.connect((event) => {
                 Logger.log(@"Event updated: $(event.to_string())");
                 update_event(event);
+                event_manager.save_events(tasks);
                 if (!add_action() && list_box != null) {
                     list_box.refresh_list(tasks);
                 } else {

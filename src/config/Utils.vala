@@ -1,12 +1,12 @@
 namespace Tasks {
 	public class Utils : GLib.Object {
 	
-	    public const long MINUTE = 60;
-    	public const long HOUR = MINUTE * 60;
+	    public const int64 MINUTE = 60;
+    	public const int64 HOUR = MINUTE * 60;
     	public const string ZERO = "0";
     	public const int LENGTH = 6;
     	
-    	public static string to_label_from_seconds(long seconds) {
+    	public static string to_label_from_seconds(int64 seconds) {
     	    return to_label(from_seconds(seconds));
     	}
     	
@@ -27,7 +27,7 @@ namespace Tasks {
     		return @"$(d01)H $(d23)m $(d45)s";
     	}
 		
-		public static string from_seconds (long seconds) {
+		public static string from_seconds (int64 seconds) {
 			var hours = seconds / HOUR;
     	    var minutes = (seconds - (hours * HOUR)) / MINUTE;
     	    var secs = (seconds - (hours * HOUR) - (minutes * MINUTE));
@@ -56,7 +56,7 @@ namespace Tasks {
     	    return tmp;
 		}
 		
-		public static long to_seconds(string input) {
+		public static int64 to_seconds(string input) {
 		    var tmp = "";
     		if (input.length < LENGTH) {
     			for (int i = 0; i < LENGTH - input.length; i++) {
@@ -69,7 +69,7 @@ namespace Tasks {
     		var d23 = tmp.substring(2, 2);
     		var d45 = tmp.substring(4, 2);
     		
-    		long secs = 0;
+    		int64 secs = 0;
     		secs += int.parse(d01) * HOUR;
     		secs += int.parse(d23) * MINUTE;
     		secs += int.parse(d45);

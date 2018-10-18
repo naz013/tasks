@@ -56,11 +56,11 @@ namespace Tasks {
     	    add(overlay);
     	}
     	
-    	public long get_seconds() {
+    	public int64 get_seconds() {
     		return Utils.to_seconds(input);
     	}
     	
-    	public void set_seconds(long seconds) {
+    	public void set_seconds(int64 seconds) {
     	    input = Utils.from_seconds(seconds);
     		create_label();
     	}
