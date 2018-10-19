@@ -41,12 +41,19 @@ namespace Tasks {
         };
 
         public HomeWindow (Gtk.Application app) {
+            Logger.log(AppSettings.get_default().to_string());
             Object (
                 application: app,
                 resizable: true,
-                height_request: 500,
-                width_request: 500
+                width_request: 50,
+                height_request: 500
             );
+            
+            if (AppSettings.get_default().is_maximized && !is_maximized) {
+                maximize ();
+            } else {
+                resize(AppSettings.get_default().window_x, AppSettings.get_default().window_y);
+            }
             
             int theme = AppSettings.get_default().app_theme;
             Logger.log(@"Theme value: $theme");
@@ -74,7 +81,7 @@ namespace Tasks {
             focus_out_event.connect (() => {
                 return false;
             });
-            grid.size_allocate.connect(() => {
+            grid.size_allocate.connect((allocation) => {
                 was_create_open = create_open;
                 if (is_maximized) {
                     if (!was_maximized && !create_open) {
@@ -98,6 +105,15 @@ namespace Tasks {
                 if (create_view != null) {
                     create_view.set_maximazed(is_maximized);
                 }
+            });
+            delete_event.connect(() => {
+                int new_width, new_height;
+                get_size (out new_width, out new_height);
+                Logger.log(@"on_allocate: w -> $(new_width), h -> $(new_height)");
+                AppSettings.get_default().window_x = new_width;
+                AppSettings.get_default().window_y = new_height;
+                AppSettings.get_default().is_maximized = is_maximized;
+                return false;
             });
             
             tasks = event_manager.load_from_file();

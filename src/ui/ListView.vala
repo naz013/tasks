@@ -133,7 +133,6 @@ namespace Tasks {
             
             var button_grid = new Gtk.Grid();
             button_grid.orientation = Gtk.Orientation.HORIZONTAL;
-            button_grid.width_request = 32;
             
             var edit_button = new Gtk.Button.from_icon_name ("document-edit-symbolic", Gtk.IconSize.BUTTON);
             edit_button.has_tooltip = true;

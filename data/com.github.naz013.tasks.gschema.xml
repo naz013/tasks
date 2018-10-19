@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <schemalist>
 	<schema id="com.github.naz013.tasks" path="/com/github/naz013/tasks/">
-		<key name="window-x" type="x">
-			<default>-1</default>
-			<summary>Window position</summary>
-			<description>The x axis of window position</description>
+		<key name="window-x" type="i">
+			<default>500</default>
+			<summary>Window width</summary>
+			<description>The width of window</description>
 		</key>
-		<key name="window-y" type="x">
-			<default>-1</default>
-			<summary>Window position</summary>
-			<description>The y axis of window position</description>
+		<key name="window-y" type="i">
+			<default>500</default>
+			<summary>Window height</summary>
+			<description>The height of window</description>
 		</key>
 		<key name="app-theme" type="i">
 			<default>0</default>
@@ -20,6 +20,11 @@
 			<default>1</default>
 			<summary>Last used id for task</summary>
 			<description>Last used id for task</description>
+		</key>
+		<key name="is-maximized" type="b">
+			<default>false</default>
+			<summary>Screen maximization</summary>
+			<description>Save if was screen maximized</description>
 		</key>
 	</schema>
 </schemalist>
