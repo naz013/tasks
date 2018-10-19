@@ -2,11 +2,21 @@
 <schemalist>
 	<schema id="com.github.naz013.tasks" path="/com/github/naz013/tasks/">
 		<key name="window-x" type="i">
+			<default>-1</default>
+			<summary>Window horizontal position</summary>
+			<description>The x axis of window position</description>
+		</key>
+		<key name="window-y" type="i">
+			<default>-1</default>
+			<summary>Window vertical position</summary>
+			<description>The y axis of window position</description>
+		</key>
+		<key name="window-width" type="i">
 			<default>500</default>
 			<summary>Window width</summary>
 			<description>The width of window</description>
 		</key>
-		<key name="window-y" type="i">
+		<key name="window-height" type="i">
 			<default>500</default>
 			<summary>Window height</summary>
 			<description>The height of window</description>
@@ -25,6 +35,11 @@
 			<default>false</default>
 			<summary>Screen maximization</summary>
 			<description>Save if was screen maximized</description>
+		</key>
+		<key name="is-fullscreen" type="b">
+			<default>false</default>
+			<summary>Screen fullscreen</summary>
+			<description>Save if was screen fullscreen</description>
 		</key>
 	</schema>
 </schemalist>

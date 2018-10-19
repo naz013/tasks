@@ -43,17 +43,19 @@ namespace Tasks {
         public HomeWindow (Gtk.Application app) {
             Logger.log(AppSettings.get_default().to_string());
             Object (
-                application: app,
-                resizable: true,
-                width_request: 50,
-                height_request: 500
+                application: app
             );
             
             if (AppSettings.get_default().is_maximized && !is_maximized) {
                 maximize ();
             } else {
-                resize(AppSettings.get_default().window_x, AppSettings.get_default().window_y);
+                default_width = AppSettings.get_default().window_width;
+                default_height = AppSettings.get_default().window_height;
+                // move(AppSettings.get_default().window_x, AppSettings.get_default().window_y);
             }
+            
+            set_size_request (500, 500);
+            set_hide_titlebar_when_maximized (false);
             
             int theme = AppSettings.get_default().app_theme;
             Logger.log(@"Theme value: $theme");
@@ -63,8 +65,6 @@ namespace Tasks {
             var actions = new SimpleActionGroup ();
             actions.add_action_entries (action_entries, this);
             insert_action_group ("win", actions);
-
-            this.set_position(Gtk.WindowPosition.CENTER);
 
             header = new Gtk.HeaderBar();
             header.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
@@ -110,9 +110,15 @@ namespace Tasks {
                 int new_width, new_height;
                 get_size (out new_width, out new_height);
                 Logger.log(@"on_allocate: w -> $(new_width), h -> $(new_height)");
-                AppSettings.get_default().window_x = new_width;
-                AppSettings.get_default().window_y = new_height;
+                AppSettings.get_default().window_width = new_width;
+                AppSettings.get_default().window_height = new_height;
                 AppSettings.get_default().is_maximized = is_maximized;
+                
+                int x, y;
+                get_position (out x, out y);
+                Logger.log(@"on_allocate: x -> $(x), y -> $(y)");
+                AppSettings.get_default().window_x = x;
+                AppSettings.get_default().window_y = y;
                 return false;
             });
             
@@ -159,6 +165,8 @@ namespace Tasks {
 
         private void init_theme(int theme) {
             Logger.log(@"Is dark -> $(theme == 0), value -> $theme");
+            var gtk_settings = Gtk.Settings.get_default ();
+            gtk_settings.gtk_application_prefer_dark_theme = theme == 0;
             if (theme == 0) {
                 app_theme = new DarkTheme();
             } else {

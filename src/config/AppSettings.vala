@@ -4,9 +4,12 @@ namespace Tasks {
         private static AppSettings? instance;
         public int window_x { get; set; }
         public int window_y { get; set; }
+        public int window_width { get; set; }
+        public int window_height { get; set; }
         public int app_theme { get; set; }
         public int64 last_id { get; set; }
         public bool is_maximized { get; set; }
+        public bool is_fullscreen { get; set; }
 
         public static unowned AppSettings get_default () {
             if (instance == null) {
@@ -20,7 +23,7 @@ namespace Tasks {
         }
         
         public string to_string() {
-            return @"AppSettings: w -> $window_x, h -> $window_y, theme -> $app_theme, max -> $is_maximized";
+            return @"AppSettings: x -> $window_x, y -> $window_y, theme -> $app_theme, max -> $is_maximized";
         }
     }
 }
