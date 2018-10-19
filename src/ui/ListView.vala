@@ -195,7 +195,7 @@ namespace Tasks {
 				    
 				    vert_grid.add(timer_label);
                 } else if (task.event_type == Event.DATE) {
-                	string format = "%a, %e %b %y, %H:%k";
+                	string format = "%a, %e %b %y, %H:%M";
 				    string date_time = new DateTime.from_unix_local(task.due_date_time).format(format);
 				    
 				    var date_label = new Gtk.Label(date_time);

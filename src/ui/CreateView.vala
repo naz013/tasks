@@ -259,6 +259,20 @@ namespace Tasks {
             editable_event = null;
         }
         
+        private bool validate_time(int64 timer_value) {
+            if (timer_value <= 0) {
+                return true;
+            }
+            return false;
+        }
+        
+        private bool validate_dt(DateTime date) {
+            DateTime now = new DateTime.now_local ();
+            int res = date.compare(now);
+            Logger.log(@"validate_dt: diff -> $res");
+            return res > 0;
+        }
+        
         public void edit_event(Event event) {
             clear_view();
             
@@ -298,13 +312,7 @@ namespace Tasks {
             summary_label.set_opacity(0);
             
             due_switch.set_active (false);
-        }
-        
-        private bool validate_time(int64 timer_value) {
-            if (timer_value <= 0) {
-                return true;
-            }
-            return false;
+            editable_event = null;
         }
         
         private void add_error_popup(Gtk.Overlay overlay) {
@@ -522,13 +530,6 @@ namespace Tasks {
         
         private void toggle_notification() {
             Logger.log(@"Notification is enabled -> $(notification_switch.active)");
-        }
-        
-        private bool validate_dt(DateTime date) {
-            DateTime now = new DateTime.now_local ();
-            int res = date.compare(now);
-            Logger.log(@"validate_dt: diff -> $res");
-            return res > 0;
         }
         
         private Gtk.SpinButton create_spin_button(int from, int to, int step, int width, owned DelegateType action) {
