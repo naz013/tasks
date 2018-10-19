@@ -169,13 +169,9 @@ namespace Tasks {
         }
         
         public void save_task() {
-        	int64 hour = 0;
-	        int64 minute = 0;
+        	int64 due_date_time = 0;
 	        int64 timer_value = 0;
 	        
-	        int64 year = 0;
-	        int64 month = 0;
-	        int64 day = 0;
             var summary = summary_field.get_text();
             var note = description_field.get_text();
             
@@ -190,20 +186,25 @@ namespace Tasks {
             }
             
             if (due_switch.active) {
-                show_notification = true;
+                show_notification = notification_switch.active;
             
-            	hour = hours_view.get_value_as_int ();
-		        minute = minutes_view.get_value_as_int ();
 		        timer_value = 0;
 		        
-		    	year = calendar.year;
-		        month = calendar.month;
-		        day = calendar.day;
-		        
                 if (type == Event.DATE) {
-                    if (validate_dt(year, month, day, hour, minute)) {
+                    int hour = hours_view.get_value_as_int ();
+		            int minute = minutes_view.get_value_as_int ();
+		            
+		            int year = calendar.year;
+		            int month = calendar.month + 1;
+		            int day = calendar.day;
+		            
+		            DateTime dt = new DateTime.local(year, month, day, hour, minute, 0);
+		            
+                    if (!validate_dt(dt)) {
                     	has_error = true;
                     	show_error("Select date in future");
+                    } else {
+                        due_date_time = dt.to_unix();
                     }
                 } else if (type == Event.TIMER) {
                     if (timer_view != null) {
@@ -240,11 +241,7 @@ namespace Tasks {
                 AppSettings.get_default().last_id = id + 1;
             	event = new Event.with_id(id, summary, note);
             }
-            event.year = year;
-            event.month = month;
-            event.day = day;
-            event.hour = hour;
-            event.minute = minute;
+            event.due_date_time = due_date_time;
             event.event_type = type;
             event.is_active = true;
             event.has_reminder = has_reminder;
@@ -278,12 +275,14 @@ namespace Tasks {
                 notification_switch.active = event.show_notification;
                 
                 if (event.event_type == Event.DATE) {
-                    hours_view.set_value(event.hour);
-                    minutes_view.set_value(event.minute);
+                    DateTime date_time = new DateTime.from_unix_local(event.due_date_time);
                     
-                    calendar.year = (int) event.year;
-		            calendar.month = (int) event.month;
-		            calendar.day = (int) event.day;
+                    hours_view.set_value(date_time.get_hour());
+                    minutes_view.set_value(date_time.get_minute());
+                    
+                    calendar.year = date_time.get_year();
+		            calendar.month = date_time.get_month() - 1;
+		            calendar.day = date_time.get_day_of_month();
                 } else {
                     timer_radio.set_active(true);
                     timer_view.set_seconds(event.timer_time);
@@ -482,7 +481,7 @@ namespace Tasks {
             minutes_view.set_value(current_dt.get_minute());
             
             calendar.year = current_dt.get_year();
-	        calendar.month = current_dt.get_month();
+	        calendar.month = current_dt.get_month() - 1;
 	        calendar.day = current_dt.get_day_of_month();
         }
         
@@ -525,8 +524,11 @@ namespace Tasks {
             Logger.log(@"Notification is enabled -> $(notification_switch.active)");
         }
         
-        private bool validate_dt(int64 year, int64 month, int64 day, int64 hour, int64 minute) {
-            return false;
+        private bool validate_dt(DateTime date) {
+            DateTime now = new DateTime.now_local ();
+            int res = date.compare(now);
+            Logger.log(@"validate_dt: diff -> $res");
+            return res > 0;
         }
         
         private Gtk.SpinButton create_spin_button(int from, int to, int step, int width, owned DelegateType action) {

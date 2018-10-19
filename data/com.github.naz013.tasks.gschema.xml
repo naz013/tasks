@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <schemalist>
 	<schema id="com.github.naz013.tasks" path="/com/github/naz013/tasks/">
-		<key name="window-x" type="i">
+		<key name="window-x" type="x">
 			<default>-1</default>
 			<summary>Window position</summary>
 			<description>The x axis of window position</description>
 		</key>
-		<key name="window-y" type="i">
+		<key name="window-y" type="x">
 			<default>-1</default>
 			<summary>Window position</summary>
 			<description>The y axis of window position</description>
@@ -16,8 +16,8 @@
 			<summary>Window theme</summary>
 			<description>Window theme parameter</description>
 		</key>
-		<key name="last-id" type="i">
-			<default>0</default>
+		<key name="last-id" type="x">
+			<default>1</default>
 			<summary>Last used id for task</summary>
 			<description>Last used id for task</description>
 		</key>

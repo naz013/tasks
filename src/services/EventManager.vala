@@ -42,18 +42,8 @@ namespace Tasks {
                 builder.set_member_name ("id");
                 builder.add_int_value (event.id);
                 
-                builder.set_member_name ("year");
-                builder.add_int_value (event.year);
-                builder.set_member_name ("month");
-                builder.add_int_value (event.month);
-                builder.set_member_name ("day");
-                builder.add_int_value (event.day);
-                builder.set_member_name ("hour");
-                builder.add_int_value (event.year);
-                builder.set_member_name ("minute");
-                builder.add_int_value (event.minute);
-                builder.set_member_name ("second");
-                builder.add_int_value (event.second);
+                builder.set_member_name ("due_date_time");
+                builder.add_int_value (event.due_date_time);
                 
                 builder.set_member_name ("event_type");
                 builder.add_int_value (event.event_type);
@@ -118,19 +108,11 @@ namespace Tasks {
                         bool show_notification = node.get_boolean_member("show_notification");
                         
                         int64 event_type = node.get_int_member("event_type");
-                        int64 second = node.get_int_member("second");
-                        int64 minute = node.get_int_member("minute");
-                        int64 hour = node.get_int_member("hour");
-                        int64 day = node.get_int_member("day");
-                        int64 month = node.get_int_member("month");
-                        int64 year = node.get_int_member("year");
+                        int64 due_date_time = node.get_int_member("due_date_time");
                         
                         Event event = new Event();
-                        event.year = year;
-                        event.month = month;
-                        event.day = day;
-                        event.hour = hour;
-                        event.minute = minute;
+                        event.id = id;
+                        event.due_date_time = due_date_time;
                         
                         event.event_type = event_type;
                         event.is_active = is_active;

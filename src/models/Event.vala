@@ -5,14 +5,9 @@ namespace Tasks {
 		public const int TIMER = 1;
 		
 		public int64 id { get; set; default = 0; }
-		public int64 year { get; set; default = 0; }
-		public int64 month { get; set; default = 0; }
-		public int64 day { get; set; default = 0; }
-		public int64 hour { get; set; default = 0; }
-		public int64 minute { get; set; default = 0; }
-		public int64 second { get; set; default = 0; }
 		public int64 event_type { get; set; default = 0; }
 		public int64 timer_time { get; set; default = 0; }
+		public int64 due_date_time { get; set; default = 0; }
 		public string summary { get; set; default = ""; }
 		public string description { get; set; default = ""; }
 		public bool is_active { get; set; default = true; }
@@ -32,11 +27,7 @@ namespace Tasks {
 		}
 		
 		public Event.with_event(Event event) {
-		  	this.year = event.year;
-            this.month = event.month;
-            this.day = event.day;
-            this.hour = event.hour;
-            this.minute = event.minute;
+		  	this.due_date_time = event.due_date_time;
             this.event_type = event.event_type;
             this.is_active = event.is_active;
             this.has_reminder = event.has_reminder;
