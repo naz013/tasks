@@ -12,6 +12,7 @@ namespace Tasks {
         private CreateView create_view;
         private MainContainer main_view;
 
+        private bool is_new = true;
         private bool create_open = false;
         private bool was_create_open = false;
         private bool was_maximized = false;
@@ -86,14 +87,20 @@ namespace Tasks {
             grid.size_allocate.connect((allocation) => {
                 was_create_open = create_open;
                 if (is_maximized) {
-                    if (!was_maximized && !create_open) {
+                    if (!was_maximized && !create_open && !is_new) {
+                        Logger.log("From allocate 1");
                         draw_views();
+                    } else {
+                        is_new = false;
                     }
                     was_maximized = true;
                     was_minimized = false;
                 } else if (!is_maximized) {
-                    if (!was_minimized && !create_open) {
+                    if (!was_minimized && !create_open && !is_new) {
+                        Logger.log("From allocate 2");
                         draw_views();
+                    } else {
+                        is_new = false;
                     }
                     was_maximized = false;
                     was_minimized = true;
@@ -122,6 +129,7 @@ namespace Tasks {
             });
             
             tasks = event_manager.load_from_file();
+            Logger.log("From main");
             draw_views();
         }
         
@@ -134,6 +142,7 @@ namespace Tasks {
                 return false;
             }
             create_open = !create_open;
+            Logger.log("From add_action");
             draw_views();
             return true;
         }
@@ -197,6 +206,8 @@ namespace Tasks {
             resize(new_width, new_height);
 
             this.get_style_context().add_class("rounded");
+            
+            Logger.log(@"draw_views: main_view -> $(main_view != null)");
             
             if (main_view == null) {
                 main_view = new MainContainer(tasks);

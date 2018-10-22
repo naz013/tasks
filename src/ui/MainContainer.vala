@@ -12,6 +12,7 @@ namespace Tasks {
         private Gtk.Button fab;
         private ListView list_box;
         private Gtk.Grid grid;
+        private Gtk.Grid overlay_grid;
         private bool is_maximized;
         private int last_delete_position = -1;
         
@@ -21,9 +22,10 @@ namespace Tasks {
             
             grid = new Gtk.Grid();
             grid.expand = true;
-            overlay.add(grid);
             
-            refresh_view(tasks);
+            refresh_list(tasks);
+            
+            overlay.add(grid);
             
             var vert_grid = new Gtk.Grid();
             vert_grid.expand = true;
@@ -60,8 +62,9 @@ namespace Tasks {
 	        fab.get_style_context().add_class(CssData.MATERIAL_FAB);
             
             hor_grid.add(fab);
-            overlay.add_overlay(vert_grid);
             
+            vert_grid.show_all();
+            overlay.add_overlay(vert_grid);
             overlay.set_overlay_pass_through(vert_grid, true);
             
             overlay.show_all();
@@ -103,13 +106,14 @@ namespace Tasks {
                 list_box.on_delete.connect((event) => {
                     last_delete_position = tasks.index_of(event);
                     on_event_delete(event);
-                    show_undo_snackbar(event);
+                    // show_undo_snackbar(event);
                 });
                 list_box.on_copy.connect((event) => {
                     on_event_copy(event);
                 });
                 grid.add(list_box);
-            } 
+            }
+            grid.show_all();
         }
         
         private void update_fab() {
