@@ -54,6 +54,7 @@ executable(
     'src/ui/EmptyView.vala',
     'src/ui/TimerView.vala',
     'src/ui/SettingsView.vala',
+    'src/ui/MainContainer.vala',
     c_args: c_args,
     dependencies: [
         dependency('granite'),

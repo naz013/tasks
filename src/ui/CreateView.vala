@@ -163,7 +163,7 @@ namespace Tasks {
 		    clear_view();
         }
         
-        public void set_maximazed(bool max) {
+        public void set_maximized(bool max) {
         	this.is_max = max;
         	// update_buttons();
         }

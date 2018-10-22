@@ -68,7 +68,10 @@ namespace Tasks {
 			Logger.log(@"hide_snackbar: $(floaing_error.child_revealed)");
 			if (floaing_error.child_revealed) {
 				floaing_error.set_reveal_child(false);
-				on_hide();
+				GLib.Timeout.add(350, () => {
+				    on_hide();
+				    return false;
+				});
 			}
 		}
 		

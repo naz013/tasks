@@ -10,8 +10,7 @@ namespace Tasks {
         private Gtk.Popover popover;
         private Gtk.Switch mode_switch;
         private CreateView create_view;
-        private ListView list_box;
-        private EmptyView empty_view;
+        private MainContainer main_view;
 
         private bool create_open = false;
         private bool was_create_open = false;
@@ -22,7 +21,6 @@ namespace Tasks {
         private bool settings_visible = false;
         private int64 old_width = 500;
         private int64 old_height = 500;
-        private int last_delete_position = -1;
 
         private AppTheme app_theme = new LightTheme();
         private EventManager event_manager = new EventManager();
@@ -51,7 +49,7 @@ namespace Tasks {
             } else {
                 default_width = AppSettings.get_default().window_width;
                 default_height = AppSettings.get_default().window_height;
-                // move(AppSettings.get_default().window_x, AppSettings.get_default().window_y);
+                move(AppSettings.get_default().window_x, AppSettings.get_default().window_y);
             }
             
             set_size_request (500, 500);
@@ -74,8 +72,12 @@ namespace Tasks {
             header.set_show_close_button (true);
 
             this.set_titlebar(header);
+            
             grid.get_style_context().add_class("main_container");
             grid.expand = true;
+            grid.orientation = Gtk.Orientation.HORIZONTAL;
+            grid.get_style_context().add_class("main_grid");
+            
             this.add (grid);
 
             focus_out_event.connect (() => {
@@ -96,14 +98,11 @@ namespace Tasks {
                     was_maximized = false;
                     was_minimized = true;
                 }
-                if (list_box != null) {
-                    list_box.set_maximazed(is_maximized);
-                }
-                if (empty_view != null) {
-                    empty_view.set_maximazed(is_maximized);
+                if (main_view != null) {
+                    main_view.set_maximized(is_maximized);
                 }
                 if (create_view != null) {
-                    create_view.set_maximazed(is_maximized);
+                    create_view.set_maximized(is_maximized);
                 }
             });
             delete_event.connect(() => {
@@ -182,8 +181,7 @@ namespace Tasks {
             
             Logger.log(@"Draw screen: width -> $new_width, height -> $new_height, max -> $is_maximized");
             
-            grid.remove_row(0);
-            grid.remove_column(0);
+            grid.forall ((element) => grid.remove (element));
 
             if (create_open) {
                 if (!was_create_open && !is_maximized && new_width < 500) {
@@ -200,44 +198,29 @@ namespace Tasks {
 
             this.get_style_context().add_class("rounded");
             
-            Gtk.Grid main_grid = new Gtk.Grid();
-            main_grid.expand = true;
-            main_grid.orientation = Gtk.Orientation.HORIZONTAL;
-            main_grid.get_style_context().add_class("main_grid");
-            grid.add(main_grid);
-
-            if (tasks.size == 0) {
-                empty_view = new EmptyView();
-                empty_view.on_add_clicked.connect(() => {
+            if (main_view == null) {
+                main_view = new MainContainer(tasks);
+                main_view.add_clicked.connect(() => {
                     add_action();
                 });
-                empty_view.set_maximazed(is_maximized);
-                main_grid.add(empty_view);
-                if (create_open || is_maximized) {
-
-                    //Add rigth panel
-                    add_create_task_panel(main_grid);
-                } else {
-                    create_view = null;
-                }
-            } else {
-                //Show events
-                list_box = new ListView(tasks);
-                list_box.on_edit.connect((event) => {
+                main_view.on_event_edit.connect((event) => {
                     Logger.log(@"Edit row $(event.to_string())");
                     add_action();
                     if (create_view != null) {
                         create_view.edit_event(event);
                     }
                 });
-                list_box.on_delete.connect((event) => {
+                main_view.on_event_delete.connect((event) => {
                     Logger.log(@"Delete row $(event.to_string())");
-                    last_delete_position = tasks.index_of(event);
                     tasks.remove(event);
                     event_manager.save_events(tasks);
-                    draw_views();
+                    if (main_view != null) {
+                        main_view.refresh_list(tasks);
+                    } else {
+                        draw_views();
+                    }
                 });
-                list_box.on_copy.connect((event) => {
+                main_view.on_event_copy.connect((event) => {
                     Logger.log(@"Copy row $(event.to_string())");
                     add_action();
                     if (create_view != null) {
@@ -246,32 +229,28 @@ namespace Tasks {
                         create_view.edit_event(editable);
                     }
                 });
-                list_box.on_undo.connect((event) => {
-                    Logger.log(@"Undo row $(event.to_string())");
-                    if (last_delete_position >= 0) {
-                        tasks.insert(last_delete_position, event);
+                main_view.undo_event.connect((event, position) => {
+                    Logger.log(@"Undo row $(event.to_string()), position -> $position");
+                    if (position >= 0) {
+                        tasks.insert(position, event);
                         event_manager.save_events(tasks);
-                        if (!add_action() && list_box != null) {
-                            list_box.refresh_list(tasks);
+                        if (main_view != null) {
+                            main_view.refresh_list(tasks);
                         } else {
                             draw_views();
                         }
-                        last_delete_position = -1;
                     }
                 });
-                list_box.on_add_clicked.connect(() => {
-                    add_action();
-                });
-                list_box.set_maximazed(is_maximized);
-                
-                main_grid.add(list_box);
-                if (create_open || is_maximized) {
-
-                    //Add rigth panel
-                    add_create_task_panel(main_grid);
-                } else {
-                    create_view = null;
-                }
+            }
+            
+            main_view.set_maximized(is_maximized);
+            grid.add(main_view);
+            
+            if (create_open || is_maximized) {
+                //Add rigth panel
+                add_create_task_panel(grid);
+            } else {
+                create_view = null;
             }
             update_theme();
             this.show_all();
@@ -283,8 +262,9 @@ namespace Tasks {
                 Logger.log(@"Event added: $(event.to_string())");
                 tasks.add(event);
                 event_manager.save_events(tasks);
-                if (!add_action() && list_box != null) {
-                    list_box.refresh_list(tasks);
+                add_action();
+                if (main_view != null) {
+                    main_view.refresh_list(tasks);
                 } else {
                     draw_views();
                 }
@@ -293,8 +273,9 @@ namespace Tasks {
                 Logger.log(@"Event updated: $(event.to_string())");
                 update_event(event);
                 event_manager.save_events(tasks);
-                if (!add_action() && list_box != null) {
-                    list_box.refresh_list(tasks);
+                add_action();
+                if (main_view != null) {
+                    main_view.refresh_list(tasks);
                 } else {
                     draw_views();
                 }
@@ -302,7 +283,7 @@ namespace Tasks {
             create_view.on_cancel.connect(() => {
                 cancel_action();
             });
-            create_view.set_maximazed(is_maximized);
+            create_view.set_maximized(is_maximized);
             grid.add(create_view);
         }
         

@@ -5,19 +5,10 @@ namespace Tasks {
         public signal void on_edit(Event task);
         public signal void on_delete(Event task);
         public signal void on_copy(Event task);
-        public signal void on_undo(Event task);
-        public signal void on_add_clicked();
         
         private Gtk.ListBox list_box;
-        private Gtk.Button fab;
-        private SnackBar snackbar;
-        
-        private bool is_max = false;
         
         public ListView(Gee.ArrayList<Event> tasks) {
-            var overlay = new Gtk.Overlay();
-            overlay.expand = true;
-            
             Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
             scrolled.expand = true;
             
@@ -30,62 +21,7 @@ namespace Tasks {
             
             refresh_list(tasks);
             scrolled.show_all();
-            overlay.add(scrolled);
-            
-            var vert_grid = new Gtk.Grid();
-            vert_grid.expand = true;
-            vert_grid.orientation = Gtk.Orientation.VERTICAL;
-            
-            var box = new Gtk.Fixed();
-            box.expand = true;
-            vert_grid.add(box);
-            
-            var hor_grid = new Gtk.Grid();
-            hor_grid.hexpand = true;
-            hor_grid.vexpand = false;
-            hor_grid.margin = 18;
-            hor_grid.orientation = Gtk.Orientation.HORIZONTAL;
-            
-            vert_grid.add(hor_grid);
-            
-            snackbar = new SnackBar();
-            snackbar.on_show.connect(() => {
-                overlay.set_overlay_pass_through(vert_grid, false);
-            });
-            snackbar.on_hide.connect(() => {
-                overlay.set_overlay_pass_through(vert_grid, true);
-            });
-            // hor_grid.add(snackbar);
-            
-            var box2 = new Gtk.Fixed();
-            box2.hexpand = true;
-            box2.vexpand = false;
-            
-            fab = new Gtk.Button.from_icon_name ("list-add-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
-		    fab.hexpand = false;
-		    fab.set_always_show_image(true);
-		    fab.set_label("Add task");
-		    fab.clicked.connect (() => {
-			    on_add_clicked();
-		    });
-		    fab.get_style_context().add_class(CssData.MATERIAL_FAB);
-		    
-            
-            hor_grid.add(box2);
-            hor_grid.add(fab);
-            overlay.add_overlay(vert_grid);
-            
-            overlay.set_overlay_pass_through(vert_grid, true);
-            
-            overlay.show_all();
-            add(overlay);
-            
-            update_fab();
-        }
-        
-        public void set_maximazed(bool max) {
-        	this.is_max = max;
-        	update_fab();
+            add(scrolled);
         }
         
         public void refresh_list(Gee.ArrayList<Event> tasks) {
@@ -94,29 +30,6 @@ namespace Tasks {
                 Event task = tasks.get(i);
                 list_box.add(get_row(task));
             }
-        }
-        
-        private void update_fab() {
-        	if (is_max) {
-        		hide_fab();
-        	} else {
-        		show_fab();
-        	}
-        }
-        
-        private void show_fab() {
-        	fab.set_opacity(1);
-        }
-        
-        private void hide_fab() {
-        	fab.set_opacity(0);
-        }
-        
-        private void show_undo_snackbar(Event event) {
-            var message = @"Event $(event.summary) deleted.";
-            snackbar.show_snackbar_with_action(message, "UNDO", () => {
-                on_undo(event);
-            });
         }
         
         private Gtk.ListBoxRow get_row(Event task) {
@@ -152,7 +65,6 @@ namespace Tasks {
             delete_button.clicked.connect (() => {
                 Logger.log(@"Delete row $(task.to_string())");
 			    on_delete(task);
-			    // show_undo_snackbar(task);
 		    });
 		    
 		    var copy_button = new Gtk.Button.from_icon_name ("edit-copy-symbolic", Gtk.IconSize.BUTTON);
