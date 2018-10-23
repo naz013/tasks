@@ -32,16 +32,6 @@ namespace Tasks {
                     main_window.add_action();
                 }
             });
-
-            var mode_action = new SimpleAction ("mode", null);
-            set_accels_for_action ("app.mode", {"<Control>m"});
-            add_action (mode_action);
-            mode_action.activate.connect (() => {
-                Logger.log("Change mode...");
-                if (main_window != null) {
-                    main_window.toggle_mode();
-                }
-            });
             
             var maximaze_action = new SimpleAction ("fullscreen", null);
             set_accels_for_action ("app.fullscreen", {"<Control>f"});

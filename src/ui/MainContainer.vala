@@ -12,7 +12,6 @@ namespace Tasks {
         private Gtk.Button fab;
         private ListView list_box;
         private Gtk.Grid grid;
-        private Gtk.Grid overlay_grid;
         private bool is_maximized;
         private int last_delete_position = -1;
         

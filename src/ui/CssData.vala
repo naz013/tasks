@@ -20,6 +20,8 @@ namespace Tasks {
         public const string LABEL_PRIMARY = "body2";
         public const string LABEL_SECONDARY = "body1";
         
+        public const string COLOR_RADIO = "color_radio";
+        
         private AppTheme theme;
 
         public CssData() {
@@ -608,6 +610,57 @@ namespace Tasks {
                     border-radius: 2px;
                     box-shadow: 0 2px 2px @shadowColor, 0 2px 2px @shadowOutColor;
                     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+                }
+                
+                .color_radio radio,
+                .color_radio radio:checked {
+                    border-color: alpha (#000, 0.3);
+                    box-shadow:
+                        inset 0 1px 0 0 alpha (@shadowColor, 0.7),
+                        inset 0 0 0 1px alpha (@shadowColor, 0.3),
+                        0 1px 0 0 alpha (@accentColor, 0.3);
+                    padding: 10px;
+                    -gtk-icon-shadow: none;
+                }
+
+                .color_radio radio:focus {
+                    border-color: @colorAccent;
+                    box-shadow:
+                        inset 0 1px 0 0 alpha (@shadowColor, 0.7),
+                        inset 0 0 0 1px alpha (@shadowColor, 0.3),
+                        inset 0 0 0 1px alpha (@accentColor, 0.05),
+                        0 1px 0 0 alpha (@accentColor, 0.3),
+                        0 0 0 1px alpha (@accentColor, 0.25);
+                }
+                
+                .color-dark radio {
+                    background: #212121;
+                    border-color: #0091ea;
+                    color: #FFFFFF;
+                }
+
+                .color-light radio {
+                    background: #eeeeee;
+                    border-color: #0091ea;
+                    color: #000000;
+                }
+                
+                .color-sand radio {
+                    background: #fff176;
+                    border-color: #ff1744;
+                    color: #000000;
+                }
+                
+                .color-olive radio {
+                    background: #a5d6a7;
+                    border-color: #ff3d00;
+                    color: #000000;
+                }
+                
+                .color-grape radio {
+                    background: #d1c4e9;
+                    border-color: #f50057;
+                    color: #000000;
                 }
                 
                 .show_border {

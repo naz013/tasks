@@ -155,8 +155,6 @@ namespace Tasks {
 		    cancel_button.get_style_context().add_class(CssData.MATERIAL_BUTTON);
 		    button_grid.add (cancel_button);
 		    
-		    // update_buttons();
-		    
 		    vert_grid.get_style_context().add_class("right_block");
 		    add(vert_grid);
 		    
@@ -165,7 +163,6 @@ namespace Tasks {
         
         public void set_maximized(bool max) {
         	this.is_max = max;
-        	// update_buttons();
         }
         
         public void save_task() {
@@ -335,17 +332,6 @@ namespace Tasks {
             
             overlay.add_overlay(v_grid);
             overlay.set_overlay_pass_through(v_grid, true);
-        }
-        
-        private void update_buttons() {
-            Logger.log(@"update_buttons: isMax -> $is_max");
-        	if (is_max) {
-        		cancel_button.set_label("CLEAR (Ctrl+C)");
-        	} else {
-        		cancel_button.set_label("CANCEL (Ctrl+C)");
-        	}
-        	cancel_button.set_always_show_image(false);
-        	cancel_button.show_all();
         }
         
         private void add_due_view() {

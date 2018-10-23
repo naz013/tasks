@@ -8,7 +8,6 @@ namespace Tasks {
         private Gtk.Grid grid = new Gtk.Grid ();
         private Gtk.HeaderBar header;
         private Gtk.Popover popover;
-        private Gtk.Switch mode_switch;
         private CreateView create_view;
         private MainContainer main_view;
 
@@ -18,7 +17,6 @@ namespace Tasks {
         private bool was_maximized = false;
         private bool was_minimized = false;
         private bool was_resized = false;
-        private bool change_theme = false;
         private bool settings_visible = false;
         private int64 old_width = 500;
         private int64 old_height = 500;
@@ -175,10 +173,23 @@ namespace Tasks {
             Logger.log(@"Is dark -> $(theme == 0), value -> $theme");
             var gtk_settings = Gtk.Settings.get_default ();
             gtk_settings.gtk_application_prefer_dark_theme = theme == 0;
-            if (theme == 0) {
-                app_theme = new DarkTheme();
-            } else {
-                app_theme = new LightTheme();
+            app_theme = new LightTheme();
+            switch (theme) {
+                case 0:
+                    app_theme = new DarkTheme();
+                    break;
+                case 1:
+                    app_theme = new LightTheme();
+                    break; 
+                case 2:
+                    app_theme = new SandTheme();
+                    break;
+                case 3:
+                    app_theme = new OliveTheme();
+                    break; 
+                case 4:
+                    app_theme = new GrapeTheme();
+                    break; 
             }
         }
 
@@ -335,62 +346,91 @@ namespace Tasks {
             }
             
             update_theme();
-            if (settings_visible && mode_switch != null) {
-                toggle_mode_switch();
-            }
-        }
-
-        private void toggle_mode_switch() {
-            change_theme = false;
-            mode_switch.set_active (AppSettings.get_default().app_theme == 0);
-            change_theme = true;
         }
 
         private void create_app_menu() {
-            mode_switch = new Gtk.Switch ();
-            mode_switch.notify["active"].connect (() => {
-                if (change_theme) {
-                    toggle_mode();
-                }
-    		});
-    		mode_switch.set_active (AppSettings.get_default().app_theme == 0);
-            mode_switch.set_property("height-request", 20);
-            mode_switch.get_style_context().add_class("mode_switch");
+            var color_button_light = new Gtk.RadioButton (null);
+            color_button_light.halign = Gtk.Align.CENTER;
+            color_button_light.tooltip_text = _("Light");
 
-            var mode_label = new Gtk.Label ("Dark mode");
-		    mode_label.set_use_markup (false);
-            mode_label.set_line_wrap (true);
-            mode_label.set_property("height-request", 20);
-            mode_label.touch_event.connect (() => {
-                toggle_mode();
-                return false;
-            });
-            mode_label.get_style_context().add_class("mode_label");
+            var color_button_light_context = color_button_light.get_style_context ();
+            color_button_light_context.add_class (CssData.COLOR_RADIO);
+            color_button_light_context.add_class ("color-light");
             
-            var moon_icon = new Gtk.Button.from_icon_name ("weather-clear-night-symbolic", Gtk.IconSize.BUTTON);
-            moon_icon.get_style_context().add_class("moon_icon");
+            var color_button_sand = new Gtk.RadioButton.from_widget (color_button_light);
+            color_button_sand.halign = Gtk.Align.CENTER;
+            color_button_sand.tooltip_text = _("Sand");
 
-            var dark_mode_grid = new Gtk.Grid ();
-            dark_mode_grid.column_spacing = 4;
-            dark_mode_grid.attach(moon_icon, 0, 0, 1, 1);
-            dark_mode_grid.attach(mode_label, 1, 0, 1, 1);
-            dark_mode_grid.attach(mode_switch, 2, 0, 1, 1);
+            var color_button_sand_context = color_button_sand.get_style_context ();
+            color_button_sand_context.add_class (CssData.COLOR_RADIO);
+            color_button_sand_context.add_class ("color-sand");
 
-            var setting_grid = new Gtk.Grid ();
-            setting_grid.margin = 12;
-            setting_grid.column_spacing = 6;
-            setting_grid.row_spacing = 12;
-            setting_grid.orientation = Gtk.Orientation.VERTICAL;
-            setting_grid.add(dark_mode_grid);
-            setting_grid.show_all ();
+            var color_button_dark = new Gtk.RadioButton.from_widget (color_button_light);
+            color_button_dark.halign = Gtk.Align.CENTER;
+            color_button_dark.tooltip_text = _("Dark");
+
+            var color_button_dark_context = color_button_dark.get_style_context ();
+            color_button_dark_context.add_class (CssData.COLOR_RADIO);
+            color_button_dark_context.add_class ("color-dark");
+            
+            var color_button_olive = new Gtk.RadioButton.from_widget (color_button_light);
+            color_button_olive.halign = Gtk.Align.CENTER;
+            color_button_olive.tooltip_text = _("Olive");
+
+            var color_button_olive_context = color_button_olive.get_style_context ();
+            color_button_olive_context.add_class (CssData.COLOR_RADIO);
+            color_button_olive_context.add_class ("color-olive");
+            
+            var color_button_grape = new Gtk.RadioButton.from_widget (color_button_light);
+            color_button_grape.halign = Gtk.Align.CENTER;
+            color_button_grape.tooltip_text = _("Grape");
+
+            var color_button_grape_context = color_button_grape.get_style_context ();
+            color_button_grape_context.add_class (CssData.COLOR_RADIO);
+            color_button_grape_context.add_class ("color-grape");
+            
+            var menu_grid = new Gtk.Grid ();
+            menu_grid.margin_bottom = 3;
+            menu_grid.column_spacing = 12;
+            menu_grid.margin = 12;
+            menu_grid.orientation = Gtk.Orientation.VERTICAL;
+            menu_grid.attach (color_button_dark, 0, 0, 1, 1);
+            menu_grid.attach (color_button_light, 1, 0, 1, 1);
+            menu_grid.attach (color_button_sand, 2, 0, 1, 1);
+            menu_grid.attach (color_button_olive, 3, 0, 1, 1);
+            menu_grid.attach (color_button_grape, 4, 0, 1, 1);
+            menu_grid.show_all ();
+            
+            switch (AppSettings.get_default().app_theme) {
+                case 0:
+                    color_button_dark.active = true;
+                    break;
+                case 1:
+                    color_button_light.active = true;
+                    break;
+                case 2:
+                    color_button_sand.active = true;
+                    break;
+                case 3:
+                    color_button_olive.active = true;
+                    break;
+                case 4:
+                    color_button_grape.active = true;
+                    break;
+            }
+            
+            theme_button_click(color_button_dark, 0);
+            theme_button_click(color_button_light, 1);
+            theme_button_click(color_button_sand, 2);
+            theme_button_click(color_button_olive, 3);
+            theme_button_click(color_button_grape, 4);
 
             popover = new Gtk.Popover (null);
-            popover.add (setting_grid);
+            popover.add (menu_grid);
             popover.closed.connect(() => {
                 settings_visible = false;
             });
             popover.show.connect(() => {
-                toggle_mode_switch();
                 settings_visible = true;
             });
             popover.get_style_context().add_class("popover");
@@ -402,6 +442,14 @@ namespace Tasks {
             app_button.popover = popover;
             
             header.pack_end(app_button);
+        }
+        
+        private void theme_button_click(Gtk.RadioButton button, int theme) {
+            button.clicked.connect (() => {
+                AppSettings.get_default().app_theme = theme;
+                init_theme(theme);
+                update_theme();
+            });
         }
     }
 }
