@@ -4,7 +4,7 @@ namespace Tasks {
 		public const int DATE = 0;
 		public const int TIMER = 1;
 		
-		public int64 id { get; set; default = 0; }
+		public uint id { get; set; default = 0; }
 		public int64 event_type { get; set; default = 0; }
 		public int64 timer_time { get; set; default = 0; }
 		public int64 due_date_time { get; set; default = 0; }
@@ -20,7 +20,7 @@ namespace Tasks {
 			this.with_id(0, "", "");
 		}
 
-		public Event.with_id(int64 id, string summary, string description) {
+		public Event.with_id(uint id, string summary, string description) {
 		  	this.id = id;
 		  	this.summary = summary;
 		  	this.description = description;
@@ -38,7 +38,7 @@ namespace Tasks {
 		}
 
 		public string to_string() {
-		  	return @"Event => id: $id, summary: $summary, desc: $description, type: $event_type, has_reminder: $has_reminder";
+		  	return @"Event => id: $id, summary: $summary, desc: $description, type: $event_type, has_reminder: $has_reminder, is_active: $is_active";
 		}
   	}
 }

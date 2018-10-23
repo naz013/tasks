@@ -3,7 +3,7 @@ namespace Tasks {
     public class Application : Granite.Application {
 
         private HomeWindow main_window;
-        private static bool create_new_window;
+        private static bool create_new;
 
         public Application () {
             Object (flags: ApplicationFlags.HANDLES_COMMAND_LINE,
@@ -72,7 +72,10 @@ namespace Tasks {
 	    }
 
         public void create_task() {
-            debug ("Creating a task...\n");
+            Logger.log("Creating a task");
+            if (main_window != null) {
+                main_window.set_create_open(true);
+            }
 	    }
 
         protected override int command_line (ApplicationCommandLine command_line) {
@@ -95,15 +98,15 @@ namespace Tasks {
             }
 
             // Create a next window if requested and it's not the app launch
-            if (create_new_window) {
-                create_new_window = false;
+            if (create_new) {
+                create_new = false;
                 create_task();
             }
             return 0;
         }
 
         const OptionEntry[] entries = {
-            { "new-task", 'n', 0, OptionArg.NONE, out create_new_window, "New Task", null },
+            { "new-task", 'n', 0, OptionArg.NONE, out create_new, "New Task", null },
             { null }
         };
 

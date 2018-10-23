@@ -6,6 +6,7 @@ namespace Tasks {
         
         public signal void on_add_new(Event event);
         public signal void on_update(Event event);
+        public signal void on_cancel_event(Event event);
         public signal void on_cancel();
         
         private Gtk.Entry summary_field;
@@ -114,7 +115,7 @@ namespace Tasks {
 		    var due_label = new Gtk.Button.with_label ("Due date");
             due_label.clicked.connect (() => {
                 due_switch.active = !due_switch.active;
-                Logger.log("Due label click");
+                // Logger.log("Due label click");
             });
             due_label.get_style_context().add_class(CssData.MATERIAL_BUTTON_FLAT);
             
@@ -150,7 +151,12 @@ namespace Tasks {
 		    button_grid.add (button_save);
 		    
 		    cancel_button = create_material_button ("CANCEL (Ctrl+C)", () => {
-		        on_cancel();
+		    	if (editable_event == null) {
+		    		on_cancel();
+		    	} else {
+		    		on_cancel_event(new Event.with_event(editable_event));
+		    	}
+		        editable_event = null;
 		    });
 		    cancel_button.get_style_context().add_class(CssData.MATERIAL_BUTTON);
 		    button_grid.add (cancel_button);
@@ -226,7 +232,7 @@ namespace Tasks {
             if (editable_event != null) {
             	event = editable_event;
             	if (editable_event.id == 0) {
-            	    int64 id = AppSettings.get_default().last_id;
+            	    uint id = AppSettings.get_default().last_id;
                     AppSettings.get_default().last_id = id + 1;
                     event.id = id;
                     editable_event = null;
@@ -234,7 +240,7 @@ namespace Tasks {
             	event.summary = summary;
                 event.description = note;
             } else {
-                int64 id = AppSettings.get_default().last_id;
+                uint id = AppSettings.get_default().last_id;
                 AppSettings.get_default().last_id = id + 1;
             	event = new Event.with_id(id, summary, note);
             }
@@ -309,6 +315,7 @@ namespace Tasks {
             summary_label.set_opacity(0);
             
             due_switch.set_active (false);
+            
             editable_event = null;
         }
         
@@ -393,7 +400,7 @@ namespace Tasks {
 		    type_grid.add(grid);
 		    
             if (button.active) {
-                Logger.log(@"Toggled radio -> $(button.label)");
+                // Logger.log(@"Toggled radio -> $(button.label)");
                 if (button.label == type_date_time_label) {
                     type = Event.DATE;
                     add_date_type(grid);
@@ -503,19 +510,19 @@ namespace Tasks {
         }
         
         private void show_error(string label) {
-            Logger.log(@"show_error: $label");
+            // Logger.log(@"show_error: $label");
             if (snackbar != null) {
                 snackbar.show_snackbar(label);
             }
         }
         
         private void toggle_reminder() {
-            Logger.log(@"Due is enabled -> $(due_switch.active)");
+            // Logger.log(@"Due is enabled -> $(due_switch.active)");
             add_due_view();
         }
         
         private void toggle_notification() {
-            Logger.log(@"Notification is enabled -> $(notification_switch.active)");
+            // Logger.log(@"Notification is enabled -> $(notification_switch.active)");
         }
         
         private Gtk.SpinButton create_spin_button(int from, int to, int step, int width, owned DelegateType action) {

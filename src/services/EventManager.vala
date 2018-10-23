@@ -1,4 +1,3 @@
-
 namespace Tasks {
     public class EventManager {
         
@@ -101,7 +100,7 @@ namespace Tasks {
                         string description = node.get_string_member("description");
                         
                         int64 timer_time = node.get_int_member("timer_time");
-                        int64 id = node.get_int_member("id");
+                        uint id = (uint) node.get_int_member("id");
                         
                         bool is_active = node.get_boolean_member("is_active");
                         bool has_reminder = node.get_boolean_member("has_reminder");

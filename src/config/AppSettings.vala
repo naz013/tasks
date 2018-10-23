@@ -7,7 +7,7 @@ namespace Tasks {
         public int window_width { get; set; }
         public int window_height { get; set; }
         public int app_theme { get; set; }
-        public int64 last_id { get; set; }
+        public uint last_id { get; set; }
         public bool is_maximized { get; set; }
         public bool is_fullscreen { get; set; }
 

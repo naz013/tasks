@@ -18,7 +18,7 @@ namespace Tasks {
     			}
     		}
     		tmp = tmp + input;
-    		Logger.log(@"create_label: tmp -> $tmp");
+    		// Logger.log(@"create_label: tmp -> $tmp");
     		
     		var d01 = tmp.substring(0, 2);
     		var d23 = tmp.substring(2, 2);
@@ -74,7 +74,7 @@ namespace Tasks {
     		secs += int.parse(d23) * MINUTE;
     		secs += int.parse(d45);
     		
-    		Logger.log(@"to_seconds: tmp -> $tmp, secs -> $secs");
+    		// Logger.log(@"to_seconds: tmp -> $tmp, secs -> $secs");
     		
     		return secs;
 		}

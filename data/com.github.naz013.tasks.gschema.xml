@@ -26,7 +26,7 @@
 			<summary>Window theme</summary>
 			<description>Window theme parameter</description>
 		</key>
-		<key name="last-id" type="x">
+		<key name="last-id" type="u">
 			<default>1</default>
 			<summary>Last used id for task</summary>
 			<description>Last used id for task</description>

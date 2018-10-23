@@ -23,6 +23,7 @@ namespace Tasks {
 
         private AppTheme app_theme = new LightTheme();
         private EventManager event_manager = new EventManager();
+        private TasksController tasks_controller = new TasksController();
 
         public SimpleActionGroup actions { get; construct; }
 
@@ -55,7 +56,7 @@ namespace Tasks {
             set_hide_titlebar_when_maximized (false);
             
             int theme = AppSettings.get_default().app_theme;
-            Logger.log(@"Theme value: $theme");
+            // Logger.log(@"Theme value: $theme");
 
             init_theme(theme);
 
@@ -66,7 +67,7 @@ namespace Tasks {
             header = new Gtk.HeaderBar();
             header.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
             header.has_subtitle = false;
-            header.set_title("Tasks");
+            header.set_title(_("Tasks"));
             create_app_menu ();
             header.set_show_close_button (true);
 
@@ -86,7 +87,7 @@ namespace Tasks {
                 was_create_open = create_open;
                 if (is_maximized) {
                     if (!was_maximized && !create_open && !is_new) {
-                        Logger.log("From allocate 1");
+                        // Logger.log("From allocate 1");
                         draw_views();
                     } else {
                         is_new = false;
@@ -95,7 +96,7 @@ namespace Tasks {
                     was_minimized = false;
                 } else if (!is_maximized) {
                     if (!was_minimized && !create_open && !is_new) {
-                        Logger.log("From allocate 2");
+                        // Logger.log("From allocate 2");
                         draw_views();
                     } else {
                         is_new = false;
@@ -127,7 +128,23 @@ namespace Tasks {
             });
             
             tasks = event_manager.load_from_file();
-            Logger.log("From main");
+            
+            tasks_controller.find_event.connect((id) => {
+                return find_event(id);
+            });
+            tasks_controller.show_notification.connect((event) => {
+                Logger.log(@"show_notification: $(event.to_string())");
+                
+                show_notification(event);
+            });
+            tasks_controller.init_tasks(tasks);
+            
+            // Logger.log("From main");
+            draw_views();
+        }
+        
+        public void set_create_open(bool create_open) {
+            this.create_open = create_open;
             draw_views();
         }
         
@@ -140,7 +157,6 @@ namespace Tasks {
                 return false;
             }
             create_open = !create_open;
-            Logger.log("From add_action");
             draw_views();
             return true;
         }
@@ -166,11 +182,50 @@ namespace Tasks {
                 } else {
                     add_action();
                 }
+            } else {
+                add_action();
             }
+        }
+        
+        private void show_notification(Event event) {
+            event.is_active = false;
+            update_event(event);
+            event_manager.save_events(tasks);
+            
+            if (event.show_notification) {
+                var notification = new Notification (event.summary);
+                if (event.description != "") {
+                    notification.set_body (event.description);
+                } else {
+                    notification.set_body ("Tasks");
+                }
+                // var icon = new GLib.ThemedIcon ("alarm-symbolic");
+                // notification.set_icon (icon);
+                application.hold();
+                application.send_notification ("com.github.naz013.tasks", notification);
+                application.release();
+            }
+            
+            if (main_view != null) {
+                main_view.refresh_list(tasks);
+            } else {
+                draw_views();
+            }
+        }
+        
+        private Event find_event(uint id) {
+            Event event = null;
+            for (int i = 0; i < tasks.size; i++) {
+                if (tasks.get(i).id == id) {
+                    event = tasks.get(i);
+                    break;
+                }
+            }
+            return event;
         }
 
         private void init_theme(int theme) {
-            Logger.log(@"Is dark -> $(theme == 0), value -> $theme");
+            // Logger.log(@"Is dark -> $(theme == 0), value -> $theme");
             var gtk_settings = Gtk.Settings.get_default ();
             gtk_settings.gtk_application_prefer_dark_theme = theme == 0;
             app_theme = new LightTheme();
@@ -199,7 +254,7 @@ namespace Tasks {
             int new_width, new_height;
             get_size (out new_width, out new_height);
             
-            Logger.log(@"Draw screen: width -> $new_width, height -> $new_height, max -> $is_maximized");
+            // Logger.log(@"Draw screen: width -> $new_width, height -> $new_height, max -> $is_maximized");
             
             grid.forall ((element) => grid.remove (element));
 
@@ -218,7 +273,7 @@ namespace Tasks {
 
             this.get_style_context().add_class("rounded");
             
-            Logger.log(@"draw_views: main_view -> $(main_view != null)");
+            // Logger.log(@"draw_views: main_view -> $(main_view != null)");
             
             if (main_view == null) {
                 main_view = new MainContainer(tasks);
@@ -229,12 +284,14 @@ namespace Tasks {
                     Logger.log(@"Edit row $(event.to_string())");
                     add_action();
                     if (create_view != null) {
+                        tasks_controller.stop_task(event);
                         create_view.edit_event(event);
                     }
                 });
                 main_view.on_event_delete.connect((event) => {
                     Logger.log(@"Delete row $(event.to_string())");
                     tasks.remove(event);
+                    tasks_controller.stop_task(event);
                     event_manager.save_events(tasks);
                     if (main_view != null) {
                         main_view.refresh_list(tasks);
@@ -255,6 +312,7 @@ namespace Tasks {
                     Logger.log(@"Undo row $(event.to_string()), position -> $position");
                     if (position >= 0) {
                         tasks.insert(position, event);
+                        tasks_controller.start_task(event);
                         event_manager.save_events(tasks);
                         if (main_view != null) {
                             main_view.refresh_list(tasks);
@@ -283,6 +341,7 @@ namespace Tasks {
             create_view.on_add_new.connect((event) => {
                 Logger.log(@"Event added: $(event.to_string())");
                 tasks.add(event);
+                tasks_controller.start_task(event);
                 event_manager.save_events(tasks);
                 add_action();
                 if (main_view != null) {
@@ -294,6 +353,7 @@ namespace Tasks {
             create_view.on_update.connect((event) => {
                 Logger.log(@"Event updated: $(event.to_string())");
                 update_event(event);
+                tasks_controller.start_task(event);
                 event_manager.save_events(tasks);
                 add_action();
                 if (main_view != null) {
@@ -301,6 +361,10 @@ namespace Tasks {
                 } else {
                     draw_views();
                 }
+            });
+            create_view.on_cancel_event.connect((event) => {
+                tasks_controller.start_task(event);
+                cancel_action();
             });
             create_view.on_cancel.connect(() => {
                 cancel_action();
