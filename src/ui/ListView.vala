@@ -26,17 +26,75 @@ namespace Tasks {
         
         public void refresh_list(Gee.ArrayList<Event> tasks) {
             list_box.forall ((element) => list_box.remove (element));
+            tasks.sort(comparator);
+            Event? prev_task = null;
             for (int i = 0; i < tasks.size; i++) {
                 Event task = tasks.get(i);
-                list_box.add(get_row(task));
+                list_box.add(get_row(task, prev_task, i == tasks.size - 1));
+                prev_task = new Event.full_copy(task);
             }
         }
         
-        private Gtk.ListBoxRow get_row(Event task) {
+        public int comparator (Event a, Event b) {
+            if (a.is_active == b.is_active) {
+                if (a.estimated_time < b.estimated_time) {
+                    return -1;
+                } else if (a.estimated_time > b.estimated_time) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            } else if (a.is_active) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+        
+        private Gtk.Widget? get_header_view(Event task, Event? prev) {
+            if (prev != null) {
+                if (task.is_active == prev.is_active) {
+                    return null;
+                } else {
+                    return get_header(task);
+                }
+            } else {
+                return get_header(task);
+            }
+        }
+        
+        private Gtk.Widget get_header(Event task) {
+            if (task.is_active) {
+                var label = new Gtk.Label(_("Active"));
+                label.set_xalign(0.0f);
+                label.get_style_context().add_class(CssData.LABEL_SECONDARY);
+                label.set_margin_left(8);
+                label.set_margin_top(8);
+                return label;
+            } else {
+                var label = new Gtk.Label(_("Completed"));
+                label.set_xalign(0.0f);
+                label.get_style_context().add_class(CssData.LABEL_SECONDARY);
+                label.set_margin_left(8);
+                label.set_margin_top(8);
+                return label;
+            }
+        }
+        
+        private Gtk.ListBoxRow get_row(Event task, Event? prev, bool is_last) {
             var row = new Gtk.ListBoxRow();
             row.hexpand = true;
             row.vexpand = false;
             row.set_selectable(false);
+            
+            var grid = new Gtk.Grid();
+            grid.orientation = Gtk.Orientation.VERTICAL;
+            grid.hexpand = true;
+            
+            var header_view = get_header_view(task, prev);
+            if (header_view != null) {
+                grid.add(header_view);
+            }
             
             var hor_grid = new Gtk.Grid();
             hor_grid.orientation = Gtk.Orientation.HORIZONTAL;
@@ -120,7 +178,15 @@ namespace Tasks {
             hor_grid.add(vert_grid);
             hor_grid.add(button_grid);
             
-            row.add(hor_grid);
+            grid.add(hor_grid);
+            
+            if (is_last) {
+                var label = new Gtk.Label("");
+                label.set_xalign(0.0f);
+                grid.add(label);
+            }
+            
+            row.add(grid);
             row.show_all();
             
             return row;

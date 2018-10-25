@@ -47,5 +47,9 @@ namespace Tasks {
         public string get_button_disabled_color() {
             return "rgba(0, 0, 0, 0.25)";
         }
+        
+        public bool is_dark() {
+        	return false;
+        }
     }
 }

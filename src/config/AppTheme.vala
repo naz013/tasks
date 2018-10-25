@@ -17,5 +17,7 @@ namespace Tasks {
         public abstract string get_alpha_accent_color();
         
         public abstract string get_button_disabled_color();
+        
+        public abstract bool is_dark();
     }
 }

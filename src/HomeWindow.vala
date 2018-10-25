@@ -215,9 +215,6 @@ namespace Tasks {
         }
 
         private void init_theme(int theme) {
-            // Logger.log(@"Is dark -> $(theme == 0), value -> $theme");
-            var gtk_settings = Gtk.Settings.get_default ();
-            gtk_settings.gtk_application_prefer_dark_theme = theme == 0;
             app_theme = new LightTheme();
             switch (theme) {
                 case 0:
@@ -236,6 +233,8 @@ namespace Tasks {
                     app_theme = new GrapeTheme();
                     break; 
             }
+            var gtk_settings = Gtk.Settings.get_default ();
+            gtk_settings.gtk_application_prefer_dark_theme = app_theme.is_dark();
         }
 
         private void draw_views() {
@@ -332,7 +331,6 @@ namespace Tasks {
                 Logger.log(@"Event added: $(event.to_string())");
                 tasks.add(event);
                 tasks_controller.start_task(event);
-                show_notification(event);
                 event_manager.save_events(tasks);
                 add_action();
                 if (main_view != null) {

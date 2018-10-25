@@ -174,6 +174,7 @@ namespace Tasks {
         public void save_task() {
         	int64 due_date_time = 0;
 	        int64 timer_value = 0;
+	        int64 estimated_time = 0;
 	        
             var summary = summary_field.get_text();
             var note = description_field.get_text();
@@ -203,25 +204,32 @@ namespace Tasks {
 		            
 		            DateTime dt = new DateTime.local(year, month, day, hour, minute, 0);
 		            
-                    if (!validate_dt(dt)) {
+                    if (show_notification && !validate_dt(dt)) {
                     	has_error = true;
                     	show_error(_("Select date in future"));
                     } else {
                         due_date_time = dt.to_unix();
+                        estimated_time = due_date_time;
                     }
                 } else if (type == Event.TIMER) {
                     if (timer_view != null) {
                         timer_value = timer_view.get_seconds();
                     }
+                    Logger.log(@"Selected seconds -> $timer_value");
                     if (validate_time(timer_value)) {
                     	has_error = true;
                     	show_error(_("Timer time not selected"));
+                    } else {
+                    	DateTime dt = new DateTime.now_local ();
+                    	dt = dt.add_seconds((double) timer_value);
+                    	estimated_time = dt.to_unix();
                     }
                 }
                 has_reminder = true;
             } else {
                 has_reminder = false;
                 show_notification = false;
+                estimated_time = 0;
             }
             
             if (has_error) {
@@ -250,6 +258,7 @@ namespace Tasks {
             event.has_reminder = has_reminder;
             event.show_notification = show_notification;
             event.timer_time = timer_value;
+            event.estimated_time = estimated_time;
             
             Logger.log(@"Event saved: $(event.to_string())");
             
