@@ -60,8 +60,21 @@ namespace Tasks {
     	}
     	
     	private uint calculate_left_secconds(Event event) {
-    	    
-    	    return 10;
+    	    uint seconds = 0;
+    	    if (event.event_type == Event.DATE) {
+    	        var current = new DateTime.now_local ();
+    	        var dt = new DateTime.from_unix_local(event.due_date_time);
+    	        var diff = dt.difference(current);
+    	        Logger.log(@"calculate_left_secconds: diff -> $diff");
+    	        seconds = (uint) (diff / TimeSpan.SECOND);
+    	    } else if (event.event_type == Event.TIMER) {
+    	        seconds = (uint) event.timer_time;
+    	    }
+    	    Logger.log(@"calculate_left_secconds: $seconds");
+    	    if (seconds < 0) {
+    	    	seconds = 0;
+    	    }
+    	    return seconds;
     	}
     }
 }

@@ -6,6 +6,7 @@ namespace Tasks {
         public signal void on_event_edit(Event event);
         public signal void on_event_delete(Event event);
         public signal void on_event_copy(Event event);
+        public signal void on_event_complete(Event event);
         public signal void undo_event(Event event, int position);
         
         private SnackBar snackbar;
@@ -109,6 +110,9 @@ namespace Tasks {
                 });
                 list_box.on_copy.connect((event) => {
                     on_event_copy(event);
+                });
+                list_box.on_complete.connect((event) => {
+                    on_event_complete(event);
                 });
                 grid.add(list_box);
             }

@@ -297,6 +297,17 @@ namespace Tasks {
                         create_view.edit_event(editable);
                     }
                 });
+                main_view.on_event_complete.connect((event) => {
+                    event.is_active = false;
+                    update_event(event);
+                    tasks_controller.stop_task(event);
+                    event_manager.save_events(tasks);
+                    if (main_view != null) {
+                        main_view.refresh_list(tasks);
+                    } else {
+                        draw_views();
+                    }
+                });
                 main_view.undo_event.connect((event, position) => {
                     Logger.log(@"Undo row $(event.to_string()), position -> $position");
                     if (position >= 0) {

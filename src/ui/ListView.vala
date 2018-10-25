@@ -87,10 +87,19 @@ namespace Tasks {
         private Gtk.Widget get_menu_item(string title, owned DelegateType action) {
             var view = new Gtk.Button.with_label (title);
             view.clicked.connect (() => {
+                hide_popover();
                 action();
             });
             view.get_style_context().add_class(CssData.MENU_ITEM);
             return view;
+        }
+        
+        private Gtk.Popover? popover;
+        
+        private void hide_popover() {
+            if (popover != null) {
+                popover.popdown();
+            }
         }
         
         private void show_more(Gtk.Widget widget, Event task) {
@@ -103,20 +112,24 @@ namespace Tasks {
             	}), 0, x, 1, 1);
             	x = x + 1;
             }
+            
             menu_grid.attach(get_menu_item(_("Edit task"), () => {
             	on_edit(task);
             }), 0, x, 1, 1);
             x = x + 1;
+            
             menu_grid.attach(get_menu_item(_("Copy task"), () => {
             	on_copy(task);
             }), 0, x, 1, 1);
             x = x + 1;
+            
             menu_grid.attach(get_menu_item(_("Delete task"), () => {
             	on_delete(task);
             }), 0, x, 1, 1);
+            
             menu_grid.show_all ();
             
-            var popover = new Gtk.Popover (widget);
+            popover = new Gtk.Popover (widget);
             popover.add (menu_grid);
             popover.get_style_context().add_class("popover");
             popover.popup();
