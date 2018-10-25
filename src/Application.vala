@@ -115,7 +115,9 @@ namespace Tasks {
             if (icon != "") {
                 notification.set_icon (new GLib.ThemedIcon (icon));
             }
-            send_notification ("com.github.naz013.tasks", notification);
+            notification.set_priority(GLib.NotificationPriority.LOW);
+            notification.set_default_action ("app.present");
+            GLib.Application.get_default ().send_notification ("com.github.naz013.tasks", notification);
         }
 
         const OptionEntry[] entries = {

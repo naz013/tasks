@@ -28,7 +28,7 @@ namespace Tasks {
 		    		remove_digit();
 		    	} else if (key.keyval == 65289) {
 		    		entry.is_focus = false;
-		    	} else if (key.keyval >= 65456 && key.keyval <= 65465) {
+		    	} else if ((key.keyval >= 65456 && key.keyval <= 65465) || (key.keyval >= 48 && key.keyval <= 57)) {
 		    		add_digit(str);
 		    	}
 		    	return true;
