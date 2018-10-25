@@ -2,6 +2,9 @@ namespace Tasks {
 
     public class ListView : Gtk.EventBox {
         
+        delegate void DelegateType ();
+        
+        public signal void on_complete(Event task);
         public signal void on_edit(Event task);
         public signal void on_delete(Event task);
         public signal void on_copy(Event task);
@@ -68,17 +71,67 @@ namespace Tasks {
                 var label = new Gtk.Label(_("Active"));
                 label.set_xalign(0.0f);
                 label.get_style_context().add_class(CssData.LABEL_SECONDARY);
-                label.set_margin_left(8);
+                label.set_margin_start(8);
                 label.set_margin_top(8);
                 return label;
             } else {
                 var label = new Gtk.Label(_("Completed"));
                 label.set_xalign(0.0f);
                 label.get_style_context().add_class(CssData.LABEL_SECONDARY);
-                label.set_margin_left(8);
+                label.set_margin_start(8);
                 label.set_margin_top(8);
                 return label;
             }
+        }
+        
+        private Gtk.Widget get_menu_item(string title, owned DelegateType action) {
+            var view = new Gtk.Button.with_label (title);
+            view.clicked.connect (() => {
+                action();
+            });
+            view.get_style_context().add_class(CssData.MENU_ITEM);
+            return view;
+        }
+        
+        private void show_more(Gtk.Widget widget, Event task) {
+            var menu_grid = new Gtk.Grid();
+            
+            int x = 0;
+            if (task.is_active) {
+            	menu_grid.attach(get_menu_item(_("Mark as completed"), () => {
+            		on_complete(task);
+            	}), 0, x, 1, 1);
+            	x = x + 1;
+            }
+            menu_grid.attach(get_menu_item(_("Edit task"), () => {
+            	on_edit(task);
+            }), 0, x, 1, 1);
+            x = x + 1;
+            menu_grid.attach(get_menu_item(_("Copy task"), () => {
+            	on_copy(task);
+            }), 0, x, 1, 1);
+            x = x + 1;
+            menu_grid.attach(get_menu_item(_("Delete task"), () => {
+            	on_delete(task);
+            }), 0, x, 1, 1);
+            menu_grid.show_all ();
+            
+            var popover = new Gtk.Popover (widget);
+            popover.add (menu_grid);
+            popover.get_style_context().add_class("popover");
+            popover.popup();
+        }
+        
+        private Gtk.Widget get_more_button(Event task) {
+            var button = new Gtk.Button.from_icon_name ("view-more-symbolic", Gtk.IconSize.BUTTON);
+            button.has_tooltip = false;
+            button.hexpand = false;
+            button.set_always_show_image(true);
+            button.get_style_context().add_class("icon_button");
+            button.clicked.connect (() => {
+                show_more(button, task);
+            });
+            return button;
         }
         
         private Gtk.ListBoxRow get_row(Event task, Event? prev, bool is_last) {
@@ -104,39 +157,8 @@ namespace Tasks {
             
             var button_grid = new Gtk.Grid();
             button_grid.orientation = Gtk.Orientation.HORIZONTAL;
-            
-            var edit_button = new Gtk.Button.from_icon_name ("document-edit-symbolic", Gtk.IconSize.BUTTON);
-            edit_button.has_tooltip = true;
-            edit_button.hexpand = false;
-		    edit_button.set_always_show_image(true);
-            edit_button.tooltip_text = (_("Edit task"));
-            edit_button.get_style_context().add_class("icon_button");
-            edit_button.clicked.connect (() => {
-                Logger.log(@"Edit row $(task.to_string())");
-			    on_edit(task);
-		    });
-            
-            var delete_button = new Gtk.Button.from_icon_name ("edit-delete-symbolic", Gtk.IconSize.BUTTON);
-            delete_button.has_tooltip = true;
-            delete_button.tooltip_text = (_("Delete task"));
-            delete_button.get_style_context().add_class("icon_button");
-            delete_button.clicked.connect (() => {
-                Logger.log(@"Delete row $(task.to_string())");
-			    on_delete(task);
-		    });
 		    
-		    var copy_button = new Gtk.Button.from_icon_name ("edit-copy-symbolic", Gtk.IconSize.BUTTON);
-            copy_button.has_tooltip = true;
-            copy_button.tooltip_text = (_("Copy task"));
-            copy_button.get_style_context().add_class("icon_button");
-            copy_button.clicked.connect (() => {
-                Logger.log(@"Copy row $(task.to_string())");
-			    on_copy(task);
-		    });
-            
-            button_grid.add(edit_button);
-            button_grid.add(delete_button);
-            button_grid.add(copy_button);
+            button_grid.add(get_more_button(task));
             
             var vert_grid = new Gtk.Grid();
             vert_grid.orientation = Gtk.Orientation.VERTICAL;

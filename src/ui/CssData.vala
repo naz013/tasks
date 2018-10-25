@@ -17,6 +17,8 @@ namespace Tasks {
         public const string MATERIAL_HINT_ERROR = "material_hint_error";
         public const string MATERIAL_SNACKBAR = "material_snackbar";
         
+        public const string MENU_ITEM = "menu_item";
+        
         public const string LABEL_PRIMARY = "body2";
         public const string LABEL_SECONDARY = "body1";
         
@@ -416,6 +418,30 @@ namespace Tasks {
                 
                 .material_card:selected {
                     box-shadow: 0 14px 28px @shadowColor, 0 10px 10px @shadowOutColor;
+                }
+                
+                .menu_item {
+                	border-radius: 0px;
+                    font-size: 13px;
+                    color: @textColorPrimary;
+                    background: transparent;
+                    border: 0px;
+                    padding: 4px;
+                    box-shadow: none;
+                    font-weight: normal;
+                }
+                
+                .menu_item:hover, 
+                .menu_item:hover:active,
+                .menu_item:selected {
+                    font-size: 13px;
+                    color: @textColorPrimary;
+                    background: @accentAlphaColor;
+                    border: 0px;
+                    padding: 4px;
+                    border-radius: 0px;
+                    box-shadow: none;
+                    font-weight: normal;
                 }
                 
                 .material_button_flat, 
