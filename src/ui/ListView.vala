@@ -4,6 +4,7 @@ namespace Tasks {
         
         delegate void DelegateType ();
         
+        public signal void on_restart(Event task);
         public signal void on_complete(Event task);
         public signal void on_edit(Event task);
         public signal void on_delete(Event task);
@@ -109,6 +110,13 @@ namespace Tasks {
             if (task.is_active) {
             	menu_grid.attach(get_menu_item(_("Mark as completed"), () => {
             		on_complete(task);
+            	}), 0, x, 1, 1);
+            	x = x + 1;
+            } else if (task.event_type == Event.TIMER) {
+            	menu_grid.attach(get_menu_item(_("Start again"), () => {
+            		task.is_active = true;
+            		task.estimated_time = Utils.calculate_estimate_timer(task.timer_time);
+            		on_restart(task);
             	}), 0, x, 1, 1);
             	x = x + 1;
             }

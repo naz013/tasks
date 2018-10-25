@@ -6,6 +6,12 @@ namespace Tasks {
     	public const string ZERO = "0";
     	public const int LENGTH = 6;
     	
+    	public static int64 calculate_estimate_timer(int64 seconds) {
+    	    var dt = new DateTime.now_local();
+        	dt = dt.add_seconds((double) seconds);
+        	return dt.to_unix();
+    	}
+    	
     	public static string to_label_from_seconds(int64 seconds) {
     	    return to_label(from_seconds(seconds));
     	}

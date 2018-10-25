@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.naz013.tasks\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-25 15:25+0300\n"
+"POT-Creation-Date: 2018-10-25 19:16+0300\n"
 "PO-Revision-Date: 2018-10-25 14:33+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -22,27 +22,27 @@ msgstr ""
 msgid "Tasks"
 msgstr "Завдання"
 
-#: src/HomeWindow.vala:409 src/ui/SettingsView.vala:11
+#: src/HomeWindow.vala:428 src/ui/SettingsView.vala:11
 msgid "Light"
 msgstr "Світла"
 
-#: src/HomeWindow.vala:417
+#: src/HomeWindow.vala:436
 msgid "Sand"
 msgstr "Пісок"
 
-#: src/HomeWindow.vala:425 src/ui/SettingsView.vala:19
+#: src/HomeWindow.vala:444 src/ui/SettingsView.vala:19
 msgid "Dark"
 msgstr "Темна"
 
-#: src/HomeWindow.vala:433
+#: src/HomeWindow.vala:452
 msgid "Olive"
 msgstr "Оливка"
 
-#: src/HomeWindow.vala:441
+#: src/HomeWindow.vala:460
 msgid "Grape"
 msgstr "Виноград"
 
-#: src/HomeWindow.vala:495
+#: src/HomeWindow.vala:514
 msgid "Settings"
 msgstr "Налаштування"
 
@@ -78,31 +78,31 @@ msgstr "ЗБЕРЕГТИ (Ctrl+S)"
 msgid "CANCEL (Ctrl+C)"
 msgstr "СКАСУВАТИ (Ctrl+C)"
 
-#: src/ui/CreateView.vala:208
+#: src/ui/CreateView.vala:209
 msgid "Select date in future"
 msgstr "Оберіть дату в майбутньому"
 
-#: src/ui/CreateView.vala:218
+#: src/ui/CreateView.vala:221
 msgid "Timer time not selected"
 msgstr "Час для таймера не обрано"
 
-#: src/ui/CreateView.vala:427
+#: src/ui/CreateView.vala:436
 msgid "Date"
 msgstr "Дата"
 
-#: src/ui/CreateView.vala:434
+#: src/ui/CreateView.vala:443
 msgid "Time"
 msgstr "Час"
 
-#: src/ui/CreateView.vala:463
+#: src/ui/CreateView.vala:472
 msgid "m"
 msgstr "хв"
 
-#: src/ui/CreateView.vala:467
+#: src/ui/CreateView.vala:476
 msgid "H"
 msgstr "Г"
 
-#: src/ui/CreateView.vala:497
+#: src/ui/CreateView.vala:506
 msgid "Show notification"
 msgstr "Показати сповіщення"
 
@@ -120,32 +120,48 @@ msgstr ""
 "<b>Control+F</b> - Повноекранний режим\n"
 "<b>Control+Q</b> - Вийти"
 
-#: src/ui/ListView.vala:54
+#: src/ui/ListView.vala:72
+msgid "Active"
+msgstr "Активні"
+
+#: src/ui/ListView.vala:79
+msgid "Completed"
+msgstr "Виконані"
+
+#: src/ui/ListView.vala:111
+msgid "Mark as completed"
+msgstr "Позначити виконаним"
+
+#: src/ui/ListView.vala:116
+msgid "Start again"
+msgstr "Почати знову"
+
+#: src/ui/ListView.vala:124
 msgid "Edit task"
 msgstr "Змінити"
 
-#: src/ui/ListView.vala:63
-msgid "Delete task"
-msgstr "Видалити"
-
-#: src/ui/ListView.vala:72
+#: src/ui/ListView.vala:129
 msgid "Copy task"
 msgstr "Копіювати"
 
-#: src/ui/ListView.vala:101
+#: src/ui/ListView.vala:134
+msgid "Delete task"
+msgstr "Видалити"
+
+#: src/ui/ListView.vala:202
 #, c-format
 msgid "Timer for: %s"
 msgstr "Таймер на: %s"
 
-#: src/ui/MainContainer.vala:57
+#: src/ui/MainContainer.vala:59
 msgid "Add task"
 msgstr "Додати завдання"
 
-#: src/ui/MainContainer.vala:135
+#: src/ui/MainContainer.vala:143
 #, c-format
 msgid "Event %s deleted."
 msgstr "Завдання %s видалено."
 
-#: src/ui/MainContainer.vala:136
+#: src/ui/MainContainer.vala:144
 msgid "UNDO"
 msgstr "ВІДМІНИТИ"
