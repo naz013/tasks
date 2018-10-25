@@ -18,7 +18,6 @@ namespace Tasks {
             set_accels_for_action ("app.quit", {"<Control>q"});
             add_action (quit_action);
             quit_action.activate.connect (() => {
-    	        Logger.log("Quitting...");
                 if (main_window != null) {
                     main_window.destroy();
                 }
@@ -27,7 +26,6 @@ namespace Tasks {
             set_accels_for_action ("app.new", {"<Control>n"});
             add_action (new_action);
             new_action.activate.connect (() => {
-                Logger.log("Add task...");
                 if (main_window != null) {
                     main_window.add_action();
                 }
@@ -37,7 +35,6 @@ namespace Tasks {
             set_accels_for_action ("app.fullscreen", {"<Control>f"});
             add_action (maximaze_action);
             maximaze_action.activate.connect (() => {
-                Logger.log("Change screen size...");
                 if (main_window != null) {
                     main_window.max_action();
                 }
@@ -47,7 +44,6 @@ namespace Tasks {
             set_accels_for_action ("app.save", {"<Control>s"});
             add_action (save_action);
             save_action.activate.connect (() => {
-                Logger.log("Saving task...");
                 if (main_window != null) {
                     main_window.save_action();
                 }
@@ -57,7 +53,6 @@ namespace Tasks {
             set_accels_for_action ("app.cancel", {"<Control>c"});
             add_action (cancel_action);
             cancel_action.activate.connect (() => {
-                Logger.log("Cancel task...");
                 if (main_window != null) {
                     main_window.cancel_action();
                 }
@@ -72,7 +67,6 @@ namespace Tasks {
 	    }
 
         public void create_task() {
-            Logger.log("Creating a task");
             if (main_window != null) {
                 main_window.set_create_open(true);
             }

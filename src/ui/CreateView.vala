@@ -34,10 +34,10 @@ namespace Tasks {
         private Gtk.RadioButton date_radio;
         
         private bool is_max = false;
-        private string summary_hint = "Remind me...";
-        private string description_hint = "Note";
-        private string type_date_time_label = "Date/Time";
-        private string type_timer_label = "Timer";
+        private string summary_hint = _("Remind me...");
+        private string description_hint = _("Note");
+        private string type_date_time_label = _("Date/Time");
+        private string type_timer_label = _("Timer");
         private int64 type = 0;
         private Event editable_event = null;
         
@@ -87,7 +87,7 @@ namespace Tasks {
 		    summary_field.get_style_context().add_class(CssData.MATERIAL_TEXT_FIELD);
 		    scrollable_grid.add(summary_field);
 		    
-		    summary_error = create_error_label("*Must be not empty", false);
+		    summary_error = create_error_label(_("Must be not empty"), false);
 		    scrollable_grid.add(create_empty_space(4));
 		    scrollable_grid.add(summary_error);
 		    
@@ -112,7 +112,7 @@ namespace Tasks {
     		});
             due_switch.get_style_context().add_class(CssData.MATERIAL_SWITCH);
 		    
-		    var due_label = new Gtk.Button.with_label ("Due date");
+		    var due_label = new Gtk.Button.with_label (_("Due date"));
             due_label.clicked.connect (() => {
                 due_switch.active = !due_switch.active;
                 // Logger.log("Due label click");
@@ -144,13 +144,13 @@ namespace Tasks {
             
             vert_grid.add(button_grid);
             
-            var button_save = create_material_button ("SAVE (Ctrl+S)", () => {
+            var button_save = create_material_button (_("SAVE (Ctrl+S)"), () => {
 			    save_task();
             });
 		    button_save.get_style_context().add_class(CssData.MATERIAL_BUTTON);
 		    button_grid.add (button_save);
 		    
-		    cancel_button = create_material_button ("CANCEL (Ctrl+C)", () => {
+		    cancel_button = create_material_button (_("CANCEL (Ctrl+C)"), () => {
 		    	if (editable_event == null) {
 		    		on_cancel();
 		    	} else {
@@ -205,7 +205,7 @@ namespace Tasks {
 		            
                     if (!validate_dt(dt)) {
                     	has_error = true;
-                    	show_error("Select date in future");
+                    	show_error(_("Select date in future"));
                     } else {
                         due_date_time = dt.to_unix();
                     }
@@ -215,7 +215,7 @@ namespace Tasks {
                     }
                     if (validate_time(timer_value)) {
                     	has_error = true;
-                    	show_error("Timer time not selected");
+                    	show_error(_("Timer time not selected"));
                     }
                 }
                 has_reminder = true;
@@ -413,7 +413,7 @@ namespace Tasks {
 	    }
 	    
 	    private void add_timer_type(Gtk.Grid container) {
-		    container.add(create_hint_label("Timer", true));
+		    container.add(create_hint_label(type_timer_label, true));
 		    container.add(create_empty_space(16));
 		    
 		    timer_view = new TimerView();
@@ -424,14 +424,14 @@ namespace Tasks {
         }
         
         private void add_date_type(Gtk.Grid container) {
-		    container.add(create_hint_label("Date", true));
+		    container.add(create_hint_label(_("Date"), true));
 		    
 		    calendar = new Gtk.Calendar();
 		    calendar.hexpand = true;
 		    container.add(calendar);
 		    
 		    container.add(create_empty_space(16));
-		    container.add(create_hint_label("Time", true));
+		    container.add(create_hint_label(_("Time"), true));
 		    
 		    Gtk.Grid time_grid = new Gtk.Grid();
 		    time_grid.column_spacing = 4;
@@ -460,11 +460,11 @@ namespace Tasks {
             h_empty.width_request = 66;
             h_empty.hexpand = true;
             
-            Gtk.Label m_label = new Gtk.Label("m");
+            Gtk.Label m_label = new Gtk.Label(_("m"));
             m_label.set_xalign(1.0f);
             m_label.get_style_context().add_class("time_label");
             
-            Gtk.Label h_label = new Gtk.Label("H");
+            Gtk.Label h_label = new Gtk.Label(_("H"));
             h_label.set_xalign(0.0f);
             h_label.get_style_context().add_class("time_label");
 		    
@@ -494,7 +494,7 @@ namespace Tasks {
     		});
             notification_switch.get_style_context().add_class(CssData.MATERIAL_SWITCH);
 		    
-		    var label = new Gtk.Button.with_label ("Show notification");
+		    var label = new Gtk.Button.with_label (_("Show notification"));
             label.clicked.connect (() => {
                 notification_switch.active = !notification_switch.active;
             });

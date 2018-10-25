@@ -1,5 +1,9 @@
 src/Application.vala
-src/MainWindow.vala
-src/Services/NoteManager.vala
-src/Services/Storage.vala
-src/Constants/AppSettings.vala
+src/HomeWindow.vala
+src/config/Utils.vala
+src/ui/CreateView.vala
+src/ui/EmptyView.vala
+src/ui/ListView.vala
+src/ui/MainContainer.vala
+src/ui/SettingsView.vala
+src/ui/TimerView.vala

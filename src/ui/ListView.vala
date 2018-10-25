@@ -51,7 +51,7 @@ namespace Tasks {
             edit_button.has_tooltip = true;
             edit_button.hexpand = false;
 		    edit_button.set_always_show_image(true);
-            edit_button.tooltip_text = ("Edit task");
+            edit_button.tooltip_text = (_("Edit task"));
             edit_button.get_style_context().add_class("icon_button");
             edit_button.clicked.connect (() => {
                 Logger.log(@"Edit row $(task.to_string())");
@@ -60,7 +60,7 @@ namespace Tasks {
             
             var delete_button = new Gtk.Button.from_icon_name ("edit-delete-symbolic", Gtk.IconSize.BUTTON);
             delete_button.has_tooltip = true;
-            delete_button.tooltip_text = ("Delete task");
+            delete_button.tooltip_text = (_("Delete task"));
             delete_button.get_style_context().add_class("icon_button");
             delete_button.clicked.connect (() => {
                 Logger.log(@"Delete row $(task.to_string())");
@@ -69,7 +69,7 @@ namespace Tasks {
 		    
 		    var copy_button = new Gtk.Button.from_icon_name ("edit-copy-symbolic", Gtk.IconSize.BUTTON);
             copy_button.has_tooltip = true;
-            copy_button.tooltip_text = ("Copy task");
+            copy_button.tooltip_text = (_("Copy task"));
             copy_button.get_style_context().add_class("icon_button");
             copy_button.clicked.connect (() => {
                 Logger.log(@"Copy row $(task.to_string())");
@@ -98,7 +98,7 @@ namespace Tasks {
             
             if (task.has_reminder) {
                 if (task.event_type == Event.TIMER) {
-                	string timer_text = @"Timer for: $(Utils.to_label_from_seconds(task.timer_time))";
+                	string timer_text = _("Timer for: %s").printf(Utils.to_label_from_seconds(task.timer_time));
                 	
                 	var timer_label = new Gtk.Label(timer_text);
 				    timer_label.set_xalign(0.0f);

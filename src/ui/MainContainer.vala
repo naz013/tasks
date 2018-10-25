@@ -54,7 +54,7 @@ namespace Tasks {
             fab = new Gtk.Button.from_icon_name ("list-add-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
 	        fab.hexpand = false;
 	        fab.set_always_show_image(true);
-	        fab.set_label("Add task");
+	        fab.set_label(_("Add task"));
 	        fab.clicked.connect (() => {
 		        add_clicked();
 	        });
@@ -132,8 +132,8 @@ namespace Tasks {
         }
         
         private void show_undo_snackbar(Event event) {
-            var message = @"Event $(event.summary) deleted.";
-            snackbar.show_snackbar_with_action(message, "UNDO", () => {
+            var message = _("Event %s deleted.").printf(event.summary);
+            snackbar.show_snackbar_with_action(message, _("UNDO"), () => {
                 undo_event(event, last_delete_position);
                 last_delete_position = -1;
             });
