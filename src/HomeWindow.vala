@@ -193,17 +193,7 @@ namespace Tasks {
             event_manager.save_events(tasks);
             
             if (event.show_notification) {
-                var notification = new Notification (event.summary);
-                if (event.description != "") {
-                    notification.set_body (event.description);
-                } else {
-                    notification.set_body ("Tasks");
-                }
-                // var icon = new GLib.ThemedIcon ("alarm-symbolic");
-                // notification.set_icon (icon);
-                application.hold();
-                application.send_notification ("com.github.naz013.tasks", notification);
-                application.release();
+                ((Application) application).show_notification(event.summary, event.description, "alarm-symbolic");
             }
             
             if (main_view != null) {
@@ -342,6 +332,7 @@ namespace Tasks {
                 Logger.log(@"Event added: $(event.to_string())");
                 tasks.add(event);
                 tasks_controller.start_task(event);
+                show_notification(event);
                 event_manager.save_events(tasks);
                 add_action();
                 if (main_view != null) {

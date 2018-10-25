@@ -104,6 +104,19 @@ namespace Tasks {
             }
             return 0;
         }
+        
+        public void show_notification(string title, string message, string icon) {
+            var notification = new GLib.Notification (title);
+            if (message != "") {
+                notification.set_body (message);
+            } else {
+                notification.set_body (_("Tasks"));
+            }
+            if (icon != "") {
+                notification.set_icon (new GLib.ThemedIcon (icon));
+            }
+            send_notification ("com.github.naz013.tasks", notification);
+        }
 
         const OptionEntry[] entries = {
             { "new-task", 'n', 0, OptionArg.NONE, out create_new, "New Task", null },

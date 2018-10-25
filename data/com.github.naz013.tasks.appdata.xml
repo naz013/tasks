@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
-    <id>com.github.naz013.tasks.desktop</id>
+    <id>com.github.naz013.tasks</id>
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>GPL-3.0+</project_license>
     <name>Tasks</name>
@@ -14,7 +14,7 @@
         </ul>
     </description>
     <provides>
-        <binary>com.github.naz013.tasks.desktop</binary>
+        <binary>com.github.naz013.tasks</binary>
     </provides>
     <developer_name>Nazar Suhovich</developer_name>
     <url type="homepage">https://github.com/naz013/reminder-vala</url>

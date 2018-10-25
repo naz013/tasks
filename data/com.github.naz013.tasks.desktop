@@ -1,16 +1,16 @@
 [Desktop Entry]
 Name=Tasks
 Comment=Simple tasks manager
-Exec=com.github.naz013.tasks
+Exec=com.github.naz013.tasks %U
 Icon=com.github.naz013.tasks
 Keywords=Note;Reminder;Task;Shopping List;
 Terminal=false
 Type=Application
 StartupNotify=true
-Categories=GTK;Utility;
+Categories=GTK;Utility;Notes;Reminder;Task;
 Actions=NewTask;
 X-GNOME-UsesNotifications=true
 
 [Desktop Action NewTask]
 Exec=com.github.naz013.tasks --new-task
-Name=New task...
+Name=New task

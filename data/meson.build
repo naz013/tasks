@@ -14,6 +14,13 @@ foreach i : icon_sizes
     )
 endforeach
 
+configure_file(
+    input: meson.project_name() + '.service',
+    output: '@BASENAME@',
+    configuration: conf,
+    install_dir: dbus.get_pkgconfig_variable('session_bus_services_dir')
+)
+
 install_data(
     meson.project_name() + '.gschema.xml',
     install_dir: join_paths(get_option('datadir'), 'glib-2.0', 'schemas')

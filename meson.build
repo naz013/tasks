@@ -32,6 +32,8 @@ c_args = [
 
 cc = meson.get_compiler('c')
 
+dbus = dependency ('dbus-1')
+
 # Let's define our executable
 executable(
     meson.project_name(),
@@ -66,6 +68,7 @@ executable(
         dependency('gtksourceview-3.0'),
         dependency('json-glib-1.0'),
         dependency('gee-0.8'),
+        dependency('glib-2.0'),
         dependency('gtk+-3.0')
     ],
     vala_args: [
@@ -74,6 +77,12 @@ executable(
     ],
     install : true
 )
+
+libnotify_dep = dependency('libnotify', required: false)
+
+if libnotify_dep.found()
+    add_project_arguments('--define=HAVE_LIBNOTIFY', language: 'vala')
+endif
 
 # Add in a post install script
 meson.add_install_script('meson/post_install.py')
