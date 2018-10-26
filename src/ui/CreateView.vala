@@ -3,6 +3,7 @@ namespace Tasks {
     public class CreateView : Gtk.EventBox {
     
         delegate void DelegateType ();
+        delegate void IntType (int val);
         
         public signal void on_add_new(Event event);
         public signal void on_update(Event event);
@@ -15,11 +16,9 @@ namespace Tasks {
         private Gtk.Label summary_label;
         private Gtk.Label description_label;
         private Gtk.Label summary_error;
+        private Gtk.Label date_label;
+        private Gtk.Label time_label;
         private SnackBar snackbar;
-        
-        private Gtk.Calendar calendar;
-        private Gtk.SpinButton hours_view;
-        private Gtk.SpinButton minutes_view;
         
         private Gtk.Switch due_switch;
         private Gtk.Switch notification_switch;
@@ -33,6 +32,8 @@ namespace Tasks {
         private Gtk.RadioButton timer_radio;
         private Gtk.RadioButton date_radio;
         
+        private Gtk.Popover? popover;
+        
         private bool is_max = false;
         private string summary_hint = _("Remind me...");
         private string description_hint = _("Note");
@@ -40,6 +41,8 @@ namespace Tasks {
         private string type_timer_label = _("Timer");
         private int64 type = 0;
         private Event editable_event = null;
+        
+        private DateTime dt = new DateTime.now_local();
         
         public CreateView() {
             Gtk.Grid vert_grid = new Gtk.Grid();
@@ -195,15 +198,6 @@ namespace Tasks {
 		        timer_value = 0;
 		        
                 if (type == Event.DATE) {
-                    int hour = hours_view.get_value_as_int ();
-		            int minute = minutes_view.get_value_as_int ();
-		            
-		            int year = calendar.year;
-		            int month = calendar.month + 1;
-		            int day = calendar.day;
-		            
-		            DateTime dt = new DateTime.local(year, month, day, hour, minute, 0);
-		            
                     if (show_notification && !validate_dt(dt)) {
                     	has_error = true;
                     	show_error(_("Select date in future"));
@@ -301,14 +295,10 @@ namespace Tasks {
                 notification_switch.active = event.show_notification;
                 
                 if (event.event_type == Event.DATE) {
-                    DateTime date_time = new DateTime.from_unix_local(event.due_date_time);
+                    dt = new DateTime.from_unix_local(event.due_date_time);
                     
-                    hours_view.set_value(date_time.get_hour());
-                    minutes_view.set_value(date_time.get_minute());
-                    
-                    calendar.year = date_time.get_year();
-		            calendar.month = date_time.get_month() - 1;
-		            calendar.day = date_time.get_day_of_month();
+                    update_date_label();
+                    update_time_label();
                 } else {
                     timer_radio.set_active(true);
                     timer_view.set_seconds(event.timer_time);
@@ -409,7 +399,6 @@ namespace Tasks {
 		    type_grid.add(grid);
 		    
             if (button.active) {
-                // Logger.log(@"Toggled radio -> $(button.label)");
                 if (button.label == type_date_time_label) {
                     type = Event.DATE;
                     add_date_type(grid);
@@ -432,67 +421,145 @@ namespace Tasks {
 		    container.add(create_empty_space(16));
         }
         
+        private void show_date_picker(Gtk.Widget parent, DateTime date_time) {
+            var calendar = new Gtk.Calendar();
+            calendar.year = date_time.get_year();
+	        calendar.month = date_time.get_month() - 1;
+	        calendar.day = date_time.get_day_of_month();
+	        calendar.day_selected.connect (() => {
+			    int year = calendar.year;
+	            int month = calendar.month + 1;
+	            int day = calendar.day;
+	            
+	            int hour = dt.get_hour();
+	            int minute = dt.get_minute();
+	            
+	            dt = new DateTime.local(year, month, day, hour, minute, 0);
+	            update_date_label();
+	            
+	            hide_popover();
+		    });
+		    calendar.show_all();
+            
+            popover = new Gtk.Popover (parent);
+            popover.add (calendar);
+            popover.get_style_context().add_class("popover");
+            popover.popup();
+        }
+        
+        private void update_date_label() {
+            string date = dt.format("%a, %e %b %y");
+            date_label.set_label(date);
+        }
+        
+        private void hide_popover() {
+            if (popover != null) {
+                popover.popdown();
+            }
+        }
+        
+        private void show_time_picker(Gtk.Widget parent, DateTime date_time) {
+            Gtk.Grid time_grid = new Gtk.Grid();
+		    time_grid.column_spacing = 4;
+		    time_grid.orientation = Gtk.Orientation.HORIZONTAL;
+		    
+		    var hours_view = create_spin_button(0, 23, 1, (val) => {
+			    int year = dt.get_year();
+	            int month = dt.get_month();
+	            int day = dt.get_day_of_month();
+	            int minute = dt.get_minute();
+	            
+	            dt = new DateTime.local(year, month, day, val, minute, 0);
+			    update_time_label();
+		    });
+		    
+		    var minutes_view = create_spin_button(0, 59, 1, (val) => {
+			    int year = dt.get_year();
+	            int month = dt.get_month();
+	            int day = dt.get_day_of_month();
+	            int hour = dt.get_hour();
+	            
+	            dt = new DateTime.local(year, month, day, hour, val, 0);
+			    update_time_label();
+		    });
+		    
+		    Gtk.Widget h_empty = new Gtk.Label(":");
+		    
+		    time_grid.add(hours_view);
+		    time_grid.add(h_empty);
+		    time_grid.add(minutes_view);
+		    
+		    time_grid.show_all();
+            
+            hours_view.set_value(date_time.get_hour());
+            minutes_view.set_value(date_time.get_minute());
+            
+            popover = new Gtk.Popover (parent);
+            popover.add (time_grid);
+            popover.get_style_context().add_class("popover");
+            popover.popup();
+        }
+        
+        private void update_time_label() {
+            string date = dt.format("%H:%M");
+            time_label.set_label(date);
+        }
+        
         private void add_date_type(Gtk.Grid container) {
 		    container.add(create_hint_label(_("Date"), true));
 		    
-		    calendar = new Gtk.Calendar();
-		    calendar.hexpand = true;
-		    container.add(calendar);
+		    var date_field = new Gtk.Grid();
+		    date_field.hexpand = true;
+		    date_field.orientation = Gtk.Orientation.HORIZONTAL;
+		    date_field.get_style_context().add_class("date-time-field");
+		    
+		    date_label = new Gtk.Label("");
+		    date_label.set_xalign(0.0f);
+		    date_label.hexpand = true;
+		    date_label.get_style_context().add_class(CssData.LABEL_SECONDARY);
+		    date_field.add(date_label);
+		    
+		    update_date_label();
+		    
+		    var date_button = new Gtk.Button.from_icon_name ("x-office-calendar-symbolic", Gtk.IconSize.BUTTON);
+            date_button.has_tooltip = false;
+            date_button.hexpand = false;
+            date_button.set_always_show_image(true);
+            date_button.get_style_context().add_class("icon_button");
+            date_button.clicked.connect (() => {
+                show_date_picker(date_button, dt);
+            });
+            date_field.add(date_button);
+		    
+		    container.add(date_field);
 		    
 		    container.add(create_empty_space(16));
 		    container.add(create_hint_label(_("Time"), true));
 		    
-		    Gtk.Grid time_grid = new Gtk.Grid();
-		    time_grid.column_spacing = 4;
-		    time_grid.hexpand = true;
-		    time_grid.orientation = Gtk.Orientation.HORIZONTAL;
+		    var time_field = new Gtk.Grid();
+		    time_field.hexpand = true;
+		    time_field.orientation = Gtk.Orientation.HORIZONTAL;
+		    time_field.get_style_context().add_class("date-time-field");
 		    
-		    hours_view = create_spin_button(0, 23, 1, 44, () => {
-		        int val = hours_view.get_value_as_int ();
-			    if (val > 23) {
-			        hours_view.set_value(23.0);
-			    } else if (val < 0) {
-			        hours_view.set_value(0.0);
-			    }
-		    });
+		    time_label = new Gtk.Label("");
+		    time_label.set_xalign(0.0f);
+		    time_label.hexpand = true;
+		    time_label.get_style_context().add_class(CssData.LABEL_SECONDARY);
+		    time_field.add(time_label);
 		    
-		    minutes_view = create_spin_button(0, 59, 1, 44, () => {
-		        int val = minutes_view.get_value_as_int ();
-			    if (val > 59) {
-			        minutes_view.set_value(59.0);
-			    } else if (val < 0) {
-			        minutes_view.set_value(0.0);
-			    }
-		    });
+		    update_time_label();
 		    
-		    Gtk.Widget h_empty = new Gtk.Label("");
-            h_empty.width_request = 66;
-            h_empty.hexpand = true;
-            
-            Gtk.Label m_label = new Gtk.Label(_("m"));
-            m_label.set_xalign(1.0f);
-            m_label.get_style_context().add_class("time_label");
-            
-            Gtk.Label h_label = new Gtk.Label(_("H"));
-            h_label.set_xalign(0.0f);
-            h_label.get_style_context().add_class("time_label");
+		    var time_button = new Gtk.Button.from_icon_name ("outline-access-time", Gtk.IconSize.BUTTON);
+            time_button.has_tooltip = false;
+            time_button.hexpand = false;
+            time_button.set_always_show_image(true);
+            time_button.get_style_context().add_class("icon_button");
+            time_button.clicked.connect (() => {
+                show_time_picker(time_button, dt);
+            });
+            time_field.add(time_button);
 		    
-		    time_grid.add(hours_view);
-		    time_grid.add(h_label);
-		    time_grid.add(h_empty);
-		    time_grid.add(m_label);
-		    time_grid.add(minutes_view);
-		    
-		    container.add(time_grid);
-		    
-		    DateTime current_dt = new DateTime.now_local ();
-            
-            hours_view.set_value(current_dt.get_hour());
-            minutes_view.set_value(current_dt.get_minute());
-            
-            calendar.year = current_dt.get_year();
-	        calendar.month = current_dt.get_month() - 1;
-	        calendar.day = current_dt.get_day_of_month();
+		    container.add(time_field);
         }
         
         private void add_notification_switch(Gtk.Grid container) {
@@ -519,27 +586,24 @@ namespace Tasks {
         }
         
         private void show_error(string label) {
-            // Logger.log(@"show_error: $label");
             if (snackbar != null) {
                 snackbar.show_snackbar(label);
             }
         }
         
         private void toggle_reminder() {
-            // Logger.log(@"Due is enabled -> $(due_switch.active)");
             add_due_view();
         }
         
         private void toggle_notification() {
-            // Logger.log(@"Notification is enabled -> $(notification_switch.active)");
         }
         
-        private Gtk.SpinButton create_spin_button(int from, int to, int step, int width, owned DelegateType action) {
+        private Gtk.SpinButton create_spin_button(int from, int to, int step, owned IntType action) {
             var spin = new Gtk.SpinButton.with_range(from, to, step);
 		    spin.orientation = Gtk.Orientation.VERTICAL;
 		    spin.get_style_context().add_class("time_button");
 		    spin.value_changed.connect (() => {
-			    action();
+			    action(spin.get_value_as_int());
 		    });
 		    return spin;
         }

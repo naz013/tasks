@@ -44,6 +44,9 @@ namespace Tasks {
                 application: app
             );
             
+            weak Gtk.IconTheme default_theme = Gtk.IconTheme.get_default ();
+            default_theme.add_resource_path ("/com/github/naz013/tasks");
+            
             if (AppSettings.get_default().is_maximized && !is_maximized) {
                 maximize ();
             } else {

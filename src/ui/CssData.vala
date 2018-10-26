@@ -37,12 +37,19 @@ namespace Tasks {
         public string get_css_data() {
             string style = null;
             if (Gtk.get_minor_version() < 20) {
-                style = (N_("""
-                @define-color textColorPrimary %s;
-                @define-color textColorSecondary %s;
-                @define-color bgColor %s;
-                @define-color accentColor %s;
-                @define-color accentAlphaColor %s;
+                style = "".concat(add_color("textColorPrimary", theme.get_text_primary_color()));
+                style = style.concat(add_color("textColorSecondary", theme.get_text_secondary_color()));
+                style = style.concat(add_color("bgColor", theme.get_bg_color()));
+                style = style.concat(add_color("accentColor", theme.get_accent_color()));
+                style = style.concat(add_color("accentLightColor", theme.get_accent_light_color()));
+                style = style.concat(add_color("accentDarkColor", theme.get_accent_dark_color()));
+                style = style.concat(add_color("accentAlphaColor", theme.get_alpha_accent_color()));
+                style = style.concat(add_color("textColorDisabled", theme.get_text_disabled_color()));
+                style = style.concat(add_color("cardBgColor", theme.get_card_bg_color()));
+                style = style.concat(add_color("shadowColor", theme.get_shadow_color()));
+                style = style.concat(add_color("shadowOutColor", theme.get_shadow_out_color()));
+                style = style.concat(add_color("buttonDisabledColor", theme.get_button_disabled_color()));
+                style = style.concat("""
                 
                 .input_field {
                     font-size: 13px;
@@ -109,6 +116,14 @@ namespace Tasks {
                     background-color: #64baff;
                     font-size: 11px;
                 }
+                
+                 .icon_button_colored {
+                    border: 1px solid transparent;
+                    color: @accentColor;
+                    box-shadow: none;
+                    background: transparent;
+                    border-radius: 5px;
+                }
 
                 .window GtkTextView,
                 .window GtkHeaderBar {
@@ -116,13 +131,7 @@ namespace Tasks {
                     border-bottom-color: @bgColor;
                     box-shadow: none;
                 }
-                """)).printf(
-                    theme.get_text_primary_color(),
-                    theme.get_text_secondary_color(),
-                    theme.get_bg_color(),
-                    theme.get_accent_color(),
-                    theme.get_alpha_accent_color()
-                );
+                """);
             } else {
                 style = "".concat(add_color("textColorPrimary", theme.get_text_primary_color()));
                 style = style.concat(add_color("textColorSecondary", theme.get_text_secondary_color()));
@@ -343,6 +352,22 @@ namespace Tasks {
                     border: 1px solid @accentAlphaColor;
                     border-radius: 5px;
                     color: @textColorPrimary;
+                    box-shadow: none;
+                }
+                
+                .icon_button_colored {
+                    border: 1px solid transparent;
+                    color: @accentLightColor;
+                    box-shadow: none;
+                    background: transparent;
+                    border-radius: 5px;
+                }
+                
+                .icon_button_colored:hover, .icon_button_colored:hover:active  {
+                    background: @accentAlphaColor;
+                    border: 1px solid @accentAlphaColor;
+                    border-radius: 5px;
+                    color: @accentColor;
                     box-shadow: none;
                 }
                 
@@ -636,6 +661,16 @@ namespace Tasks {
                     border-radius: 2px;
                     box-shadow: 0 2px 2px @shadowColor, 0 2px 2px @shadowOutColor;
                     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+                }
+                
+                .date-time-field {
+                    background: @accentAlphaColor;
+                    border-left: 1px solid @accentAlphaColor;
+                    border-top: 1px solid @accentAlphaColor;
+                    border-right: 1px solid @accentAlphaColor;
+                    border-bottom: 1px solid @accentAlphaColor;
+                    border-radius: 5px 5px 0px 0px;
+                    padding: 5px;
                 }
                 
                 .color_radio radio,

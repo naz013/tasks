@@ -32,9 +32,16 @@ c_args = [
 
 cc = meson.get_compiler('c')
 
+gresource_tasks = gnome.compile_resources(
+    'gresource_icons',
+    'data/maya.gresource.xml',
+    source_dir: 'data'
+)
+
 # Let's define our executable
 executable(
     meson.project_name(),
+    gresource_tasks,
     'src/Application.vala',
     'src/HomeWindow.vala',
     'src/models/Event.vala',
@@ -76,9 +83,9 @@ executable(
     install : true
 )
 
-# Add in a post install script
-meson.add_install_script('meson/post_install.py')
-
 # Add subfolders for Meson to look
 subdir('data')
 subdir('po')
+
+# Add in a post install script
+meson.add_install_script('meson/post_install.py')
