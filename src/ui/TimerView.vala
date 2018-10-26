@@ -3,7 +3,7 @@ namespace Tasks {
     public class TimerView : Gtk.EventBox {
         
         private Gtk.Entry entry;
-        private Gtk.Button label;
+        private Gtk.Label label;
         
         private string input = "";
         private string re_presentation = "";
@@ -35,20 +35,28 @@ namespace Tasks {
 		    });
 		    entry.get_style_context().add_class("invisible_view");
 		    
-		    overlay.add(entry);
+		    var timer_field = new Gtk.Grid();
+		    timer_field.hexpand = true;
+		    timer_field.orientation = Gtk.Orientation.HORIZONTAL;
+		    timer_field.get_style_context().add_class("date-time-field");
 		    
-		    label = new Gtk.Button.with_label("00H 00m 00s");
-		    label.height_request = 40;
+		    label = new Gtk.Label("");
+		    label.set_xalign(0.0f);
 		    label.hexpand = true;
-		    label.get_style_context().add_class(CssData.MATERIAL_BUTTON_FLAT);
-		    label.get_style_context().add_class("timer_label");
-		    label.clicked.connect (() => {
-                entry.grab_focus_without_selecting();
-                Logger.log("Timer touched");
-            });
-            create_label();
+		    label.get_style_context().add_class(CssData.LABEL_SECONDARY);
 		    
-		    overlay.add_overlay(label);
+            create_label();
+            timer_field.add(label);
+            
+            var date_button = new Gtk.Button.from_icon_name ("outline-timer", Gtk.IconSize.BUTTON);
+            date_button.has_tooltip = false;
+            date_button.hexpand = false;
+            date_button.set_always_show_image(true);
+            date_button.get_style_context().add_class("icon_button");
+            timer_field.add(date_button);
+		    
+		    overlay.add(timer_field);
+		    overlay.add_overlay(entry);
 		    
 		    entry.is_focus = true;
 		    

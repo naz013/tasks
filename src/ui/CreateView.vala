@@ -412,10 +412,8 @@ namespace Tasks {
 	    
 	    private void add_timer_type(Gtk.Grid container) {
 		    container.add(create_hint_label(type_timer_label, true));
-		    container.add(create_empty_space(16));
 		    
 		    timer_view = new TimerView();
-		    timer_view.get_style_context().add_class("timer_view");
 		    container.add(timer_view);
 		    
 		    container.add(create_empty_space(16));
