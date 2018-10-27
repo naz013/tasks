@@ -53,6 +53,9 @@ namespace Tasks {
                 builder.set_member_name ("estimated_time");
                 builder.add_int_value (event.estimated_time);
                 
+                builder.set_member_name ("before_time");
+                builder.add_int_value (event.before_time);
+                
                 builder.set_member_name ("summary");
                 builder.add_string_value (event.summary);
                 builder.set_member_name ("description");
@@ -112,6 +115,7 @@ namespace Tasks {
                         int64 event_type = node.get_int_member("event_type");
                         int64 due_date_time = node.get_int_member("due_date_time");
                         int64 estimated_time = node.get_int_member("estimated_time");
+                        int64 before_time = node.get_int_member("before_time");
                         
                         Event event = new Event();
                         event.id = id;
@@ -123,19 +127,17 @@ namespace Tasks {
                         event.show_notification = show_notification;
                         event.timer_time = timer_time;
                         event.estimated_time = estimated_time;
+                        event.before_time = before_time;
                         
                         event.summary = summary;
                         event.description = description;
                         
                         stored_events.add(event);
                     }
-
                 }
-
             } catch (Error e) {
                 warning ("Failed to load file: %s\n", e.message);
             }
-
             return stored_events;
         }
     }

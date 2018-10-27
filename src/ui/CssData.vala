@@ -188,6 +188,53 @@ namespace Tasks {
                     margin: 15px;
                 }
                 
+                .before-field {
+                    font-size: 13px;
+                    color: @textColorPrimary;
+                    background: transparent;
+                    border: 1px solid @accentLightColor;
+                    border-radius: 5px 5px 0px 0px;
+                    padding: 5px;
+                    box-shadow: none;
+                }
+                
+                .before-field:focus {
+                    font-size: 13px;
+                    color: @textColorPrimary;
+                    background: transparent;
+                    border: 1px solid @accentLightColor;
+                    border-radius: 5px 5px 0px 0px;
+                    padding: 5px;
+                    box-shadow: none;
+                }
+                
+                .type-selector, .type-selector.box.linked {
+                    font-size: 13px;
+                    color: @textColorPrimary;
+                    background: transparent;
+                    border: 1px solid @accentLightColor;
+                    border-radius: 5px;
+                    box-shadow: none;
+                }
+                
+                .type-selector:focus, .type-selector:hover, .type-selector:hover:active {
+                    font-size: 13px;
+                    color: @textColorPrimary;
+                    background: transparent;
+                    border: 1px solid @accentLightColor;
+                    border-radius: 5px;
+                    box-shadow: none;
+                }
+                
+                .type-selector window.popup {
+                    font-size: 13px;
+                    color: @textColorPrimary;
+                    background: @bgColor;
+                    border: 0px;
+                    border-radius: 0px;
+                    box-shadow: none;
+                }
+                
                 calendar:selected {
                     color: #fff;
                     background: @accentColor;

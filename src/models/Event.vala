@@ -9,6 +9,7 @@ namespace Tasks {
 		public int64 timer_time { get; set; default = 0; }
 		public int64 estimated_time { get; set; default = 0; }
 		public int64 due_date_time { get; set; default = 0; }
+		public int64 before_time { get; set; default = 0; }
 		public string summary { get; set; default = ""; }
 		public string description { get; set; default = ""; }
 		public bool is_active { get; set; default = true; }
@@ -37,6 +38,7 @@ namespace Tasks {
             this.summary = event.summary;
             this.description = event.description;
             this.estimated_time = event.estimated_time;
+            this.before_time = event.before_time;
 		}
 		
 		public Event.full_copy(Event event) {
@@ -50,6 +52,7 @@ namespace Tasks {
             this.summary = event.summary;
             this.description = event.description;
             this.estimated_time = event.estimated_time;
+            this.before_time = event.before_time;
             this.isSelected = event.isSelected;
 		}
 

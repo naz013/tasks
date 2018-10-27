@@ -73,6 +73,8 @@ namespace Tasks {
     	    Logger.log(@"calculate_left_secconds: $seconds");
     	    if (seconds < 0) {
     	    	seconds = 0;
+    	    } else if (event.before_time > 0) {
+    	        seconds = seconds - (uint) event.before_time;
     	    }
     	    return seconds;
     	}
