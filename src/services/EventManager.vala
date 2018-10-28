@@ -55,6 +55,8 @@ namespace Tasks {
                 
                 builder.set_member_name ("before_time");
                 builder.add_int_value (event.before_time);
+                builder.set_member_name ("repeat_time");
+                builder.add_int_value (event.repeat_time);
                 
                 builder.set_member_name ("summary");
                 builder.add_string_value (event.summary);
@@ -116,6 +118,7 @@ namespace Tasks {
                         int64 due_date_time = node.get_int_member("due_date_time");
                         int64 estimated_time = node.get_int_member("estimated_time");
                         int64 before_time = node.get_int_member("before_time");
+                        int64 repeat_time = node.get_int_member("repeat_time");
                         
                         Event event = new Event();
                         event.id = id;
@@ -128,6 +131,7 @@ namespace Tasks {
                         event.timer_time = timer_time;
                         event.estimated_time = estimated_time;
                         event.before_time = before_time;
+                        event.before_time = repeat_time;
                         
                         event.summary = summary;
                         event.description = description;

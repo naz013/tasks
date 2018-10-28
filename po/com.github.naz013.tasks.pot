@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.naz013.tasks\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-25 19:16+0300\n"
+"POT-Creation-Date: 2018-10-28 15:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,92 +17,112 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Application.vala:107 src/HomeWindow.vala:70
+#: src/Application.vala:107 src/HomeWindow.vala:73
 msgid "Tasks"
 msgstr ""
 
-#: src/HomeWindow.vala:428 src/ui/SettingsView.vala:11
+#: src/HomeWindow.vala:430 src/ui/SettingsView.vala:11
 msgid "Light"
 msgstr ""
 
-#: src/HomeWindow.vala:436
+#: src/HomeWindow.vala:438
 msgid "Sand"
 msgstr ""
 
-#: src/HomeWindow.vala:444 src/ui/SettingsView.vala:19
+#: src/HomeWindow.vala:446 src/ui/SettingsView.vala:19
 msgid "Dark"
 msgstr ""
 
-#: src/HomeWindow.vala:452
+#: src/HomeWindow.vala:454
 msgid "Olive"
 msgstr ""
 
-#: src/HomeWindow.vala:460
+#: src/HomeWindow.vala:462
 msgid "Grape"
 msgstr ""
 
-#: src/HomeWindow.vala:514
+#: src/HomeWindow.vala:516
 msgid "Settings"
 msgstr ""
 
-#: src/ui/CreateView.vala:37
+#: src/config/Strings.vala:4
+msgid "seconds"
+msgstr ""
+
+#: src/config/Strings.vala:5
+msgid "minutes"
+msgstr ""
+
+#: src/config/Strings.vala:6
+msgid "hours"
+msgstr ""
+
+#: src/config/Strings.vala:7
+msgid "days"
+msgstr ""
+
+#: src/ui/CreateView.vala:41
 msgid "Remind me..."
 msgstr ""
 
-#: src/ui/CreateView.vala:38
+#: src/ui/CreateView.vala:42
 msgid "Note"
 msgstr ""
 
-#: src/ui/CreateView.vala:39
+#: src/ui/CreateView.vala:43
 msgid "Date/Time"
 msgstr ""
 
-#: src/ui/CreateView.vala:40
+#: src/ui/CreateView.vala:44
 msgid "Timer"
 msgstr ""
 
-#: src/ui/CreateView.vala:90
+#: src/ui/CreateView.vala:95
 msgid "Must be not empty"
 msgstr ""
 
-#: src/ui/CreateView.vala:115
+#: src/ui/CreateView.vala:120
 msgid "Due date"
 msgstr ""
 
-#: src/ui/CreateView.vala:147
+#: src/ui/CreateView.vala:152
 msgid "SAVE (Ctrl+S)"
 msgstr ""
 
-#: src/ui/CreateView.vala:153
+#: src/ui/CreateView.vala:158
 msgid "CANCEL (Ctrl+C)"
 msgstr ""
 
-#: src/ui/CreateView.vala:209
+#: src/ui/CreateView.vala:214
 msgid "Select date in future"
 msgstr ""
 
-#: src/ui/CreateView.vala:221
+#: src/ui/CreateView.vala:225 src/ui/CreateView.vala:243
+msgid "Notification parameter is wrong"
+msgstr ""
+
+#: src/ui/CreateView.vala:235
 msgid "Timer time not selected"
 msgstr ""
 
-#: src/ui/CreateView.vala:436
+#: src/ui/CreateView.vala:534
 msgid "Date"
 msgstr ""
 
-#: src/ui/CreateView.vala:443
+#: src/ui/CreateView.vala:562
 msgid "Time"
 msgstr ""
 
-#: src/ui/CreateView.vala:472
-msgid "m"
-msgstr ""
-
-#: src/ui/CreateView.vala:476
-msgid "H"
-msgstr ""
-
-#: src/ui/CreateView.vala:506
+#: src/ui/CreateView.vala:598
 msgid "Show notification"
+msgstr ""
+
+#: src/ui/CreateView.vala:613
+msgid "Notify before"
+msgstr ""
+
+#: src/ui/CreateView.vala:619
+msgid "Repeat every"
 msgstr ""
 
 #: src/ui/EmptyView.vala:9

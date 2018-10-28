@@ -191,7 +191,6 @@ namespace Tasks {
         }
         
         private void show_notification(Event event) {
-            event.is_active = false;
             update_event(event);
             event_manager.save_events(tasks);
             

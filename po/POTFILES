@@ -1,9 +1,12 @@
 src/Application.vala
 src/HomeWindow.vala
 src/config/Utils.vala
+src/config/Strings.vala
 src/ui/CreateView.vala
 src/ui/EmptyView.vala
 src/ui/ListView.vala
 src/ui/MainContainer.vala
 src/ui/SettingsView.vala
+src/ui/BeforePickerView.vala
+src/ui/RepeatPickerView.vala
 src/ui/TimerView.vala

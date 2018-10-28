@@ -28,26 +28,20 @@ namespace Tasks {
         private Gtk.Grid main_grid;
         
         private TimerView timer_view;
+        private BeforePickerView before_view;
+        private RepeatPickerView repeat_view;
         
         private Gtk.Button cancel_button;
         private Gtk.RadioButton timer_radio;
         private Gtk.RadioButton date_radio;
         
         private Gtk.Popover? popover;
-        private Gtk.Entry? before_entry;
-        private Gtk.ComboBox? before_value;
-        private Gtk.ListStore list_store;
-	    private Gtk.TreeIter iter;
         
         private bool is_max = false;
         private string summary_hint = _("Remind me...");
         private string description_hint = _("Note");
         private string type_date_time_label = _("Date/Time");
         private string type_timer_label = _("Timer");
-        private const string seconds_string = _("seconds");
-        private const string minutes_string = _("minutes");
-        private const string hours_string = _("hours");
-        private const string days_string = _("days");
         private int64 type = 0;
         private Event? editable_event = null;
         
@@ -187,6 +181,7 @@ namespace Tasks {
 	        int64 timer_value = 0;
 	        int64 estimated_time = 0;
 	        int64 before_seconds = 0;
+	        int64 repeat_seconds = 0;
 	        
             var summary = summary_field.get_text();
             var note = description_field.get_text();
@@ -205,10 +200,11 @@ namespace Tasks {
                 show_notification = notification_switch.active;
             
                 if (show_notification) {
-                    before_seconds = get_before_seconds();
+                    before_seconds = before_view.get_seconds();
+                    repeat_seconds = repeat_view.get_seconds();
                 }
                 
-                Logger.log(@"Before seconds: $before_seconds");
+                Logger.log(@"Before seconds: $before_seconds, $repeat_seconds");
             
 		        timer_value = 0;
 		        
@@ -283,6 +279,7 @@ namespace Tasks {
             event.timer_time = timer_value;
             event.estimated_time = estimated_time;
             event.before_time = before_seconds;
+            event.repeat_time = repeat_seconds;
             
             Logger.log(@"Event saved: $(event.to_string())");
             
@@ -615,107 +612,19 @@ namespace Tasks {
             container.add(create_empty_space(16));
 		    container.add(create_hint_label(_("Notify before"), true));
             
-            before_entry = new Gtk.Entry ();
-            before_entry.set_text("0");
-            before_entry.max_length = 2;
-            before_entry.width_request = 50;
-            before_entry.hexpand = false;
-            before_entry.key_press_event.connect((key) => {
-		    	if (key.keyval == 65288 || key.keyval == 65289 || (key.keyval >= 65456 && key.keyval <= 65465) || (key.keyval >= 48 && key.keyval <= 57)) {
-		    		return false;
-		    	}
-		    	return true;
-		    });
-		    before_entry.get_style_context().add_class("before-field");
+            before_view = new BeforePickerView();
+            container.add(before_view);
             
-            list_store = new Gtk.ListStore (1, typeof (string));
-
-	        list_store.append (out iter);
-	        list_store.set (iter, 0, seconds_string);
-	        list_store.append (out iter);
-	        list_store.set (iter, 0, minutes_string);
-	        list_store.append (out iter);
-	        list_store.set (iter, 0, hours_string);
-	        list_store.append (out iter);
-	        list_store.set (iter, 0, days_string);
-
-	        before_value = new Gtk.ComboBox.with_model (list_store);
-	        before_value.set_state_flags (Gtk.StateFlags.INSENSITIVE, true);
-	        before_value.hexpand = true;
-	        before_value.get_style_context().add_class("type-selector");
-
-	        Gtk.CellRendererText renderer = new Gtk.CellRendererText ();
-	        before_value.pack_start (renderer, true);
-	        before_value.add_attribute (renderer, "text", 0);
-	        before_value.active = 0;
+            container.add(create_empty_space(16));
+		    container.add(create_hint_label(_("Repeat every"), true));
             
-            var grid2 = new Gtk.Grid ();
-            grid2.orientation = Gtk.Orientation.HORIZONTAL;
-            grid2.column_spacing = 8;
-            grid2.add(before_entry);
-            grid2.add(before_value);
-            grid2.get_style_context().add_class("date-time-field");
-            
-            container.add(grid2);
+            repeat_view = new RepeatPickerView();
+            container.add(repeat_view);
             
             if (editable_event != null) {
-                int64 seconds = editable_event.before_time;
-                
-                var days = seconds / (60 * 60 * 24);
-                if (days > 0) {
-                    before_entry.set_text(@"$days");
-                    before_value.active = 3;
-                    return;
-                }
-                
-                var hours = seconds / (60 * 60);
-                if (hours > 0) {
-                    before_entry.set_text(@"$hours");
-                    before_value.active = 2;
-                    return;
-                }
-                
-                var minutes = seconds / (60);
-                if (minutes > 0) {
-                    before_entry.set_text(@"$minutes");
-                    before_value.active = 1;
-                    return;
-                }
-                
-                before_entry.set_text(@"$seconds");
-                before_value.active = 0;
+                before_view.set_seconds(editable_event.before_time);
+                repeat_view.set_seconds(editable_event.repeat_time);
             }
-        }
-        
-        private int64 get_before_seconds() {
-            if (!notification_switch.active) {
-                return 0;
-            }
-            if (before_entry == null || before_value == null) {
-                return 0;
-            }
-            Value val1;
-	        before_value.get_active_iter (out iter);
-	        list_store.get_value (iter, 0, out val1);
-	        
-	        int64 input = (int64) int.parse (before_entry.get_text());
-	        
-	        int64 multiply = 0;
-	        switch ((string) val1) {
-	            case seconds_string:
-	                multiply = 1;
-	                break;
-	            case minutes_string:
-	                multiply = 60;
-	                break;
-	            case hours_string:
-	                multiply = 60 * 60;
-	                break;
-	            case days_string:
-	                multiply = 24 * 60 * 60;
-	                break;
-	        }
-	        return input * multiply;
         }
         
         private void show_error(string label) {
@@ -729,13 +638,8 @@ namespace Tasks {
         }
         
         private void toggle_notification() {
-            if (notification_switch.active) {
-                before_value.set_state_flags (Gtk.StateFlags.NORMAL, true);
-                before_entry.set_state_flags (Gtk.StateFlags.NORMAL, true);
-            } else {
-                before_value.set_state_flags (Gtk.StateFlags.INSENSITIVE, true);
-                before_entry.set_state_flags (Gtk.StateFlags.INSENSITIVE, true);
-            }
+            before_view.set_enabled(notification_switch.active);
+            repeat_view.set_enabled(notification_switch.active);
         }
         
         private Gtk.SpinButton create_spin_button(int from, int to, int step, owned IntType action) {

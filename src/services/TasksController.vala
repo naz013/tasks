@@ -25,16 +25,11 @@ namespace Tasks {
     	    if (event.is_active && event.has_reminder) {
     	        var thread_id = Timeout.add_seconds(calculate_left_secconds(event), () => {
     	            Logger.log(@"Task execution complete: id -> $(event.id)");
-    	            var found = find_event(event.id);
-    	            if (found != null) {
-    	                show_notification(found);
-    	            }
-    	            running_tasks.unset(event.id);
+    	            handle_event(event.id);
     	            return false;
     	        });
     	        
     	        Logger.log(@"start_task: ti -> $thread_id, ei -> $(event.id)");
-    	        
     	        running_tasks.set(event.id, thread_id);
     		}
     	}
@@ -48,6 +43,34 @@ namespace Tasks {
     	        Logger.log(@"stop_task: ti -> $thread_id, ei -> $(event.id)");
     	        Source.remove(thread_id);
     	    }
+    	}
+    	
+    	private void handle_event(uint id) {
+    	    var found = find_event(id);
+            if (found != null) {
+                found.is_active = false;
+	            if (found.repeat_time > 0) {
+	            	DateTime dt = new DateTime.now_local ();
+                	dt = dt.add_seconds((double) found.repeat_time);
+                	found.estimated_time = dt.to_unix();
+                	found.is_active = true;
+                	start_repeat(found, found.repeat_time);
+	            }
+                show_notification(found);
+            }
+            running_tasks.unset(id);
+    	}
+    	
+    	private void start_repeat(Event event, int64 seconds) {
+    	    stop_task(event);
+    	    var thread_id = Timeout.add_seconds((uint) seconds, () => {
+	            Logger.log(@"Repeat task execution complete: id -> $(event.id)");
+	            handle_event(event.id);
+	            return false;
+	        });
+	        
+	        Logger.log(@"start_task: ti -> $thread_id, ei -> $(event.id)");
+	        running_tasks.set(event.id, thread_id);
     	}
     	
     	private void print_keys(Gee.Set<uint> keys) {
