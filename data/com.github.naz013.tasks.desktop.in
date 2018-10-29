@@ -9,8 +9,11 @@ Type=Application
 StartupNotify=true
 Categories=GTK;Utility;
 Actions=NewTask;
+X-GNOME-Gettext-Domain=com.github.naz013.tasks
 X-GNOME-UsesNotifications=true
 
 [Desktop Action NewTask]
-Exec=com.github.naz013.tasks --new-task
 Name=New task
+Name[uk]=Нове завдання
+Exec=com.github.naz013.tasks --new-task
+Icon=list-add-symbolic

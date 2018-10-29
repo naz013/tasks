@@ -13,6 +13,8 @@ namespace Tasks {
         construct {
             app_launcher = "com.github.naz013.tasks";
             exec_name = "com.github.naz013.tasks";
+            program_name = _("Tasks");
+            application_id = "com.github.naz013.tasks";
 
             var quit_action = new SimpleAction ("quit", null);
             set_accels_for_action ("app.quit", {"<Control>q"});
