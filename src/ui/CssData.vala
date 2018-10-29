@@ -781,6 +781,13 @@ namespace Tasks {
                     border-bottom-color: @bgColor;
                     box-shadow: none;
                 }
+                
+                .dialog textview.view text,
+                .dialog headerbar {
+                    background-color: @bgColor;
+                    border-bottom-color: @bgColor;
+                    box-shadow: none;
+                }
                 """);
             }                               
             return style;

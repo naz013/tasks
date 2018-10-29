@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.naz013.tasks\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-29 12:33+0200\n"
+"POT-Creation-Date: 2018-10-29 15:49+0200\n"
 "PO-Revision-Date: 2018-10-25 14:33+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -22,14 +22,25 @@ msgstr ""
 msgid "Tasks"
 msgstr "Завдання"
 
-#: src/TasksWindow.vala:458
-#, fuzzy
+#: src/TasksWindow.vala:465
 msgid "Missed notifications"
-msgstr "Показати сповіщення"
+msgstr "Пропущені"
 
-#: src/TasksWindow.vala:488
+#: src/TasksWindow.vala:495
 msgid "Settings"
 msgstr "Налаштування"
+
+#: src/config/Utils.vala:38
+msgid "hrs"
+msgstr "год"
+
+#: src/config/Utils.vala:39
+msgid "mins"
+msgstr "хв"
+
+#: src/config/Utils.vala:40
+msgid "sec"
+msgstr "сек"
 
 #: src/config/Strings.vala:4
 msgid "seconds"
@@ -155,8 +166,8 @@ msgstr "Видалити"
 
 #: src/ui/ListView.vala:202
 #, c-format
-msgid "Timer for: %s"
-msgstr "Таймер на: %s"
+msgid "Timer for %s"
+msgstr "Таймер на %s"
 
 #: src/ui/MainContainer.vala:59
 msgid "Add task"

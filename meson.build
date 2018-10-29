@@ -51,6 +51,8 @@ executable(
     'src/services/EventManager.vala',
     'src/services/TasksController.vala',
     
+    'src/dialogs/TaskDialog.vala',
+    
     'src/config/AppSettings.vala',
     'src/config/AppTheme.vala',
     'src/config/LightTheme.vala',

@@ -192,7 +192,11 @@ namespace Tasks {
         }
         
         private bool screen_present() {
-            return false;
+            return focus_visible;
+        }
+        
+        private void show_task_dialog(Event event) {
+        	new TaskDialog(this, event);
         }
         
         private void show_notification(Event event) {
@@ -202,7 +206,10 @@ namespace Tasks {
             if (!screen_present()) {
                 DateTime dt = new DateTime.now_local ();
                 event_manager.save_notification(new Tasks.Notification(event.id, event.summary, dt.to_unix()));
+            } else {
+            	
             }
+            show_task_dialog(event);
             
             if (event.show_notification) {
                 ((Application) application).show_notification(event.summary, event.description, "alarm-symbolic");

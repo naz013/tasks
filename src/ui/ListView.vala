@@ -199,7 +199,7 @@ namespace Tasks {
             
             if (task.has_reminder) {
                 if (task.event_type == Event.TIMER) {
-                	string timer_text = _("Timer for: %s").printf(Utils.to_label_from_seconds(task.timer_time));
+                	string timer_text = _("Timer for %s").printf(Utils.to_label_from_seconds(task.timer_time));
                 	
                 	var timer_label = new Gtk.Label(timer_text);
 				    timer_label.set_xalign(0.0f);

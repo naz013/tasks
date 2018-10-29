@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.naz013.tasks\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-29 12:33+0200\n"
+"POT-Creation-Date: 2018-10-29 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,12 +21,24 @@ msgstr ""
 msgid "Tasks"
 msgstr ""
 
-#: src/TasksWindow.vala:458
+#: src/TasksWindow.vala:465
 msgid "Missed notifications"
 msgstr ""
 
-#: src/TasksWindow.vala:488
+#: src/TasksWindow.vala:495
 msgid "Settings"
+msgstr ""
+
+#: src/config/Utils.vala:38
+msgid "hrs"
+msgstr ""
+
+#: src/config/Utils.vala:39
+msgid "mins"
+msgstr ""
+
+#: src/config/Utils.vala:40
+msgid "sec"
 msgstr ""
 
 #: src/config/Strings.vala:4
@@ -148,7 +160,7 @@ msgstr ""
 
 #: src/ui/ListView.vala:202
 #, c-format
-msgid "Timer for: %s"
+msgid "Timer for %s"
 msgstr ""
 
 #: src/ui/MainContainer.vala:59

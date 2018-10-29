@@ -4,6 +4,8 @@ src/TasksWindow.vala
 src/config/Utils.vala
 src/config/Strings.vala
 
+src/dialogs/TaskDialog.vala
+
 src/ui/CreateView.vala
 src/ui/EmptyView.vala
 src/ui/ListView.vala

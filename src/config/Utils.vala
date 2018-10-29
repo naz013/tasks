@@ -30,7 +30,22 @@ namespace Tasks {
     		var d23 = tmp.substring(2, 2);
     		var d45 = tmp.substring(4, 2);
     		
-    		return @"$(d01)H $(d23)m $(d45)s";
+    		var hours = int.parse(d01);
+    		var minutes = int.parse(d23);
+    		var seconds = int.parse(d45);
+    		
+    		
+    		string h = _("hrs");
+    		string m = _("mins");
+    		string s = _("sec");
+    		
+    		if (hours > 0) {
+    			return @"$d01 $h $d23 $m $d45 $s";
+    		} else if (minutes > 0) {
+    			return @"$d23 $m $d45 $s";
+    		} else {
+    			return @"$d45 $s";
+    		}
     	}
 		
 		public static string from_seconds (int64 seconds) {
