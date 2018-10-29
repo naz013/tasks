@@ -43,10 +43,14 @@ executable(
     meson.project_name(),
     gresource_tasks,
     'src/Application.vala',
-    'src/HomeWindow.vala',
+    'src/TasksWindow.vala',
+    
     'src/models/Event.vala',
+    'src/models/Notification.vala',
+    
     'src/services/EventManager.vala',
     'src/services/TasksController.vala',
+    
     'src/config/AppSettings.vala',
     'src/config/AppTheme.vala',
     'src/config/LightTheme.vala',
@@ -57,9 +61,11 @@ executable(
     'src/config/Logger.vala',
     'src/config/Utils.vala',
     'src/config/Strings.vala',
+    
     'src/ui/components/SnackBar.vala',
     'src/ui/components/MaterialButton.vala',
     'src/ui/components/FloatingActionButton.vala',
+    
     'src/ui/CssData.vala',
     'src/ui/CreateView.vala',
     'src/ui/ListView.vala',
@@ -69,6 +75,7 @@ executable(
     'src/ui/RepeatPickerView.vala',
     'src/ui/SettingsView.vala',
     'src/ui/MainContainer.vala',
+    'src/ui/NotificationsView.vala',
     c_args: c_args,
     dependencies: [
         dependency('granite'),

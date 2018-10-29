@@ -2,7 +2,7 @@
 namespace Tasks {
     public class Application : Granite.Application {
 
-        private HomeWindow main_window;
+        private TasksWindow main_window;
         private static bool create_new;
 
         public Application () {
@@ -63,7 +63,7 @@ namespace Tasks {
 
         protected override void activate () {
             if (main_window == null) {
-                main_window = new HomeWindow(this);
+                main_window = new TasksWindow(this);
             }
             main_window.present();
 	    }

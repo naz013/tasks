@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.naz013.tasks\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-28 15:44+0200\n"
+"POT-Creation-Date: 2018-10-29 12:33+0200\n"
 "PO-Revision-Date: 2018-10-25 14:33+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,31 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/Application.vala:107 src/HomeWindow.vala:73
+#: src/Application.vala:16 src/Application.vala:109 src/TasksWindow.vala:74
 msgid "Tasks"
 msgstr ""
 
-#: src/HomeWindow.vala:430 src/ui/SettingsView.vala:11
-msgid "Light"
+#: src/TasksWindow.vala:458
+msgid "Missed notifications"
 msgstr ""
 
-#: src/HomeWindow.vala:438
-msgid "Sand"
-msgstr ""
-
-#: src/HomeWindow.vala:446 src/ui/SettingsView.vala:19
-msgid "Dark"
-msgstr ""
-
-#: src/HomeWindow.vala:454
-msgid "Olive"
-msgstr ""
-
-#: src/HomeWindow.vala:462
-msgid "Grape"
-msgstr ""
-
-#: src/HomeWindow.vala:516
+#: src/TasksWindow.vala:488
 msgid "Settings"
 msgstr ""
 
@@ -178,4 +162,24 @@ msgstr ""
 
 #: src/ui/MainContainer.vala:144
 msgid "UNDO"
+msgstr ""
+
+#: src/ui/SettingsView.vala:10
+msgid "Light"
+msgstr ""
+
+#: src/ui/SettingsView.vala:18
+msgid "Sand"
+msgstr ""
+
+#: src/ui/SettingsView.vala:26
+msgid "Dark"
+msgstr ""
+
+#: src/ui/SettingsView.vala:34
+msgid "Olive"
+msgstr ""
+
+#: src/ui/SettingsView.vala:42
+msgid "Grape"
 msgstr ""

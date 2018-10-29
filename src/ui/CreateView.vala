@@ -550,7 +550,7 @@ namespace Tasks {
             date_button.has_tooltip = false;
             date_button.hexpand = false;
             date_button.set_always_show_image(true);
-            date_button.get_style_context().add_class("icon_button");
+            // date_button.get_style_context().add_class("icon_button");
             date_button.clicked.connect (() => {
                 show_date_picker(date_button, dt);
             });

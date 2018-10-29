@@ -1,5 +1,5 @@
 namespace Tasks {
-    public class HomeWindow : Gtk.Window {
+    public class TasksWindow : Gtk.Window {
         
         delegate void DelegateType ();
 
@@ -10,6 +10,7 @@ namespace Tasks {
         private Gtk.Popover popover;
         private CreateView create_view;
         private MainContainer main_view;
+        private Gtk.Popover? popover_notifications;
 
         private bool is_new = true;
         private bool create_open = false;
@@ -38,7 +39,7 @@ namespace Tasks {
             { ACTION_NEW, add_key_action }
         };
 
-        public HomeWindow (Gtk.Application app) {
+        public TasksWindow (Gtk.Application app) {
             Logger.log(AppSettings.get_default().to_string());
             Object (
                 application: app
@@ -190,9 +191,18 @@ namespace Tasks {
             }
         }
         
+        private bool screen_present() {
+            return false;
+        }
+        
         private void show_notification(Event event) {
             update_event(event);
             event_manager.save_events(tasks);
+            
+            if (!screen_present()) {
+                DateTime dt = new DateTime.now_local ();
+                event_manager.save_notification(new Tasks.Notification(event.id, event.summary, dt.to_unix()));
+            }
             
             if (event.show_notification) {
                 ((Application) application).show_notification(event.summary, event.description, "alarm-symbolic");
@@ -423,86 +433,48 @@ namespace Tasks {
             
             update_theme();
         }
-
-        private void create_app_menu() {
-            var color_button_light = new Gtk.RadioButton (null);
-            color_button_light.halign = Gtk.Align.CENTER;
-            color_button_light.tooltip_text = _("Light");
-
-            var color_button_light_context = color_button_light.get_style_context ();
-            color_button_light_context.add_class (CssData.COLOR_RADIO);
-            color_button_light_context.add_class ("color-light");
+        
+        private void show_notifications(Gtk.Button parent) {
+            var notifications = event_manager.load_notifications();
             
-            var color_button_sand = new Gtk.RadioButton.from_widget (color_button_light);
-            color_button_sand.halign = Gtk.Align.CENTER;
-            color_button_sand.tooltip_text = _("Sand");
-
-            var color_button_sand_context = color_button_sand.get_style_context ();
-            color_button_sand_context.add_class (CssData.COLOR_RADIO);
-            color_button_sand_context.add_class ("color-sand");
-
-            var color_button_dark = new Gtk.RadioButton.from_widget (color_button_light);
-            color_button_dark.halign = Gtk.Align.CENTER;
-            color_button_dark.tooltip_text = _("Dark");
-
-            var color_button_dark_context = color_button_dark.get_style_context ();
-            color_button_dark_context.add_class (CssData.COLOR_RADIO);
-            color_button_dark_context.add_class ("color-dark");
-            
-            var color_button_olive = new Gtk.RadioButton.from_widget (color_button_light);
-            color_button_olive.halign = Gtk.Align.CENTER;
-            color_button_olive.tooltip_text = _("Olive");
-
-            var color_button_olive_context = color_button_olive.get_style_context ();
-            color_button_olive_context.add_class (CssData.COLOR_RADIO);
-            color_button_olive_context.add_class ("color-olive");
-            
-            var color_button_grape = new Gtk.RadioButton.from_widget (color_button_light);
-            color_button_grape.halign = Gtk.Align.CENTER;
-            color_button_grape.tooltip_text = _("Grape");
-
-            var color_button_grape_context = color_button_grape.get_style_context ();
-            color_button_grape_context.add_class (CssData.COLOR_RADIO);
-            color_button_grape_context.add_class ("color-grape");
-            
-            var menu_grid = new Gtk.Grid ();
-            menu_grid.margin_bottom = 3;
-            menu_grid.column_spacing = 12;
-            menu_grid.margin = 12;
-            menu_grid.orientation = Gtk.Orientation.VERTICAL;
-            menu_grid.attach (color_button_dark, 0, 0, 1, 1);
-            menu_grid.attach (color_button_light, 1, 0, 1, 1);
-            menu_grid.attach (color_button_sand, 2, 0, 1, 1);
-            menu_grid.attach (color_button_olive, 3, 0, 1, 1);
-            menu_grid.attach (color_button_grape, 4, 0, 1, 1);
-            menu_grid.show_all ();
-            
-            switch (AppSettings.get_default().app_theme) {
-                case 0:
-                    color_button_dark.active = true;
-                    break;
-                case 1:
-                    color_button_light.active = true;
-                    break;
-                case 2:
-                    color_button_sand.active = true;
-                    break;
-                case 3:
-                    color_button_olive.active = true;
-                    break;
-                case 4:
-                    color_button_grape.active = true;
-                    break;
+            if (notifications.size == 0) {
+                return;
             }
             
-            theme_button_click(color_button_dark, 0);
-            theme_button_click(color_button_light, 1);
-            theme_button_click(color_button_sand, 2);
-            theme_button_click(color_button_olive, 3);
-            theme_button_click(color_button_grape, 4);
+            event_manager.save_notifications(new Gee.ArrayList<Tasks.Notification>());
+            
+            NotificationsView notifications_view = new NotificationsView(notifications);
+            notifications_view.show_all();
+
+            popover_notifications = new Gtk.Popover (parent);
+            popover_notifications.add (notifications_view);
+            popover_notifications.get_style_context().add_class("popover");
+            popover_notifications.popup();
+        }
+
+        private void create_app_menu() {
+            var missed_button = new Gtk.Button.from_icon_name ("task-past-due-symbolic", Gtk.IconSize.BUTTON);
+            missed_button.has_tooltip = true;
+            missed_button.tooltip_text = _("Missed notifications");
+            missed_button.hexpand = false;
+            missed_button.set_always_show_image(true);
+            missed_button.get_style_context().add_class("icon_button");
+            missed_button.clicked.connect (() => {
+                show_notifications(missed_button);
+            });
+            
+            header.pack_end(missed_button);
+            
+            SettingsView settings_view = new SettingsView();
+            settings_view.theme_selected.connect((theme) => {
+                AppSettings.get_default().app_theme = theme;
+                init_theme(theme);
+                update_theme();
+            });
+            settings_view.show_all();
 
             popover = new Gtk.Popover (null);
-            popover.add (menu_grid);
+            popover.add (settings_view);
             popover.closed.connect(() => {
                 settings_visible = false;
             });
@@ -518,14 +490,6 @@ namespace Tasks {
             app_button.popover = popover;
             
             header.pack_end(app_button);
-        }
-        
-        private void theme_button_click(Gtk.RadioButton button, int theme) {
-            button.clicked.connect (() => {
-                AppSettings.get_default().app_theme = theme;
-                init_theme(theme);
-                update_theme();
-            });
         }
     }
 }
