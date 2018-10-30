@@ -41,13 +41,23 @@ namespace Tasks {
         
         public int comparator (Event a, Event b) {
             if (a.is_active == b.is_active) {
-                if (a.estimated_time < b.estimated_time) {
-                    return -1;
-                } else if (a.estimated_time > b.estimated_time) {
-                    return 1;
-                } else {
-                    return 0;
-                }
+            	if (a.is_active) {
+            		if (a.estimated_time < b.estimated_time) {
+		                return -1;
+		            } else if (a.estimated_time > b.estimated_time) {
+		                return 1;
+		            } else {
+		                return 0;
+		            }
+            	} else {
+            		if (a.estimated_time > b.estimated_time) {
+		                return -1;
+		            } else if (a.estimated_time < b.estimated_time) {
+		                return 1;
+		            } else {
+		                return 0;
+		            }
+            	}
             } else if (a.is_active) {
                 return -1;
             } else {
