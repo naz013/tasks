@@ -444,17 +444,22 @@ namespace Tasks {
         private void show_notifications(Gtk.Button parent) {
             var notifications = event_manager.load_notifications();
             
+            popover_notifications = new Gtk.Popover (parent);
+            
             if (notifications.size == 0) {
-                return;
+                var label = new Gtk.Label(_("No missed notifications"));
+                label.set_xalign(0.0f);
+                label.margin = 16;
+                label.get_style_context().add_class(CssData.LABEL_PRIMARY);
+                label.show_all();
+                popover_notifications.add (label);
+            } else {
+                event_manager.save_notifications(new Gee.ArrayList<Tasks.Notification>());
+                NotificationsView notifications_view = new NotificationsView(notifications);
+                notifications_view.show_all();
+                popover_notifications.add (notifications_view);
             }
             
-            event_manager.save_notifications(new Gee.ArrayList<Tasks.Notification>());
-            
-            NotificationsView notifications_view = new NotificationsView(notifications);
-            notifications_view.show_all();
-
-            popover_notifications = new Gtk.Popover (parent);
-            popover_notifications.add (notifications_view);
             popover_notifications.get_style_context().add_class("popover");
             popover_notifications.popup();
         }

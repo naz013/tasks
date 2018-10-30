@@ -32,8 +32,6 @@ namespace Tasks {
     		
     		var hours = int.parse(d01);
     		var minutes = int.parse(d23);
-    		var seconds = int.parse(d45);
-    		
     		
     		string h = _("hrs");
     		string m = _("mins");

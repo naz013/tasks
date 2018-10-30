@@ -56,7 +56,7 @@ namespace Tasks {
             
             var summary_label = new Gtk.Label(notification.summary);
             summary_label.set_xalign(0.0f);
-            summary_label.get_style_context().add_class(CssData.LABEL_PRIMARY);
+            summary_label.get_style_context().add_class(CssData.LABEL_SECONDARY);
             grid.add(summary_label);
             
             row.add(grid);
