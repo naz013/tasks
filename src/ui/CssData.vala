@@ -710,6 +710,43 @@ namespace Tasks {
                     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
                 }
                 
+                .dialog-button {
+                    border-radius: 0px;
+                    font-size: 15px;
+                    color: @accentColor;
+                    background: transparent;
+                    border: 0px;
+                    padding-top: 4px;
+                    padding-bottom: 4px;
+                    box-shadow: none;
+                    font-weight: normal;
+                } 
+                .dialog-button:hover, 
+                .dialog-button:hover:active,
+                .dialog-button:selected {
+                    border-radius: 0px;
+                    font-size: 15px;
+                    color: @accentColor;
+                    background: @shadowColor;
+                    border: 0px;
+                    padding-top: 4px;
+                    padding-bottom: 4px;
+                    box-shadow: none;
+                    font-weight: normal;
+                }
+                
+                .material-dialog {
+                    background-color: @bgColor;
+                    box-shadow: @shadowColor;
+                    padding: 16px;
+                    border-radius: 5px;
+                }
+                
+                .material-dialog-content {
+                    background-color: @bgColor;
+                    box-shadow: @shadowColor;
+                }
+                
                 .date-time-field {
                     background: @accentAlphaColor;
                     border-left: 1px solid @accentAlphaColor;
@@ -777,13 +814,6 @@ namespace Tasks {
 
                 .window textview.view text,
                 .window headerbar {
-                    background-color: @bgColor;
-                    border-bottom-color: @bgColor;
-                    box-shadow: none;
-                }
-                
-                .dialog textview.view text,
-                .dialog headerbar {
                     background-color: @bgColor;
                     border-bottom-color: @bgColor;
                     box-shadow: none;

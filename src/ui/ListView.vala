@@ -197,12 +197,20 @@ namespace Tasks {
             
             var summary_label = new Gtk.Label(task.summary);
             summary_label.set_xalign(0.0f);
+            summary_label.set_line_wrap(true);
+            summary_label.single_line_mode = false;
+            summary_label.wrap = true;
+            summary_label.wrap_mode = Pango.WrapMode.WORD;
             summary_label.get_style_context().add_class(CssData.LABEL_SECONDARY);
             vert_grid.add(summary_label);
             
             if (task.description != "") {
                 var desc_label = new Gtk.Label(task.description);
                 desc_label.set_xalign(0.0f);
+                desc_label.set_line_wrap(true);
+                desc_label.single_line_mode = false;
+                desc_label.wrap = true;
+                desc_label.wrap_mode = Pango.WrapMode.WORD;
                 desc_label.get_style_context().add_class(CssData.LABEL_SECONDARY);
                 vert_grid.add(desc_label);
             }
