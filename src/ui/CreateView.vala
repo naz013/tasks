@@ -149,13 +149,14 @@ namespace Tasks {
             
             vert_grid.add(button_grid);
             
-            var button_save = create_material_button (_("SAVE (Ctrl+S)"), () => {
+            var button_save = create_material_button (_("SAVE"), () => {
 			    save_task();
             });
+            button_save.tooltip_text = "Ctrl+S";
 		    button_save.get_style_context().add_class(CssData.MATERIAL_BUTTON);
 		    button_grid.add (button_save);
 		    
-		    cancel_button = create_material_button (_("CANCEL (Ctrl+C)"), () => {
+		    cancel_button = create_material_button (_("CANCEL"), () => {
 		    	if (editable_event == null) {
 		    		on_cancel();
 		    	} else {
@@ -163,6 +164,7 @@ namespace Tasks {
 		    	}
 		        editable_event = null;
 		    });
+		    cancel_button.tooltip_text = "Ctrl+C";
 		    cancel_button.get_style_context().add_class(CssData.MATERIAL_BUTTON);
 		    button_grid.add (cancel_button);
 		    

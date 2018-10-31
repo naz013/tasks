@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.naz013.tasks\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-29 15:49+0200\n"
+"POT-Creation-Date: 2018-10-31 11:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,23 +21,27 @@ msgstr ""
 msgid "Tasks"
 msgstr ""
 
-#: src/TasksWindow.vala:465
+#: src/TasksWindow.vala:450
+msgid "No missed notifications"
+msgstr ""
+
+#: src/TasksWindow.vala:470
 msgid "Missed notifications"
 msgstr ""
 
-#: src/TasksWindow.vala:495
+#: src/TasksWindow.vala:500
 msgid "Settings"
 msgstr ""
 
-#: src/config/Utils.vala:38
+#: src/config/Utils.vala:36
 msgid "hrs"
 msgstr ""
 
-#: src/config/Utils.vala:39
+#: src/config/Utils.vala:37
 msgid "mins"
 msgstr ""
 
-#: src/config/Utils.vala:40
+#: src/config/Utils.vala:38
 msgid "sec"
 msgstr ""
 
@@ -130,35 +134,35 @@ msgid ""
 "<b>Control+Q</b> - Exit"
 msgstr ""
 
-#: src/ui/ListView.vala:72
+#: src/ui/ListView.vala:82
 msgid "Active"
 msgstr ""
 
-#: src/ui/ListView.vala:79
+#: src/ui/ListView.vala:89
 msgid "Completed"
 msgstr ""
 
-#: src/ui/ListView.vala:111
+#: src/ui/ListView.vala:121
 msgid "Mark as completed"
 msgstr ""
 
-#: src/ui/ListView.vala:116
+#: src/ui/ListView.vala:126
 msgid "Start again"
 msgstr ""
 
-#: src/ui/ListView.vala:124
+#: src/ui/ListView.vala:134
 msgid "Edit task"
 msgstr ""
 
-#: src/ui/ListView.vala:129
+#: src/ui/ListView.vala:139
 msgid "Copy task"
 msgstr ""
 
-#: src/ui/ListView.vala:134
+#: src/ui/ListView.vala:144
 msgid "Delete task"
 msgstr ""
 
-#: src/ui/ListView.vala:202
+#: src/ui/ListView.vala:212
 #, c-format
 msgid "Timer for %s"
 msgstr ""

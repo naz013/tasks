@@ -57,6 +57,8 @@ namespace Tasks {
 	        fab.hexpand = false;
 	        fab.set_always_show_image(true);
 	        fab.set_label(_("Add task"));
+	        fab.has_tooltip = true;
+	        fab.tooltip_text = "Ctrl+N";
 	        fab.clicked.connect (() => {
 		        add_clicked();
 	        });

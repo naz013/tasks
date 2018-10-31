@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.naz013.tasks\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-29 15:49+0200\n"
+"POT-Creation-Date: 2018-10-31 11:19+0200\n"
 "PO-Revision-Date: 2018-10-25 14:33+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -22,23 +22,27 @@ msgstr ""
 msgid "Tasks"
 msgstr "Завдання"
 
-#: src/TasksWindow.vala:465
+#: src/TasksWindow.vala:450
+msgid "No missed notifications"
+msgstr "Немає пропущених сповіщень"
+
+#: src/TasksWindow.vala:470
 msgid "Missed notifications"
 msgstr "Пропущені"
 
-#: src/TasksWindow.vala:495
+#: src/TasksWindow.vala:500
 msgid "Settings"
 msgstr "Налаштування"
 
-#: src/config/Utils.vala:38
+#: src/config/Utils.vala:36
 msgid "hrs"
 msgstr "год"
 
-#: src/config/Utils.vala:39
+#: src/config/Utils.vala:37
 msgid "mins"
 msgstr "хв"
 
-#: src/config/Utils.vala:40
+#: src/config/Utils.vala:38
 msgid "sec"
 msgstr "сек"
 
@@ -136,35 +140,35 @@ msgstr ""
 "<b>Control+F</b> - Повноекранний режим\n"
 "<b>Control+Q</b> - Вийти"
 
-#: src/ui/ListView.vala:72
+#: src/ui/ListView.vala:82
 msgid "Active"
 msgstr "Активні"
 
-#: src/ui/ListView.vala:79
+#: src/ui/ListView.vala:89
 msgid "Completed"
 msgstr "Виконані"
 
-#: src/ui/ListView.vala:111
+#: src/ui/ListView.vala:121
 msgid "Mark as completed"
 msgstr "Позначити виконаним"
 
-#: src/ui/ListView.vala:116
+#: src/ui/ListView.vala:126
 msgid "Start again"
 msgstr "Почати знову"
 
-#: src/ui/ListView.vala:124
+#: src/ui/ListView.vala:134
 msgid "Edit task"
 msgstr "Змінити"
 
-#: src/ui/ListView.vala:129
+#: src/ui/ListView.vala:139
 msgid "Copy task"
 msgstr "Копіювати"
 
-#: src/ui/ListView.vala:134
+#: src/ui/ListView.vala:144
 msgid "Delete task"
 msgstr "Видалити"
 
-#: src/ui/ListView.vala:202
+#: src/ui/ListView.vala:212
 #, c-format
 msgid "Timer for %s"
 msgstr "Таймер на %s"

@@ -450,7 +450,7 @@ namespace Tasks {
                 var label = new Gtk.Label(_("No missed notifications"));
                 label.set_xalign(0.0f);
                 label.margin = 16;
-                label.get_style_context().add_class(CssData.LABEL_PRIMARY);
+                label.get_style_context().add_class(CssData.LABEL_SECONDARY);
                 label.show_all();
                 popover_notifications.add (label);
             } else {
