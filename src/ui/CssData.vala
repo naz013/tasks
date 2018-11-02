@@ -716,8 +716,6 @@ namespace Tasks {
                     color: @accentColor;
                     background: transparent;
                     border: 0px;
-                    padding-top: 4px;
-                    padding-bottom: 4px;
                     box-shadow: none;
                     font-weight: normal;
                 } 
@@ -729,22 +727,14 @@ namespace Tasks {
                     color: @accentColor;
                     background: @shadowColor;
                     border: 0px;
-                    padding-top: 4px;
-                    padding-bottom: 4px;
                     box-shadow: none;
                     font-weight: normal;
                 }
                 
                 .material-dialog {
                     background-color: @bgColor;
-                    box-shadow: @shadowColor;
-                    padding: 16px;
+                    box-shadow: 0 1px 4px @shadowColor, 0 1px 4px @shadowOutColor;
                     border-radius: 5px;
-                }
-                
-                .material-dialog-content {
-                    background-color: @bgColor;
-                    box-shadow: @shadowColor;
                 }
                 
                 .date-time-field {
@@ -808,7 +798,7 @@ namespace Tasks {
                     color: #000000;
                 }
                 
-                .show_border {
+                .show-border {
                     border: 1px solid @accentColor;
                 }
 
