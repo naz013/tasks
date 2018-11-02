@@ -20,7 +20,13 @@ namespace Tasks {
         private void refresh_list(Gee.ArrayList<Tasks.Notification> notifications) {
             grid.forall ((element) => grid.remove (element));
             notifications.sort(comparator);
-            for (int i = 0; i < notifications.size; i++) {
+            
+            int max = notifications.size;
+            if (max > 5) {
+                max = 5;
+            }
+            
+            for (int i = 0; i < max; i++) {
                 Tasks.Notification notification = notifications.get(i);
                 grid.attach(get_row(notification), 0, i, 1, 1);
             }
