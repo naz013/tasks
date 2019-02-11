@@ -12,11 +12,20 @@
         <binary>com.github.naz013.tasks</binary>
     </provides>
     <developer_name>Nazar Suhovich</developer_name>
-    <url type="homepage">https://github.com/naz013/reminder-vala</url>
-    <url type="bugtracker">https://github.com/naz013/reminder-vala/issues</url>
+    <url type="homepage">https://github.com/naz013/tasks</url>
+    <url type="bugtracker">https://github.com/naz013/tasks/issues</url>
     <screenshots>
         <screenshot type="default">
             <image>https://raw.githubusercontent.com/naz013/reminder-vala/master/data/shot.png</image>
+        </screenshot>
+        <screenshot>
+            <image>https://raw.githubusercontent.com/elementary/appcenter/master/data/screenshot-footer.png</image>
+        </screenshot>
+        <screenshot>
+            <image>https://raw.githubusercontent.com/elementary/appcenter/master/data/screenshot-updates.png</image>
+        </screenshot>
+        <screenshot>
+            <image>https://raw.githubusercontent.com/elementary/appcenter/master/data/screenshot-payment.png</image>
         </screenshot>
     </screenshots>
     <releases>
@@ -27,7 +36,7 @@
       </release>
     </releases>
     <custom>
-        <value key="x-appcenter-color-primary">#fff3ae</value>
-        <value key="x-appcenter-color-primary-text">#555864</value>
+        <value key="x-appcenter-color-primary">#E6AB6A</value>
+        <value key="x-appcenter-color-primary-text">#ffffff</value>
     </custom>
 </component>
