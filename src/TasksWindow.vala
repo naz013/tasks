@@ -18,6 +18,7 @@ namespace Tasks {
         private bool was_maximized = false;
         private bool was_minimized = false;
         private bool was_resized = false;
+        private bool was_wide = false;
         private bool settings_visible = false;
         private int64 old_width = 500;
         private int64 old_height = 500;
@@ -102,7 +103,18 @@ namespace Tasks {
                     if (!was_minimized && !create_open && !is_new) {
                         // Logger.log("From allocate 2");
                         draw_views();
+                    } else if (allocation.width > 900 && !was_wide) {
+                        was_wide = true;
+                        create_open = true;
+                        was_resized = true;
+                        draw_views();
                     } else {
+                        if (was_wide && allocation.width <= 900) {
+                            was_wide = false;
+                            create_open = false;
+                            was_resized = true;
+                            draw_views();
+                        }
                         is_new = false;
                     }
                     was_maximized = false;
@@ -157,7 +169,7 @@ namespace Tasks {
         }
         
         public bool add_action() {
-            if (is_maximized) {
+            if (is_maximized || was_wide) {
                 return false;
             }
             create_open = !create_open;
@@ -209,7 +221,7 @@ namespace Tasks {
             } else {
             	
             }
-            show_task_dialog(event);
+            // show_task_dialog(event);
             
             if (event.show_notification) {
                 ((Application) application).show_notification(event.summary, event.description, "alarm-symbolic");
@@ -267,12 +279,12 @@ namespace Tasks {
             grid.forall ((element) => grid.remove (element));
 
             if (create_open) {
-                if (!was_create_open && !is_maximized && new_width < 500) {
-                    new_width = new_width + 250;
+                if (!was_create_open && !is_maximized && new_width < 650) {
+                    new_width = new_width + 350;
                     was_resized = true;
                 }
             } else if (was_create_open && was_resized) {
-                new_width = new_width - 250;
+                new_width = new_width - 350;
                 was_resized = false;
             } else if (is_maximized) {
                 was_resized = false;

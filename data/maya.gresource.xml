@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<gresources>
-  <gresource prefix="/com/github/naz013/tasks">
-    <file alias="outline-access-time.svg" compressed="true" preprocess="xml-stripblanks">outline-access-time.svg</file>
-    <file alias="outline-timer.svg" compressed="true" preprocess="xml-stripblanks">outline-timer.svg</file>
-  </gresource>
-</gresources>

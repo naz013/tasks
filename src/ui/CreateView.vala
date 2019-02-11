@@ -51,7 +51,7 @@ namespace Tasks {
             Gtk.Grid vert_grid = new Gtk.Grid();
             vert_grid.vexpand = true;
             vert_grid.hexpand = false;
-            vert_grid.width_request = 248;
+            vert_grid.width_request = 350;
             vert_grid.orientation = Gtk.Orientation.VERTICAL;
             vert_grid.show_all ();
             vert_grid.size_allocate.connect(() => {
@@ -217,15 +217,6 @@ namespace Tasks {
                     } else {
                         due_date_time = dt.to_unix();
                         estimated_time = due_date_time;
-                        
-                        var current = new DateTime.now_local ();
-            	        var diff = dt.difference(current);
-            	        var seconds = (int64) (diff / TimeSpan.SECOND);
-            	        
-            	        if (seconds - before_seconds <= 0) {
-            	            has_error = true;
-            	            show_error(_("Notification parameter is wrong"));
-            	        }
                     }
                 } else if (type == Event.TIMER) {
                     if (timer_view != null) {
@@ -552,7 +543,7 @@ namespace Tasks {
             date_button.has_tooltip = false;
             date_button.hexpand = false;
             date_button.set_always_show_image(true);
-            // date_button.get_style_context().add_class("icon_button");
+            date_button.get_style_context().add_class("icon_button");
             date_button.clicked.connect (() => {
                 show_date_picker(date_button, dt);
             });
@@ -576,7 +567,7 @@ namespace Tasks {
 		    
 		    update_time_label();
 		    
-		    var time_button = new Gtk.Button.from_icon_name ("outline-access-time", Gtk.IconSize.BUTTON);
+		    var time_button = new Gtk.Button.from_icon_name ("preferences-system-time-symbolic", Gtk.IconSize.BUTTON);
             time_button.has_tooltip = false;
             time_button.hexpand = false;
             time_button.set_always_show_image(true);
@@ -615,12 +606,14 @@ namespace Tasks {
 		    container.add(create_hint_label(_("Notify before"), true));
             
             before_view = new BeforePickerView();
+            before_view.set_enabled(notification_switch.active);
             container.add(before_view);
             
             container.add(create_empty_space(16));
 		    container.add(create_hint_label(_("Repeat every"), true));
             
             repeat_view = new RepeatPickerView();
+            repeat_view.set_enabled(notification_switch.active);
             container.add(repeat_view);
             
             if (editable_event != null) {

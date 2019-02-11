@@ -48,7 +48,7 @@ namespace Tasks {
             create_label();
             timer_field.add(label);
             
-            var date_button = new Gtk.Button.from_icon_name ("outline-timer", Gtk.IconSize.BUTTON);
+            var date_button = new Gtk.Button.from_icon_name ("tools-timer-symbolic", Gtk.IconSize.BUTTON);
             date_button.has_tooltip = false;
             date_button.hexpand = false;
             date_button.set_always_show_image(true);

@@ -34,7 +34,7 @@ cc = meson.get_compiler('c')
 
 gresource_tasks = gnome.compile_resources(
     'gresource_icons',
-    'data/maya.gresource.xml',
+    'data/com.github.naz013.tasks.gresource.xml',
     source_dir: 'data'
 )
 
