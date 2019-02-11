@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.naz013.tasks\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-31 11:19+0200\n"
+"POT-Creation-Date: 2019-02-11 15:17+0200\n"
 "PO-Revision-Date: 2018-10-25 14:33+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,19 +18,19 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: src/Application.vala:16 src/Application.vala:109 src/TasksWindow.vala:74
+#: src/Application.vala:16 src/Application.vala:109 src/TasksWindow.vala:75
 msgid "Tasks"
 msgstr "Завдання"
 
-#: src/TasksWindow.vala:450
+#: src/TasksWindow.vala:462
 msgid "No missed notifications"
 msgstr "Немає пропущених сповіщень"
 
-#: src/TasksWindow.vala:470
+#: src/TasksWindow.vala:482
 msgid "Missed notifications"
 msgstr "Пропущені"
 
-#: src/TasksWindow.vala:500
+#: src/TasksWindow.vala:512
 msgid "Settings"
 msgstr "Налаштування"
 
@@ -62,6 +62,15 @@ msgstr "годин"
 msgid "days"
 msgstr "днів"
 
+#: src/dialogs/TaskDialog.vala:50 src/ui/ListView.vala:220
+#, c-format
+msgid "Timer for %s"
+msgstr "Таймер на %s"
+
+#: src/dialogs/TaskDialog.vala:94
+msgid "OK"
+msgstr "ОК"
+
 #: src/ui/CreateView.vala:41
 msgid "Remind me..."
 msgstr "Нагадай мені..."
@@ -87,42 +96,42 @@ msgid "Due date"
 msgstr "Кінцева дата"
 
 #: src/ui/CreateView.vala:152
-msgid "SAVE (Ctrl+S)"
-msgstr "ЗБЕРЕГТИ (Ctrl+S)"
+msgid "SAVE"
+msgstr "ЗБЕРЕГТИ"
 
-#: src/ui/CreateView.vala:158
-msgid "CANCEL (Ctrl+C)"
-msgstr "СКАСУВАТИ (Ctrl+C)"
+#: src/ui/CreateView.vala:159
+msgid "CANCEL"
+msgstr "СКАСУВАТИ"
 
-#: src/ui/CreateView.vala:214
+#: src/ui/CreateView.vala:216
 msgid "Select date in future"
 msgstr "Оберіть дату в майбутньому"
 
-#: src/ui/CreateView.vala:225 src/ui/CreateView.vala:243
-msgid "Notification parameter is wrong"
-msgstr "Параметри нотифікацій не вірні"
-
-#: src/ui/CreateView.vala:235
+#: src/ui/CreateView.vala:228
 msgid "Timer time not selected"
 msgstr "Час для таймера не обрано"
 
-#: src/ui/CreateView.vala:534
+#: src/ui/CreateView.vala:236
+msgid "Notification parameter is wrong"
+msgstr "Параметри нотифікацій не вірні"
+
+#: src/ui/CreateView.vala:527
 msgid "Date"
 msgstr "Дата"
 
-#: src/ui/CreateView.vala:562
+#: src/ui/CreateView.vala:555
 msgid "Time"
 msgstr "Час"
 
-#: src/ui/CreateView.vala:598
+#: src/ui/CreateView.vala:591
 msgid "Show notification"
 msgstr "Показати сповіщення"
 
-#: src/ui/CreateView.vala:613
+#: src/ui/CreateView.vala:606
 msgid "Notify before"
 msgstr "Нагадати за"
 
-#: src/ui/CreateView.vala:619
+#: src/ui/CreateView.vala:613
 msgid "Repeat every"
 msgstr "Повторювати кожні"
 
@@ -168,21 +177,16 @@ msgstr "Копіювати"
 msgid "Delete task"
 msgstr "Видалити"
 
-#: src/ui/ListView.vala:212
-#, c-format
-msgid "Timer for %s"
-msgstr "Таймер на %s"
-
 #: src/ui/MainContainer.vala:59
 msgid "Add task"
 msgstr "Додати завдання"
 
-#: src/ui/MainContainer.vala:143
+#: src/ui/MainContainer.vala:145
 #, c-format
 msgid "Event %s deleted."
 msgstr "Завдання %s видалено."
 
-#: src/ui/MainContainer.vala:144
+#: src/ui/MainContainer.vala:146
 msgid "UNDO"
 msgstr "ВІДМІНИТИ"
 
@@ -205,6 +209,12 @@ msgstr "Оливка"
 #: src/ui/SettingsView.vala:42
 msgid "Grape"
 msgstr "Виноград"
+
+#~ msgid "SAVE (Ctrl+S)"
+#~ msgstr "ЗБЕРЕГТИ (Ctrl+S)"
+
+#~ msgid "CANCEL (Ctrl+C)"
+#~ msgstr "СКАСУВАТИ (Ctrl+C)"
 
 #~ msgid "m"
 #~ msgstr "хв"

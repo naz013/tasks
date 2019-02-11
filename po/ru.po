@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.naz013.tasks\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-31 11:19+0200\n"
+"POT-Creation-Date: 2019-02-11 15:17+0200\n"
 "PO-Revision-Date: 2018-10-25 14:33+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,113 +18,122 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: src/Application.vala:16 src/Application.vala:109 src/TasksWindow.vala:74
+#: src/Application.vala:16 src/Application.vala:109 src/TasksWindow.vala:75
 msgid "Tasks"
-msgstr ""
+msgstr "Задачи"
 
-#: src/TasksWindow.vala:450
+#: src/TasksWindow.vala:462
 msgid "No missed notifications"
-msgstr ""
+msgstr "Нет пропущенных уведомлений"
 
-#: src/TasksWindow.vala:470
+#: src/TasksWindow.vala:482
 msgid "Missed notifications"
-msgstr ""
+msgstr "Пропущенные уведомления"
 
-#: src/TasksWindow.vala:500
+#: src/TasksWindow.vala:512
 msgid "Settings"
-msgstr ""
+msgstr "Настройки"
 
 #: src/config/Utils.vala:36
 msgid "hrs"
-msgstr ""
+msgstr "часов"
 
 #: src/config/Utils.vala:37
 msgid "mins"
-msgstr ""
+msgstr "мин"
 
 #: src/config/Utils.vala:38
 msgid "sec"
-msgstr ""
+msgstr "сек"
 
 #: src/config/Strings.vala:4
 msgid "seconds"
-msgstr ""
+msgstr "секунд"
 
 #: src/config/Strings.vala:5
 msgid "minutes"
-msgstr ""
+msgstr "минут"
 
 #: src/config/Strings.vala:6
 msgid "hours"
-msgstr ""
+msgstr "часов"
 
 #: src/config/Strings.vala:7
 msgid "days"
-msgstr ""
+msgstr "дней"
+
+#: src/dialogs/TaskDialog.vala:50 src/ui/ListView.vala:220
+#, c-format
+msgid "Timer for %s"
+msgstr "Таймер на %s"
+
+#: src/dialogs/TaskDialog.vala:94
+msgid "OK"
+msgstr "ОК"
 
 #: src/ui/CreateView.vala:41
 msgid "Remind me..."
-msgstr ""
+msgstr "Напомни мне..."
 
 #: src/ui/CreateView.vala:42
 msgid "Note"
-msgstr ""
+msgstr "Заметка"
 
 #: src/ui/CreateView.vala:43
 msgid "Date/Time"
-msgstr ""
+msgstr "Дата/время"
 
 #: src/ui/CreateView.vala:44
 msgid "Timer"
-msgstr ""
+msgstr "Таймер"
 
 #: src/ui/CreateView.vala:95
 msgid "Must be not empty"
-msgstr ""
+msgstr "Должно быть не пустым"
 
 #: src/ui/CreateView.vala:120
 msgid "Due date"
-msgstr ""
+msgstr "Срок исполнения"
 
 #: src/ui/CreateView.vala:152
-msgid "SAVE (Ctrl+S)"
-msgstr ""
+msgid "SAVE"
+msgstr "СОХРАНИТЬ"
 
-#: src/ui/CreateView.vala:158
-msgid "CANCEL (Ctrl+C)"
-msgstr ""
+#: src/ui/CreateView.vala:159
+msgid "CANCEL"
+msgstr "ОТМЕНИТЬ"
 
-#: src/ui/CreateView.vala:214
+#: src/ui/CreateView.vala:216
 msgid "Select date in future"
-msgstr ""
+msgstr "Выберите дату в будущем"
 
-#: src/ui/CreateView.vala:225 src/ui/CreateView.vala:243
-msgid "Notification parameter is wrong"
-msgstr ""
-
-#: src/ui/CreateView.vala:235
+#: src/ui/CreateView.vala:228
 msgid "Timer time not selected"
-msgstr ""
+msgstr "Время таймера не выбрано"
 
-#: src/ui/CreateView.vala:534
+#: src/ui/CreateView.vala:236
+msgid "Notification parameter is wrong"
+msgstr "Неверный параметр уведомления"
+
+#: src/ui/CreateView.vala:527
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
-#: src/ui/CreateView.vala:562
+#: src/ui/CreateView.vala:555
 msgid "Time"
-msgstr ""
+msgstr "Время"
 
-#: src/ui/CreateView.vala:598
+#: src/ui/CreateView.vala:591
 msgid "Show notification"
-msgstr ""
+msgstr "Показать уведомление"
+
+#: src/ui/CreateView.vala:606
+msgid "Notify before"
+msgstr "Уведомлять до"
 
 #: src/ui/CreateView.vala:613
-msgid "Notify before"
-msgstr ""
-
-#: src/ui/CreateView.vala:619
 msgid "Repeat every"
-msgstr ""
+msgstr "Повторять каждые"
 
 #: src/ui/EmptyView.vala:9
 msgid ""
@@ -134,69 +143,69 @@ msgid ""
 "<b>Control+F</b> - Set fullscreen\n"
 "<b>Control+Q</b> - Exit"
 msgstr ""
+"Нет задач, используйте кнопку \"Плюс\" чтобы добавить один\n"
+"\n"
+"<b>Control+N</b> - Создать задачу\n"
+"<b>Control+F</b> - Установить полноэкранный режим\n"
+"<b>Control+Q</b> - Выход"
 
 #: src/ui/ListView.vala:82
 msgid "Active"
-msgstr ""
+msgstr "Активные"
 
 #: src/ui/ListView.vala:89
 msgid "Completed"
-msgstr ""
+msgstr "Завершенные"
 
 #: src/ui/ListView.vala:121
 msgid "Mark as completed"
-msgstr ""
+msgstr "Отметить как выполненное"
 
 #: src/ui/ListView.vala:126
 msgid "Start again"
-msgstr ""
+msgstr "Начать снова"
 
 #: src/ui/ListView.vala:134
 msgid "Edit task"
-msgstr ""
+msgstr "Изменить задачу"
 
 #: src/ui/ListView.vala:139
 msgid "Copy task"
-msgstr ""
+msgstr "Копировать задание"
 
 #: src/ui/ListView.vala:144
 msgid "Delete task"
-msgstr ""
-
-#: src/ui/ListView.vala:212
-#, c-format
-msgid "Timer for %s"
-msgstr ""
+msgstr "Удалить задачу"
 
 #: src/ui/MainContainer.vala:59
 msgid "Add task"
-msgstr ""
+msgstr "Добавить задачу"
 
-#: src/ui/MainContainer.vala:143
+#: src/ui/MainContainer.vala:145
 #, c-format
 msgid "Event %s deleted."
-msgstr ""
+msgstr "Событие %s удалено."
 
-#: src/ui/MainContainer.vala:144
+#: src/ui/MainContainer.vala:146
 msgid "UNDO"
-msgstr ""
+msgstr "ОТМЕНИТЬ"
 
 #: src/ui/SettingsView.vala:10
 msgid "Light"
-msgstr ""
+msgstr "Светлый"
 
 #: src/ui/SettingsView.vala:18
 msgid "Sand"
-msgstr ""
+msgstr "Песок"
 
 #: src/ui/SettingsView.vala:26
 msgid "Dark"
-msgstr ""
+msgstr "Темно"
 
 #: src/ui/SettingsView.vala:34
 msgid "Olive"
-msgstr ""
+msgstr "Оливковый"
 
 #: src/ui/SettingsView.vala:42
 msgid "Grape"
-msgstr ""
+msgstr "Виноград"

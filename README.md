@@ -1,3 +1,5 @@
-## Tasks - Simple Reminder Application
+## Tasks
+
+Simple Reminder Application
 
 

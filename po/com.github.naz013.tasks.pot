@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.naz013.tasks\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-31 11:19+0200\n"
+"POT-Creation-Date: 2019-02-11 15:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Application.vala:16 src/Application.vala:109 src/TasksWindow.vala:74
+#: src/Application.vala:16 src/Application.vala:109 src/TasksWindow.vala:75
 msgid "Tasks"
 msgstr ""
 
-#: src/TasksWindow.vala:450
+#: src/TasksWindow.vala:462
 msgid "No missed notifications"
 msgstr ""
 
-#: src/TasksWindow.vala:470
+#: src/TasksWindow.vala:482
 msgid "Missed notifications"
 msgstr ""
 
-#: src/TasksWindow.vala:500
+#: src/TasksWindow.vala:512
 msgid "Settings"
 msgstr ""
 
@@ -61,6 +61,15 @@ msgstr ""
 msgid "days"
 msgstr ""
 
+#: src/dialogs/TaskDialog.vala:50 src/ui/ListView.vala:220
+#, c-format
+msgid "Timer for %s"
+msgstr ""
+
+#: src/dialogs/TaskDialog.vala:94
+msgid "OK"
+msgstr ""
+
 #: src/ui/CreateView.vala:41
 msgid "Remind me..."
 msgstr ""
@@ -86,42 +95,42 @@ msgid "Due date"
 msgstr ""
 
 #: src/ui/CreateView.vala:152
-msgid "SAVE (Ctrl+S)"
+msgid "SAVE"
 msgstr ""
 
-#: src/ui/CreateView.vala:158
-msgid "CANCEL (Ctrl+C)"
+#: src/ui/CreateView.vala:159
+msgid "CANCEL"
 msgstr ""
 
-#: src/ui/CreateView.vala:214
+#: src/ui/CreateView.vala:216
 msgid "Select date in future"
 msgstr ""
 
-#: src/ui/CreateView.vala:225 src/ui/CreateView.vala:243
-msgid "Notification parameter is wrong"
-msgstr ""
-
-#: src/ui/CreateView.vala:235
+#: src/ui/CreateView.vala:228
 msgid "Timer time not selected"
 msgstr ""
 
-#: src/ui/CreateView.vala:534
+#: src/ui/CreateView.vala:236
+msgid "Notification parameter is wrong"
+msgstr ""
+
+#: src/ui/CreateView.vala:527
 msgid "Date"
 msgstr ""
 
-#: src/ui/CreateView.vala:562
+#: src/ui/CreateView.vala:555
 msgid "Time"
 msgstr ""
 
-#: src/ui/CreateView.vala:598
+#: src/ui/CreateView.vala:591
 msgid "Show notification"
 msgstr ""
 
-#: src/ui/CreateView.vala:613
+#: src/ui/CreateView.vala:606
 msgid "Notify before"
 msgstr ""
 
-#: src/ui/CreateView.vala:619
+#: src/ui/CreateView.vala:613
 msgid "Repeat every"
 msgstr ""
 
@@ -162,21 +171,16 @@ msgstr ""
 msgid "Delete task"
 msgstr ""
 
-#: src/ui/ListView.vala:212
-#, c-format
-msgid "Timer for %s"
-msgstr ""
-
 #: src/ui/MainContainer.vala:59
 msgid "Add task"
 msgstr ""
 
-#: src/ui/MainContainer.vala:143
+#: src/ui/MainContainer.vala:145
 #, c-format
 msgid "Event %s deleted."
 msgstr ""
 
-#: src/ui/MainContainer.vala:144
+#: src/ui/MainContainer.vala:146
 msgid "UNDO"
 msgstr ""
 

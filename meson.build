@@ -82,7 +82,6 @@ executable(
     dependencies: [
         dependency('granite'),
         dependency('gobject-2.0'),
-        dependency('gtksourceview-3.0'),
         dependency('json-glib-1.0'),
         dependency('gee-0.8'),
         dependency('glib-2.0'),
