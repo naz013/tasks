@@ -16,20 +16,20 @@
     <url type="bugtracker">https://github.com/naz013/tasks/issues</url>
     <screenshots>
         <screenshot type="default">
-            <image>https://raw.githubusercontent.com/naz013/reminder-vala/master/data/shot.png</image>
+            <image>https://github.com/naz013/tasks/raw/master/data/scr_main.png</image>
         </screenshot>
         <screenshot>
-            <image>https://raw.githubusercontent.com/elementary/appcenter/master/data/screenshot-footer.png</image>
+            <image>https://github.com/naz013/tasks/raw/master/data/scr_2.png</image>
         </screenshot>
         <screenshot>
-            <image>https://raw.githubusercontent.com/elementary/appcenter/master/data/screenshot-updates.png</image>
+            <image>https://github.com/naz013/tasks/raw/master/data/scr_3.png</image>
         </screenshot>
         <screenshot>
-            <image>https://raw.githubusercontent.com/elementary/appcenter/master/data/screenshot-payment.png</image>
+            <image>https://github.com/naz013/tasks/raw/master/data/scr_4.png</image>
         </screenshot>
     </screenshots>
     <releases>
-      <release version="1.0.0" date="2018-03-19">
+      <release version="1.0.0" date="2019-02-11">
           <description>
               <p>Simple reminder application</p>
           </description>
