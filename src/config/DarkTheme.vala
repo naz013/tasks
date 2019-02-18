@@ -4,6 +4,14 @@ namespace Tasks {
             return "#212121";
         }
         
+        public string get_bg_top_color() {
+            return "#212121";
+        }
+        
+        public string get_bg_bottom_color() {
+            return "#212121";
+        }
+        
         public string get_card_bg_color() {
             return "#2b2b2b";
         }

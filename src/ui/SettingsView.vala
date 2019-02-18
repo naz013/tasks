@@ -45,6 +45,22 @@ namespace Tasks {
             color_button_grape_context.add_class (CssData.COLOR_RADIO);
             color_button_grape_context.add_class ("color-grape");
             
+            var color_button_green_gradient = new Gtk.RadioButton.from_widget (color_button_light);
+            color_button_green_gradient.halign = Gtk.Align.CENTER;
+            color_button_green_gradient.tooltip_text = _("Green Gradient");
+            
+            var color_button_green_gradient_context = color_button_green_gradient.get_style_context ();
+            color_button_green_gradient_context.add_class (CssData.COLOR_RADIO);
+            color_button_green_gradient_context.add_class ("color-green-gradient");
+            
+            var color_button_sunset = new Gtk.RadioButton.from_widget (color_button_light);
+            color_button_sunset.halign = Gtk.Align.CENTER;
+            color_button_sunset.tooltip_text = _("Sunset");
+            
+            var color_button_sunset_context = color_button_sunset.get_style_context ();
+            color_button_sunset_context.add_class (CssData.COLOR_RADIO);
+            color_button_sunset_context.add_class ("color-sunset");
+            
             var menu_grid = new Gtk.Grid ();
             menu_grid.margin_bottom = 3;
             menu_grid.column_spacing = 12;
@@ -55,6 +71,8 @@ namespace Tasks {
             menu_grid.attach (color_button_sand, 2, 0, 1, 1);
             menu_grid.attach (color_button_olive, 3, 0, 1, 1);
             menu_grid.attach (color_button_grape, 4, 0, 1, 1);
+            menu_grid.attach (color_button_green_gradient, 5, 0, 1, 1);
+            menu_grid.attach (color_button_sunset, 6, 0, 1, 1);
             menu_grid.show_all ();
             
             switch (AppSettings.get_default().app_theme) {
@@ -73,6 +91,12 @@ namespace Tasks {
                 case 4:
                     color_button_grape.active = true;
                     break;
+                case 5:
+                    color_button_green_gradient.active = true;
+                    break;
+                case 6:
+                    color_button_sunset.active = true;
+                    break;
             }
             
             theme_button_click(color_button_dark, 0);
@@ -80,6 +104,8 @@ namespace Tasks {
             theme_button_click(color_button_sand, 2);
             theme_button_click(color_button_olive, 3);
             theme_button_click(color_button_grape, 4);
+            theme_button_click(color_button_green_gradient, 5);
+            theme_button_click(color_button_sunset, 6);
             
             add(menu_grid);
         }

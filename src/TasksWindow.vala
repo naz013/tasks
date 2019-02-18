@@ -36,7 +36,6 @@ namespace Tasks {
         public static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> ();
 
         private const GLib.ActionEntry[] action_entries = {
-            { ACTION_MODE, toggle_mode },
             { ACTION_NEW, add_key_action }
         };
 
@@ -262,6 +261,12 @@ namespace Tasks {
                     break; 
                 case 4:
                     app_theme = new GrapeTheme();
+                    break;
+                case 5:
+                    app_theme = new GreenGradientTheme();
+                    break; 
+                case 6:
+                    app_theme = new SunsetTheme();
                     break; 
             }
             var gtk_settings = Gtk.Settings.get_default ();
@@ -439,18 +444,6 @@ namespace Tasks {
                 css_provider,
                 Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
             );
-        }
-
-        public void toggle_mode() {
-            if (AppSettings.get_default().app_theme == 0) {
-                AppSettings.get_default().app_theme = 1;
-                init_theme(1);
-            } else {
-                AppSettings.get_default().app_theme = 0;
-                init_theme(0);
-            }
-            
-            update_theme();
         }
         
         private void show_notifications(Gtk.Button parent) {

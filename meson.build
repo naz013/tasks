@@ -60,6 +60,8 @@ executable(
     'src/config/SandTheme.vala',
     'src/config/OliveTheme.vala',
     'src/config/GrapeTheme.vala',
+    'src/config/GreenGradientTheme.vala',
+    'src/config/SunsetTheme.vala',
     'src/config/Logger.vala',
     'src/config/Utils.vala',
     'src/config/Strings.vala',

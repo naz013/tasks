@@ -2,6 +2,8 @@ namespace Tasks {
     public interface AppTheme : GLib.Object {
     
         public abstract string get_bg_color();
+        public abstract string get_bg_top_color();
+        public abstract string get_bg_bottom_color();
         public abstract string get_card_bg_color();
         
         public abstract string get_shadow_color();
