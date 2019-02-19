@@ -12,37 +12,24 @@ namespace Tasks {
         	return dt.to_unix();
     	}
     	
-    	public static string to_label_from_seconds(int64 seconds) {
-    	    return to_label(from_seconds(seconds));
+    	public static string to_label_from_seconds(int64 all_seconds) {
+    	    int hours = (int) (all_seconds / HOUR);
+    	    int minutes = (int) ((all_seconds - (hours * HOUR)) / MINUTE);
+    	    int seconds = (int) (all_seconds - (hours * HOUR) - (minutes * MINUTE));
+    	    return to_label(hours, minutes, seconds);
     	}
     	
-    	public static string to_label(string input) {
-    	    var tmp = "";
-    		if (input.length < LENGTH) {
-    			for (int i = 0; i < LENGTH - input.length; i++) {
-    				tmp = tmp + ZERO;
-    			}
-    		}
-    		tmp = tmp + input;
-    		// Logger.log(@"create_label: tmp -> $tmp");
-    		
-    		var d01 = tmp.substring(0, 2);
-    		var d23 = tmp.substring(2, 2);
-    		var d45 = tmp.substring(4, 2);
-    		
-    		var hours = int.parse(d01);
-    		var minutes = int.parse(d23);
-    		
-    		string h = _("hrs");
+    	public static string to_label(int hours, int minutes, int seconds) {
+    	    string h = _("hrs");
     		string m = _("mins");
     		string s = _("sec");
     		
     		if (hours > 0) {
-    			return @"$d01 $h $d23 $m $d45 $s";
+    			return @"$hours $h $minutes $m $seconds $s";
     		} else if (minutes > 0) {
-    			return @"$d23 $m $d45 $s";
+    			return @"$minutes $m $seconds $s";
     		} else {
-    			return @"$d45 $s";
+    			return @"$seconds $s";
     		}
     	}
 		
@@ -75,23 +62,11 @@ namespace Tasks {
     	    return tmp;
 		}
 		
-		public static int64 to_seconds(string input) {
-		    var tmp = "";
-    		if (input.length < LENGTH) {
-    			for (int i = 0; i < LENGTH - input.length; i++) {
-    				tmp = tmp + ZERO;
-    			}
-    		}
-    		tmp = tmp + input;
-    		
-    		var d01 = tmp.substring(0, 2);
-    		var d23 = tmp.substring(2, 2);
-    		var d45 = tmp.substring(4, 2);
-    		
+		public static int64 to_seconds(int hours, int minutes, int seconds) {
     		int64 secs = 0;
-    		secs += int.parse(d01) * HOUR;
-    		secs += int.parse(d23) * MINUTE;
-    		secs += int.parse(d45);
+    		secs += hours * HOUR;
+    		secs += minutes * MINUTE;
+    		secs += seconds;
     		
     		// Logger.log(@"to_seconds: tmp -> $tmp, secs -> $secs");
     		
