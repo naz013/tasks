@@ -2,39 +2,12 @@ namespace Tasks {
 
     public class TimerView : Gtk.EventBox {
         
-        private Gtk.Entry entry;
         private Gtk.Label label;
         
         private string input = "";
         private string re_presentation = "";
     	
     	public TimerView() {
-    	    var overlay = new Gtk.Overlay();
-    	    overlay.height_request = 40;
-    	    overlay.hexpand = true;
-    	    overlay.vexpand = false;
-    	    
-    	    entry = new Gtk.Entry ();
-		    entry.set_max_length(1);
-		    entry.has_frame = false;
-		    entry.editable = false;
-		    entry.caps_lock_warning = false;
-		    entry.set_visibility(false);
-		    entry.set_opacity(0);
-		    entry.key_press_event.connect((key) => {
-		    	var str = key.str;
-		    	Logger.log(@"Input value -> $(key.str), is_mod -> $(key.is_modifier), val -> $(key.keyval)");
-		    	if (key.keyval == 65288) {
-		    		remove_digit();
-		    	} else if (key.keyval == 65289) {
-		    		entry.is_focus = false;
-		    	} else if ((key.keyval >= 65456 && key.keyval <= 65465) || (key.keyval >= 48 && key.keyval <= 57)) {
-		    		add_digit(str);
-		    	}
-		    	return true;
-		    });
-		    entry.get_style_context().add_class("invisible_view");
-		    
 		    var timer_field = new Gtk.Grid();
 		    timer_field.hexpand = true;
 		    timer_field.orientation = Gtk.Orientation.HORIZONTAL;
@@ -53,15 +26,9 @@ namespace Tasks {
             date_button.hexpand = false;
             date_button.set_always_show_image(true);
             date_button.get_style_context().add_class("icon_button");
+            
             timer_field.add(date_button);
-		    
-		    overlay.add(timer_field);
-		    overlay.add_overlay(entry);
-		    
-		    entry.is_focus = true;
-		    
-		    overlay.show_all();
-    	    add(overlay);
+    	    add(timer_field);
     	}
     	
     	public int64 get_seconds() {

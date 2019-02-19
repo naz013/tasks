@@ -51,7 +51,6 @@ namespace Tasks {
             snackbar.on_hide.connect(() => {
                 overlay.set_overlay_pass_through(vert_grid, true);
             });
-            hor_grid.add(snackbar);
             
             fab = new Gtk.Button.from_icon_name ("list-add-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
 	        fab.hexpand = false;
@@ -64,6 +63,7 @@ namespace Tasks {
 	        });
 	        fab.get_style_context().add_class(CssData.MATERIAL_FAB);
             
+            hor_grid.add(snackbar);
             hor_grid.add(fab);
             
             vert_grid.show_all();
