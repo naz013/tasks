@@ -1,19 +1,19 @@
 namespace Tasks {
-    public class SandTheme : AppTheme, GLib.Object {
+    public class GreenGradientTheme : AppTheme, GLib.Object {
         public string get_bg_color() {
-            return "#fff176";
+            return "#0cebeb";
         }
         
         public string get_bg_top_color() {
-            return "#fff176";
+            return "#0cebeb";
         }
         
         public string get_bg_bottom_color() {
-            return "#fff176";
+            return "#29ffc6";
         }
         
         public string get_card_bg_color() {
-            return "#ffffa8";
+            return "#6effff";
         }
 
         public string get_text_primary_color() {

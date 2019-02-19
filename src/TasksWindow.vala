@@ -11,14 +11,12 @@ namespace Tasks {
         private CreateView create_view;
         private MainContainer main_view;
         private Gtk.Popover? popover_notifications;
+        private Gtk.Grid create_panel;
+        private Gtk.Grid create_container;
+        private Gtk.Overlay overlay;
 
         private bool is_new = true;
         private bool create_open = false;
-        private bool was_create_open = false;
-        private bool was_maximized = false;
-        private bool was_minimized = false;
-        private bool was_resized = false;
-        private bool was_wide = false;
         private bool settings_visible = false;
         private int64 old_width = 500;
         private int64 old_height = 500;
@@ -36,7 +34,6 @@ namespace Tasks {
         public static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> ();
 
         private const GLib.ActionEntry[] action_entries = {
-            { ACTION_MODE, toggle_mode },
             { ACTION_NEW, add_key_action }
         };
 
@@ -89,43 +86,7 @@ namespace Tasks {
                 return false;
             });
             grid.size_allocate.connect((allocation) => {
-                was_create_open = create_open;
-                if (is_maximized) {
-                    if (!was_maximized && !create_open && !is_new) {
-                        // Logger.log("From allocate 1");
-                        draw_views();
-                    } else {
-                        is_new = false;
-                    }
-                    was_maximized = true;
-                    was_minimized = false;
-                } else if (!is_maximized) {
-                    if (!was_minimized && !create_open && !is_new) {
-                        // Logger.log("From allocate 2");
-                        draw_views();
-                    } else if (allocation.width > 900 && !was_wide) {
-                        was_wide = true;
-                        create_open = true;
-                        was_resized = true;
-                        draw_views();
-                    } else {
-                        if (was_wide && allocation.width <= 900) {
-                            was_wide = false;
-                            create_open = false;
-                            was_resized = true;
-                            draw_views();
-                        }
-                        is_new = false;
-                    }
-                    was_maximized = false;
-                    was_minimized = true;
-                }
-                if (main_view != null) {
-                    main_view.set_maximized(is_maximized);
-                }
-                if (create_view != null) {
-                    create_view.set_maximized(is_maximized);
-                }
+                
             });
             delete_event.connect(() => {
                 int new_width, new_height;
@@ -150,7 +111,6 @@ namespace Tasks {
             });
             tasks_controller.show_notification.connect((event) => {
                 Logger.log(@"show_notification: $(event.to_string())");
-                
                 show_notification(event);
             });
             tasks_controller.init_tasks(tasks);
@@ -161,7 +121,15 @@ namespace Tasks {
         
         public void set_create_open(bool create_open) {
             this.create_open = create_open;
-            draw_views();
+            Logger.log(@"set_create_open: $(create_open)");
+            if (create_open) {
+                build_create_view();
+                create_container.add(create_view);
+            } else {
+                create_container.remove(create_view);
+            }
+            create_container.show_all();
+            overlay.set_overlay_pass_through(create_panel, !create_open);
         }
         
         public void add_key_action() {
@@ -169,16 +137,12 @@ namespace Tasks {
         }
         
         public bool add_action() {
-            if (is_maximized || was_wide) {
-                return false;
-            }
-            create_open = !create_open;
-            draw_views();
+            set_create_open(!create_open);
             return true;
         }
         
         public void max_action() {
-            if (is_maximized) {
+            if (!is_maximized) {
                 unmaximize();
             } else {
                 maximize();
@@ -189,17 +153,17 @@ namespace Tasks {
             if (create_view != null) {
                 create_view.save_task();
             }
+            if (create_open) {
+            	add_action();
+            }
         }
         
         public void cancel_action() {
             if (create_view != null) {
-                if (is_maximized) {
-                    create_view.clear_view();
-                } else {
-                    add_action();
-                }
-            } else {
-                add_action();
+                create_view.clear_view();
+            }
+            if (create_open) {
+            	add_action();
             }
         }
         
@@ -229,8 +193,6 @@ namespace Tasks {
             
             if (main_view != null) {
                 main_view.refresh_list(tasks);
-            } else {
-                draw_views();
             }
         }
         
@@ -262,6 +224,12 @@ namespace Tasks {
                     break; 
                 case 4:
                     app_theme = new GrapeTheme();
+                    break;
+                case 5:
+                    app_theme = new GreenGradientTheme();
+                    break; 
+                case 6:
+                    app_theme = new SunsetTheme();
                     break; 
             }
             var gtk_settings = Gtk.Settings.get_default ();
@@ -269,115 +237,111 @@ namespace Tasks {
         }
 
         private void draw_views() {
-            create_view = null;
-            
             int new_width, new_height;
             get_size (out new_width, out new_height);
             
             // Logger.log(@"Draw screen: width -> $new_width, height -> $new_height, max -> $is_maximized");
             
-            grid.forall ((element) => grid.remove (element));
+            grid.foreach ((element) => grid.remove (element));
 
-            if (create_open) {
-                if (!was_create_open && !is_maximized && new_width < 650) {
-                    new_width = new_width + 350;
-                    was_resized = true;
-                }
-            } else if (was_create_open && was_resized) {
-                new_width = new_width - 350;
-                was_resized = false;
-            } else if (is_maximized) {
-                was_resized = false;
+            if (new_width < 400) {
+                new_width = 400;
             }
             resize(new_width, new_height);
 
             this.get_style_context().add_class("rounded");
             
-            // Logger.log(@"draw_views: main_view -> $(main_view != null)");
-            
-            if (main_view == null) {
-                main_view = new MainContainer(tasks);
-                main_view.add_clicked.connect(() => {
-                    add_action();
-                });
-                main_view.on_event_edit.connect((event) => {
-                    Logger.log(@"Edit row $(event.to_string())");
-                    add_action();
-                    if (create_view != null) {
-                        tasks_controller.stop_task(event);
-                        create_view.edit_event(event);
-                    }
-                });
-                main_view.on_event_delete.connect((event) => {
-                    Logger.log(@"Delete row $(event.to_string())");
-                    tasks.remove(event);
+            main_view = new MainContainer(tasks);
+            main_view.add_clicked.connect(() => {
+                add_action();
+            });
+            main_view.on_event_edit.connect((event) => {
+                Logger.log(@"Edit row $(event.to_string())");
+                add_action();
+                if (create_view != null) {
                     tasks_controller.stop_task(event);
-                    event_manager.save_events(tasks);
-                    if (main_view != null) {
-                        main_view.refresh_list(tasks);
-                    } else {
-                        draw_views();
-                    }
-                });
-                main_view.on_event_copy.connect((event) => {
-                    Logger.log(@"Copy row $(event.to_string())");
-                    add_action();
-                    if (create_view != null) {
-                        var editable = new Event.with_event(event);
-                        editable.summary = event.summary + " - copy";
-                        create_view.edit_event(editable);
-                    }
-                });
-                main_view.on_event_complete.connect((event) => {
-                    event.is_active = false;
-                    update_event(event);
-                    tasks_controller.stop_task(event);
-                    event_manager.save_events(tasks);
-                    if (main_view != null) {
-                        main_view.refresh_list(tasks);
-                    } else {
-                        draw_views();
-                    }
-                });
-                main_view.on_event_restart.connect((event) => {
-                    update_event(event);
+                    create_view.edit_event(event);
+                }
+            });
+            main_view.on_event_delete.connect((event) => {
+                Logger.log(@"Delete row $(event.to_string())");
+                tasks.remove(event);
+                tasks_controller.stop_task(event);
+                event_manager.save_events(tasks);
+                if (main_view != null) {
+                    main_view.refresh_list(tasks);
+                }
+            });
+            main_view.on_event_copy.connect((event) => {
+                Logger.log(@"Copy row $(event.to_string())");
+                add_action();
+                if (create_view != null) {
+                    var editable = new Event.with_event(event);
+                    editable.summary = event.summary + " - copy";
+                    create_view.edit_event(editable);
+                }
+            });
+            main_view.on_event_complete.connect((event) => {
+                event.is_active = false;
+                update_event(event);
+                tasks_controller.stop_task(event);
+                event_manager.save_events(tasks);
+                if (main_view != null) {
+                    main_view.refresh_list(tasks);
+                }
+            });
+            main_view.on_event_restart.connect((event) => {
+                update_event(event);
+                tasks_controller.start_task(event);
+                event_manager.save_events(tasks);
+                if (main_view != null) {
+                    main_view.refresh_list(tasks);
+                }
+            });
+            main_view.undo_event.connect((event, position) => {
+                Logger.log(@"Undo row $(event.to_string()), position -> $position");
+                if (position >= 0) {
+                    tasks.insert(position, event);
                     tasks_controller.start_task(event);
                     event_manager.save_events(tasks);
                     if (main_view != null) {
                         main_view.refresh_list(tasks);
-                    } else {
-                        draw_views();
                     }
-                });
-                main_view.undo_event.connect((event, position) => {
-                    Logger.log(@"Undo row $(event.to_string()), position -> $position");
-                    if (position >= 0) {
-                        tasks.insert(position, event);
-                        tasks_controller.start_task(event);
-                        event_manager.save_events(tasks);
-                        if (main_view != null) {
-                            main_view.refresh_list(tasks);
-                        } else {
-                            draw_views();
-                        }
-                    }
-                });
-            }
+                }
+            });
             
-            main_view.set_maximized(is_maximized);
-            grid.add(main_view);
+            create_panel = new Gtk.Grid();
+            create_panel.hexpand = true;
+            create_panel.vexpand = true;
+            create_panel.orientation = Gtk.Orientation.HORIZONTAL;
             
-            if (create_open || is_maximized) {
-                //Add rigth panel
-                add_create_task_panel(grid);
-            } else {
-                create_view = null;
-            }
+            var box = new Gtk.Fixed();
+            box.expand = true;
+            
+            create_container = new Gtk.Grid();
+            create_container.vexpand = true;
+            create_container.hexpand = false;
+            create_container.width_request = 350;
+            
+            overlay = new Gtk.Overlay();
+            overlay.expand = true;
+            
+            create_container.add(create_view);
+            create_panel.add(box);
+            create_panel.add(create_container);
+            overlay.add(main_view);
+            overlay.add_overlay(create_panel);
+            overlay.set_overlay_pass_through(create_panel, !create_open);
+            // set_create_open(false);
+            
+            grid.add(overlay);
+            grid.show_all();
+            
             update_theme();
             this.show_all();
         }
         
-        private void add_create_task_panel(Gtk.Grid grid) {
+        private void build_create_view() {
             create_view = new CreateView();
             create_view.on_add_new.connect((event) => {
                 Logger.log(@"Event added: $(event.to_string())");
@@ -387,8 +351,6 @@ namespace Tasks {
                 add_action();
                 if (main_view != null) {
                     main_view.refresh_list(tasks);
-                } else {
-                    draw_views();
                 }
             });
             create_view.on_update.connect((event) => {
@@ -399,8 +361,6 @@ namespace Tasks {
                 add_action();
                 if (main_view != null) {
                     main_view.refresh_list(tasks);
-                } else {
-                    draw_views();
                 }
             });
             create_view.on_cancel_event.connect((event) => {
@@ -410,8 +370,6 @@ namespace Tasks {
             create_view.on_cancel.connect(() => {
                 cancel_action();
             });
-            create_view.set_maximized(is_maximized);
-            grid.add(create_view);
         }
         
         private void update_event(Event event) {
@@ -439,18 +397,6 @@ namespace Tasks {
                 css_provider,
                 Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
             );
-        }
-
-        public void toggle_mode() {
-            if (AppSettings.get_default().app_theme == 0) {
-                AppSettings.get_default().app_theme = 1;
-                init_theme(1);
-            } else {
-                AppSettings.get_default().app_theme = 0;
-                init_theme(0);
-            }
-            
-            update_theme();
         }
         
         private void show_notifications(Gtk.Button parent) {

@@ -26,6 +26,7 @@ namespace Tasks {
         private Gtk.Grid mutable_grid;
         private Gtk.Grid type_grid;
         private Gtk.Grid main_grid;
+        private Gtk.Grid v_grid;
         
         private TimerView timer_view;
         private BeforePickerView before_view;
@@ -34,6 +35,7 @@ namespace Tasks {
         private Gtk.Button cancel_button;
         private Gtk.RadioButton timer_radio;
         private Gtk.RadioButton date_radio;
+        private Gtk.Overlay overlay;
         
         private Gtk.Popover? popover;
         
@@ -60,7 +62,7 @@ namespace Tasks {
             
             //Scrollable holder
             
-            Gtk.Overlay overlay = new Gtk.Overlay();
+            overlay = new Gtk.Overlay();
             overlay.expand = true;
             
             Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
@@ -339,7 +341,7 @@ namespace Tasks {
         }
         
         private void add_error_popup(Gtk.Overlay overlay) {
-            var v_grid = new Gtk.Grid();
+            v_grid = new Gtk.Grid();
             v_grid.expand = true;
             v_grid.orientation = Gtk.Orientation.VERTICAL;
             

@@ -1,19 +1,19 @@
 namespace Tasks {
-    public class SandTheme : AppTheme, GLib.Object {
+    public class SunsetTheme : AppTheme, GLib.Object {
         public string get_bg_color() {
-            return "#fff176";
+            return "#fffcdc";
         }
         
         public string get_bg_top_color() {
-            return "#fff176";
+            return "#fffcdc";
         }
         
         public string get_bg_bottom_color() {
-            return "#fff176";
+            return "#d9a7c7";
         }
         
         public string get_card_bg_color() {
-            return "#ffffa8";
+            return "#ffd9fa";
         }
 
         public string get_text_primary_color() {
@@ -29,19 +29,19 @@ namespace Tasks {
         }
 
         public string get_accent_color() {
-            return "#ff1744";
+            return "#2979ff";
         }
         
         public string get_accent_light_color() {
-            return "#ff616f";
+            return "#75a7ff";
         }
         
         public string get_accent_dark_color() {
-            return "#c4001d";
+            return "#004ecb";
         }
         
         public string get_alpha_accent_color() {
-            return "rgba(255, 23, 68, 0.12)";
+            return "rgba(41, 121, 255, 0.12)";
         }
         
         public string get_shadow_color() {

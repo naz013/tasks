@@ -136,6 +136,8 @@ namespace Tasks {
                 style = "".concat(add_color("textColorPrimary", theme.get_text_primary_color()));
                 style = style.concat(add_color("textColorSecondary", theme.get_text_secondary_color()));
                 style = style.concat(add_color("bgColor", theme.get_bg_color()));
+                style = style.concat(add_color("bgTopColor", theme.get_bg_top_color()));
+                style = style.concat(add_color("bgBottomColor", theme.get_bg_bottom_color()));
                 style = style.concat(add_color("accentColor", theme.get_accent_color()));
                 style = style.concat(add_color("accentLightColor", theme.get_accent_light_color()));
                 style = style.concat(add_color("accentDarkColor", theme.get_accent_dark_color()));
@@ -363,11 +365,6 @@ namespace Tasks {
                     border: 0px;
                     border-radius: 0px;
                     box-shadow: none;
-                }
-
-                .mainwindow {
-                    background-color: @bgColor;
-                    box-shadow: #1a1a1a;
                 }
 
                 .popover {
@@ -798,8 +795,30 @@ namespace Tasks {
                     color: #000000;
                 }
                 
+                .color-green-gradient radio {
+                    background-image: linear-gradient(#0cebeb, #29ffc6);
+                    border-color: #f50057;
+                    color: #000000;
+                }
+                
+                .color-sunset radio {
+                    background-image: linear-gradient(#fffcdc, #d9a7c7);
+                    border-color: #f50057;
+                    color: #000000;
+                }
+                
                 .show-border {
                     border: 1px solid @accentColor;
+                }
+                
+                .mainwindow {
+                    background-color: @bgColor;
+                    box-shadow: @shadowColor;
+                }
+                
+                .popover {
+                    background-color: @bgColor;
+                    box-shadow: @shadowColor;
                 }
 
                 .window textview.view text,
