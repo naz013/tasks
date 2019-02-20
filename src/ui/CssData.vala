@@ -367,11 +367,6 @@ namespace Tasks {
                     box-shadow: none;
                 }
 
-                .popover {
-                    background-color: @bgColor;
-                    box-shadow: #1a1a1a;
-                }
-
                 .mode_label {
                     color: @textColorPrimary;
                 }
@@ -449,7 +444,8 @@ namespace Tasks {
                 }
                 
                 .right_block {
-                    background: @cardBgColor;
+                    background: linear-gradient(@cardBgColor, @cardBgColor);
+                    background-blend-mode: multiply;
                     border-radius: 2px;
                     margin-top: 8px;
                     margin-left: 8px;
@@ -472,7 +468,8 @@ namespace Tasks {
                 }
                 
                 .material_card {
-                    background: @cardBgColor;
+                    background: linear-gradient(@cardBgColor, @cardBgColor);
+                    background-blend-mode: multiply;
                     border-radius: 2px;
                     margin-top: 8px;
                     margin-left: 8px;
@@ -481,11 +478,15 @@ namespace Tasks {
                 }
                 
                 .material_card {
+                    background: linear-gradient(@cardBgColor, @cardBgColor);
+                    background-blend-mode: multiply;
                     box-shadow: 0 1px 2px @shadowColor, 0 1px 2px @shadowOutColor;
                     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
                 }
                 
                 .material_card:selected {
+                    background: linear-gradient(@cardBgColor, @cardBgColor);
+                    background-blend-mode: multiply;
                     box-shadow: 0 14px 28px @shadowColor, 0 10px 10px @shadowOutColor;
                 }
                 
@@ -576,7 +577,8 @@ namespace Tasks {
                     border: 0px;
                     padding-top: 8px;
                     padding-bottom: 8px;
-                    background: @accentColor;
+                    background: linear-gradient(@accentColor, @accentColor);
+                    background-blend-mode: multiply;
                     box-shadow: 0 1px 2px @shadowColor, 0 1px 2px @shadowOutColor;
                     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
                 }
@@ -585,7 +587,8 @@ namespace Tasks {
                     border-radius: 25px;
                     border: 0px;
                     color: #fff;
-                    background: @accentColor;
+                    background: linear-gradient(@accentColor, @accentColor);
+                    background-blend-mode: multiply;
                     box-shadow: 0 1px 3px @shadowColor, 0 1px 3px @shadowOutColor;
                 }
                 
@@ -594,7 +597,8 @@ namespace Tasks {
                     color: #fff;
                     outline: 0px;
                     border: 0px;
-                    background: @accentColor;
+                    background: linear-gradient(@accentColor, @accentColor);
+                    background-blend-mode: multiply;
                     box-shadow: 0 1px 4px @shadowColor, 0 1px 4px @shadowOutColor;
                 }
                 
@@ -602,7 +606,8 @@ namespace Tasks {
                     border-radius: 25px;
                     color: @textColorDisabled;
                     border: 0px;
-                    background: @buttonDisabledColor;
+                    background: linear-gradient(@buttonDisabledColor, @buttonDisabledColor);
+                    background-blend-mode: multiply;
                     box-shadow: none;
                 }
                 
@@ -613,7 +618,8 @@ namespace Tasks {
                     border: 0px;
                     padding-top: 8px;
                     padding-bottom: 8px;
-                    background: @accentColor;
+                    background: linear-gradient(@accentColor, @accentColor);
+                    background-blend-mode: multiply;
                     box-shadow: 0 1px 2px @shadowColor, 0 1px 2px @shadowOutColor;
                     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
                 }
@@ -623,7 +629,8 @@ namespace Tasks {
                     border: 0px;
                     color: #fff;
                     margin: 4px;
-                    background: @accentColor;
+                    background: linear-gradient(@accentColor, @accentColor);
+                    background-blend-mode: multiply;
                     box-shadow: 0 1px 3px @shadowColor, 0 1px 3px @shadowOutColor;
                 }
                 
@@ -633,7 +640,8 @@ namespace Tasks {
                     margin: 4px;
                     outline: 0px;
                     border: 0px;
-                    background: @accentColor;
+                    background: linear-gradient(@accentColor, @accentColor);
+                    background-blend-mode: multiply;
                     box-shadow: 0 1px 4px @shadowColor, 0 1px 4px @shadowOutColor;
                 }
                 
@@ -642,7 +650,8 @@ namespace Tasks {
                     color: @textColorDisabled;
                     margin: 4px;
                     border: 0px;
-                    background: @buttonDisabledColor;
+                    background: linear-gradient(@buttonDisabledColor, @buttonDisabledColor);
+                    background-blend-mode: multiply;
                     border-radius: 5px;
                     box-shadow: none;
                 }
@@ -693,7 +702,8 @@ namespace Tasks {
                 }
                 
                 .material_snackbar {
-                    background: @cardBgColor;
+                    background: linear-gradient(@cardBgColor, @cardBgColor);
+                    background-blend-mode: multiply;
                     padding-left: 16px;
                     padding-right: 16px;
                     padding-top: 8px;
@@ -796,13 +806,13 @@ namespace Tasks {
                 }
                 
                 .color-green-gradient radio {
-                    background-image: linear-gradient(#0cebeb, #29ffc6);
+                    background: linear-gradient(#0cebeb, #29ffc6);
                     border-color: #f50057;
                     color: #000000;
                 }
                 
                 .color-sunset radio {
-                    background-image: linear-gradient(#fffcdc, #d9a7c7);
+                    background: linear-gradient(#fffcdc, #d9a7c7);
                     border-color: #f50057;
                     color: #000000;
                 }
@@ -812,19 +822,21 @@ namespace Tasks {
                 }
                 
                 .mainwindow {
-                    background-color: @bgColor;
+                    background: linear-gradient(@bgTopColor, @bgBottomColor);
+                    background-blend-mode: multiply;
                     box-shadow: @shadowColor;
                 }
                 
                 .popover {
-                    background-color: @bgColor;
+                    background: linear-gradient(@bgColor, @bgColor);
                     box-shadow: @shadowColor;
+                    background-blend-mode: multiply;
                 }
 
                 .window textview.view text,
                 .window headerbar {
-                    background-color: @bgColor;
-                    border-bottom-color: @bgColor;
+                    background: @bgTopColor;
+                    background-blend-mode: multiply;
                     box-shadow: none;
                 }
                 """);
