@@ -41,5 +41,10 @@
 			<summary>Screen fullscreen</summary>
 			<description>Save if was screen fullscreen</description>
 		</key>
+		<key name="is-multi" type="b">
+			<default>false</default>
+			<summary>Multicolumn View</summary>
+			<description>Save if Multicolumn View enabled</description>
+		</key>
 	</schema>
 </schemalist>

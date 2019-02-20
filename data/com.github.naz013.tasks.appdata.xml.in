@@ -29,11 +29,21 @@
         </screenshot>
     </screenshots>
     <releases>
-      <release version="1.0.0" date="2019-02-11">
-          <description>
-              <p>Simple reminder application</p>
-          </description>
-      </release>
+    	<release version="1.0.2" date="2019-02-20">
+    		<description>
+    			<p>Update list design</p>
+          	</description>
+      	</release>
+    	<release version="1.0.1" date="2019-02-18">
+    		<description>
+    			<p>Update create panel design</p>
+          	</description>
+      	</release>
+      	<release version="1.0.0" date="2019-02-11">
+          	<description>
+              	<p>Simple reminder application</p>
+          	</description>
+      	</release>
     </releases>
     <custom>
         <value key="x-appcenter-color-primary">#E6AB6A</value>

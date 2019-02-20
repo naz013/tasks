@@ -425,6 +425,12 @@ namespace Tasks {
                 init_theme(theme);
                 update_theme();
             });
+            settings_view.multi_changed.connect((is_multi) => {
+                AppSettings.get_default().is_multi = is_multi;
+                if (main_view != null) {
+                    main_view.refresh_list(tasks);
+                }
+            });
             settings_view.show_all();
 
             popover = new Gtk.Popover (null);

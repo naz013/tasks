@@ -11,6 +11,9 @@ namespace Tasks {
         public signal void on_copy(Event task);
         
         private Gtk.ListBox list_box;
+        private Gtk.Popover? popover;
+        private int state = 1;
+        private Gee.ArrayList<Event> m_tasks;
         
         public ListView(Gee.ArrayList<Event> tasks) {
             Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
@@ -25,18 +28,97 @@ namespace Tasks {
             
             refresh_list(tasks);
             scrolled.show_all();
+            size_allocate.connect((allocation) => {
+                if (is_multi()) {
+                    update_state(allocation.width);
+                }
+            });
             add(scrolled);
         }
         
+        private bool is_multi() {
+            return AppSettings.get_default().is_multi;
+        }
+        
+        public void refresh_view() {
+            if (m_tasks != null) {
+    	        refresh_list(m_tasks);
+    	    }
+        }
+        
+        public void update_state(int width) {
+        	int _state = new_state(width);
+        	if (_state != state) {
+        	    state = _state;
+        	    refresh_view();
+        	}
+        }
+        
         public void refresh_list(Gee.ArrayList<Event> tasks) {
-            list_box.forall ((element) => list_box.remove (element));
+            m_tasks = tasks;
+            list_box.foreach ((element) => list_box.remove (element));
             tasks.sort(comparator);
-            Event? prev_task = null;
-            for (int i = 0; i < tasks.size; i++) {
-                Event task = tasks.get(i);
-                list_box.add(get_row(task, prev_task, i == tasks.size - 1));
-                prev_task = new Event.full_copy(task);
+            if (!is_multi() || state == 1) {
+                Event? prev_task = null;
+                for (int i = 0; i < tasks.size; i++) {
+                    Event task = tasks.get(i);
+                    list_box.add(get_row(task, prev_task, i == tasks.size - 1, true));
+                    prev_task = new Event.full_copy(task);
+                }
+            } else {
+                Event? prev_task = null;
+                int count = 0;
+                Gtk.Grid grid = new_grid();
+                for (int i = 0; i < tasks.size; i++) {
+                    Event task = tasks.get(i);
+                    var row = get_row(task, prev_task, i == tasks.size - 1, false);
+                    count++;
+                    if (is_same(task, prev_task)) {
+                        grid.add(row);
+                        Logger.log(@"refresh_list: same");
+                        if (count == state) {
+                            Logger.log(@"refresh_list: 1");
+                            list_box.add(pack_grid(add_empty(grid, count)));
+                            grid = new_grid();
+                            count = 0;
+                        }
+                    } else {
+                        Logger.log(@"refresh_list: not same");
+                        if (i != 0) {
+                            Logger.log(@"refresh_list: 2");
+                            list_box.add(pack_grid(add_empty(grid, count - 1)));
+                            count = 0;
+                        } 
+                        list_box.add(pack_grid(get_header(task)));
+                        grid = new_grid();
+                        grid.add(row);
+                        if (i == tasks.size - 1) {
+                            Logger.log(@"refresh_list: 3");
+                            list_box.add(pack_grid(add_empty(grid, 1)));
+                            count = 0;
+                        }
+                    }
+                    
+                    prev_task = new Event.full_copy(task);
+                }
             }
+        }
+        
+        private Gtk.Grid add_empty(Gtk.Grid grid, int count) {
+            if (count == state) return grid;
+            Logger.log(@"add_empty: $count, $state");
+            for (int i = count; i < state; i++) {
+                grid.add(new_grid());
+            }
+            return grid;
+        }
+        
+        private Gtk.Grid new_grid() {
+            Gtk.Grid grid = new Gtk.Grid();
+            grid.hexpand = true;
+            grid.set_column_homogeneous(true);
+            grid.orientation = Gtk.Orientation.HORIZONTAL;
+            return grid;
         }
         
         public int comparator (Event a, Event b) {
@@ -63,6 +145,20 @@ namespace Tasks {
             } else {
                 return 1;
             }
+        }
+        
+        private int new_state(int width) {
+        	if (width < 650) return 1;
+        	else if (width < 1300) return 2;
+        	else if (width < 1950) return 3;
+        	else if (width < 2600) return 4;
+        	else if (width < 3250) return 5;
+        	else return 6;
+        }
+        
+        private bool is_same(Event task, Event? prev) {
+            if (prev == null) return false;
+            else return task.is_active == prev.is_active;
         }
         
         private Gtk.Widget? get_header_view(Event task, Event? prev) {
@@ -104,8 +200,6 @@ namespace Tasks {
             view.get_style_context().add_class(CssData.MENU_ITEM);
             return view;
         }
-        
-        private Gtk.Popover? popover;
         
         private void hide_popover() {
             if (popover != null) {
@@ -165,7 +259,17 @@ namespace Tasks {
             return button;
         }
         
-        private Gtk.ListBoxRow get_row(Event task, Event? prev, bool is_last) {
+        private Gtk.ListBoxRow pack_grid(Gtk.Widget grid) {
+            var row = new Gtk.ListBoxRow();
+            row.hexpand = true;
+            row.vexpand = false;
+            row.set_selectable(false);
+            row.add(grid);
+            row.show_all();
+            return row;
+        }
+        
+        private Gtk.ListBoxRow get_row(Event task, Event? prev, bool is_last, bool add_header) {
             var row = new Gtk.ListBoxRow();
             row.hexpand = true;
             row.vexpand = false;
@@ -176,7 +280,7 @@ namespace Tasks {
             grid.hexpand = true;
             
             var header_view = get_header_view(task, prev);
-            if (header_view != null) {
+            if (add_header && header_view != null) {
                 grid.add(header_view);
             }
             

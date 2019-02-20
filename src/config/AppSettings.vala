@@ -10,6 +10,7 @@ namespace Tasks {
         public uint last_id { get; set; }
         public bool is_maximized { get; set; }
         public bool is_fullscreen { get; set; }
+        public bool is_multi { get; set; }
 
         public static unowned AppSettings get_default () {
             if (instance == null) {

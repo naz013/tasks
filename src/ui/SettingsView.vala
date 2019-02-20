@@ -3,6 +3,7 @@ namespace Tasks {
     public class SettingsView : Gtk.EventBox {
     
         public signal void theme_selected(int theme);
+        public signal void multi_changed(bool is_multi);
         
         public SettingsView() {
             var color_button_light = new Gtk.RadioButton (null);
@@ -107,7 +108,48 @@ namespace Tasks {
             theme_button_click(color_button_green_gradient, 5);
             theme_button_click(color_button_sunset, 6);
             
-            add(menu_grid);
+            var multi_switch = new Gtk.Switch();
+		    multi_switch.vexpand = false;
+		    multi_switch.active = AppSettings.get_default().is_multi;
+		    multi_switch.notify["active"].connect (() => {
+                multi_changed(multi_switch.active);
+    		});
+            multi_switch.get_style_context().add_class(CssData.MATERIAL_SWITCH);
+		    
+		    var multi_label = new Gtk.Button.with_label (_("Multicolumn View"));
+            multi_label.clicked.connect (() => {
+                multi_switch.active = !multi_switch.active;
+            });
+            multi_label.get_style_context().add_class(CssData.MATERIAL_BUTTON_FLAT);
+            
+            var box = new Gtk.Fixed();
+            box.hexpand = true;
+            box.vexpand = false;
+            
+            var box1 = new Gtk.Fixed();
+            box1.hexpand = true;
+            box1.vexpand = false;
+            
+            var multi_grid = new Gtk.Grid ();
+            multi_grid.column_spacing = 8;
+            multi_grid.hexpand = true;
+            multi_grid.orientation = Gtk.Orientation.HORIZONTAL;
+            multi_grid.add(box);
+            multi_grid.add(multi_label);
+            multi_grid.add(multi_switch);
+            multi_grid.add(box1);
+            
+            var grid = new Gtk.Grid ();
+            grid.margin_bottom = 3;
+            grid.column_spacing = 12;
+            grid.margin = 12;
+            grid.orientation = Gtk.Orientation.VERTICAL;
+            
+            grid.add(multi_grid);
+            grid.add(menu_grid);
+            grid.show_all();
+            
+            add(grid);
         }
         
         private void theme_button_click(Gtk.RadioButton button, int theme) {

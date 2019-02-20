@@ -581,11 +581,6 @@ namespace Tasks {
                     background: transparent;
                 }
                 
-                .material_fab horizontal {
-                    background: transparent;
-                    background-blend-mode: multiply;
-                }
-                
                 .material_fab {
                     border-radius: 25px;
                     color: #fff;
@@ -593,6 +588,7 @@ namespace Tasks {
                     padding-top: 8px;
                     padding-bottom: 8px;
                     background-color: @accentColor;
+                    background-blend-mode: screen;
                     box-shadow: 0 1px 2px @shadowColor, 0 1px 2px @shadowOutColor;
                     transition: all 0.1s ease-in-out;
                 }
@@ -604,6 +600,7 @@ namespace Tasks {
                     padding-top: 8px;
                     padding-bottom: 8px;
                     background-color: @accentColor;
+                    background-blend-mode: screen;
                     box-shadow: 0 1px 3px @shadowColor, 0 1px 3px @shadowOutColor;
                 }
                 
@@ -614,6 +611,7 @@ namespace Tasks {
                     padding-top: 8px;
                     padding-bottom: 8px;
                     background-color: @accentColor;
+                    background-blend-mode: screen;
                     box-shadow: 0 1px 4px @shadowColor, 0 1px 4px @shadowOutColor;
                 }
                 
@@ -622,6 +620,7 @@ namespace Tasks {
                     color: @textColorDisabled;
                     border: 0px;
                     background-color: @buttonDisabledColor;
+                    background-blend-mode: screen;
                     box-shadow: none;
                 }
                 
@@ -836,21 +835,18 @@ namespace Tasks {
                 }
                 
                 .mainwindow {
-                    background: linear-gradient(@bgTopColor, @bgBottomColor);
-                    background-blend-mode: multiply;
+                    background: @bgColor;
                     box-shadow: @shadowColor;
                 }
                 
                 .popover {
-                    background: linear-gradient(@bgColor, @bgColor);
+                    background: @bgColor;
                     box-shadow: @shadowColor;
-                    background-blend-mode: multiply;
                 }
 
                 .window textview.view text,
                 .window headerbar {
-                    background: @bgTopColor;
-                    background-blend-mode: multiply;
+                    background: @bgColor;
                     box-shadow: none;
                 }
                 """);
