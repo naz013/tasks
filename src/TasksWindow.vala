@@ -58,8 +58,6 @@ namespace Tasks {
             set_hide_titlebar_when_maximized (false);
             
             int theme = AppSettings.get_default().app_theme;
-            // Logger.log(@"Theme value: $theme");
-
             init_theme(theme);
 
             var actions = new SimpleActionGroup ();
@@ -81,12 +79,8 @@ namespace Tasks {
             grid.get_style_context().add_class("main_grid");
             
             this.add (grid);
-
             focus_out_event.connect (() => {
                 return false;
-            });
-            grid.size_allocate.connect((allocation) => {
-                
             });
             delete_event.connect(() => {
                 int new_width, new_height;
@@ -105,7 +99,6 @@ namespace Tasks {
             });
             
             tasks = event_manager.load_from_file();
-            
             tasks_controller.find_event.connect((id) => {
                 return find_event(id);
             });
@@ -114,8 +107,6 @@ namespace Tasks {
                 show_notification(event);
             });
             tasks_controller.init_tasks(tasks);
-            
-            // Logger.log("From main");
             draw_views();
         }
         
@@ -182,10 +173,7 @@ namespace Tasks {
             if (!screen_present()) {
                 DateTime dt = new DateTime.now_local ();
                 event_manager.save_notification(new Tasks.Notification(event.id, event.summary, dt.to_unix()));
-            } else {
-            	
             }
-            // show_task_dialog(event);
             
             if (event.show_notification) {
                 ((Application) application).show_notification(event.summary, event.description, "alarm-symbolic");
@@ -239,8 +227,6 @@ namespace Tasks {
         private void draw_views() {
             int new_width, new_height;
             get_size (out new_width, out new_height);
-            
-            // Logger.log(@"Draw screen: width -> $new_width, height -> $new_height, max -> $is_maximized");
             
             grid.foreach ((element) => grid.remove (element));
 
@@ -326,13 +312,11 @@ namespace Tasks {
             overlay = new Gtk.Overlay();
             overlay.expand = true;
             
-            create_container.add(create_view);
             create_panel.add(box);
             create_panel.add(create_container);
             overlay.add(main_view);
             overlay.add_overlay(create_panel);
             overlay.set_overlay_pass_through(create_panel, !create_open);
-            // set_create_open(false);
             
             grid.add(overlay);
             grid.show_all();

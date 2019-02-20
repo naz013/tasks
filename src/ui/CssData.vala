@@ -223,17 +223,27 @@ namespace Tasks {
                     font-size: 13px;
                     color: @textColorPrimary;
                     background: transparent;
-                    border: 1px solid @accentLightColor;
+                    border: 1px solid black;
                     border-radius: 5px;
                     box-shadow: none;
                 }
                 
-                .type-selector window.popup {
+                .type-selector menu {
                     font-size: 13px;
                     color: @textColorPrimary;
-                    background: @bgColor;
+                    background: linear-gradient(@bgColor, @bgColor);
+                    background-blend-mode: multiply;
                     border: 0px;
                     border-radius: 0px;
+                    box-shadow: none;
+                }
+                
+                .type-selector button:hover:active, .type-selector button:hover, .type-selector button:active {
+                    font-size: 13px;
+                    color: @textColorPrimary;
+                    background: @accentAlphaColor;
+                    border: 1px solid @accentAlphaColor;
+                    border-radius: 5px 5px 0px 0px;
                     box-shadow: none;
                 }
                 
@@ -571,34 +581,39 @@ namespace Tasks {
                     background: transparent;
                 }
                 
+                .material_fab horizontal {
+                    background: transparent;
+                    background-blend-mode: multiply;
+                }
+                
                 .material_fab {
                     border-radius: 25px;
                     color: #fff;
                     border: 0px;
                     padding-top: 8px;
                     padding-bottom: 8px;
-                    background: linear-gradient(@accentColor, @accentColor);
-                    background-blend-mode: multiply;
+                    background-color: @accentColor;
                     box-shadow: 0 1px 2px @shadowColor, 0 1px 2px @shadowOutColor;
-                    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+                    transition: all 0.1s ease-in-out;
                 }
                 
                 .material_fab:hover  {
                     border-radius: 25px;
-                    border: 0px;
                     color: #fff;
-                    background: linear-gradient(@accentColor, @accentColor);
-                    background-blend-mode: multiply;
+                    border: 0px;
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                    background-color: @accentColor;
                     box-shadow: 0 1px 3px @shadowColor, 0 1px 3px @shadowOutColor;
                 }
                 
                 .material_fab:selected, .material_fab:hover:active {
                     border-radius: 25px;
                     color: #fff;
-                    outline: 0px;
                     border: 0px;
-                    background: linear-gradient(@accentColor, @accentColor);
-                    background-blend-mode: multiply;
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                    background-color: @accentColor;
                     box-shadow: 0 1px 4px @shadowColor, 0 1px 4px @shadowOutColor;
                 }
                 
@@ -606,8 +621,7 @@ namespace Tasks {
                     border-radius: 25px;
                     color: @textColorDisabled;
                     border: 0px;
-                    background: linear-gradient(@buttonDisabledColor, @buttonDisabledColor);
-                    background-blend-mode: multiply;
+                    background-color: @buttonDisabledColor;
                     box-shadow: none;
                 }
                 

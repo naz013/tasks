@@ -23,7 +23,6 @@ namespace Tasks {
     	    string h = _("hrs");
     		string m = _("mins");
     		string s = _("sec");
-    		
     		if (hours > 0) {
     			return @"$hours $h $minutes $m $seconds $s";
     		} else if (minutes > 0) {
@@ -67,9 +66,6 @@ namespace Tasks {
     		secs += hours * HOUR;
     		secs += minutes * MINUTE;
     		secs += seconds;
-    		
-    		// Logger.log(@"to_seconds: tmp -> $tmp, secs -> $secs");
-    		
     		return secs;
 		}
 	}

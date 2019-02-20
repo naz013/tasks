@@ -303,9 +303,7 @@ namespace Tasks {
         
         public void edit_event(Event event) {
             clear_view();
-            
             editable_event = event;
-            
             description_field.set_text(event.description);
             summary_field.set_text(event.summary);
             
@@ -331,12 +329,9 @@ namespace Tasks {
         public void clear_view() {
             description_field.set_text("");
             summary_field.set_text("");
-            
             description_label.set_opacity(0);
             summary_label.set_opacity(0);
-            
             due_switch.set_active (false);
-            
             editable_event = null;
         }
         

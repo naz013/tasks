@@ -37,6 +37,11 @@ namespace Tasks {
 	        combo_box = new Gtk.ComboBox.with_model (list_store);
 	        combo_box.set_state_flags (Gtk.StateFlags.INSENSITIVE, true);
 	        combo_box.hexpand = true;
+		    
+		    combo_box.changed.connect(() => {
+		    	Logger.log(@"BeforePickerView: style w -> $(combo_box.get_style_context().to_string(Gtk.StyleContextPrintFlags.SHOW_STYLE))");
+		    });
+	        
 	        combo_box.get_style_context().add_class("type-selector");
 
 	        Gtk.CellRendererText renderer = new Gtk.CellRendererText ();
